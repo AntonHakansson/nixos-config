@@ -1,0 +1,60 @@
+#+title: NixOS config
+#+author: Anton Hakansson
+#+date: 2022-03-20
+
+* First time setup
+See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and advanced options for configuring zpool.
+
+1. Create three partitions:
+   - Boot
+   - Swap
+   - ZFS
+    #+begin_src bash
+    disk=/dev/disk/by-id/foo
+    sudo parted "$disk" -- mklabel gpt
+    sudo parted "$disk" -- mkpart primary 512MiB -8GiB # zfs
+    sudo parted "$disk" -- mkpart primary linux-swap -8GiB 100% # swap
+    sudo parted "$disk" -- mkpart ESP fat32 1MiB 512MiB # boot
+    sudo parted "$disk" -- set 3 esp on
+
+    sudo mkswap -L swap "${disk}-part2"
+    sudo mkfs.fat -F 32 -n EFI "${disk}-part3"
+    #+end_src
+2. Create ZPool:
+   #+begin_src bash
+   zpool create -O mountpoint=none -O encryption=aes-256-gcm -O keyformat=passphrase rpool "${disk}-part1"
+   #+end_src
+3. Create datasets:
+   #+begin_src bash
+   zfs create -o mountpoint=legacy rpool/local # ?
+   zfs create -o mountpoint=legacy rpool/safe  # ?
+
+   zfs create -o mountpoint=legacy rpool/local/root
+   zfs snapshot rpool/local/root@blank
+   zfs create -o mountpoint=legacy rpool/local/nix
+   zfs set compression=lz4 rpool/local/nix
+   zfs create -o mountpoint=legacy rpool/local/nix-store
+   zfs set compression=lz4 rpool/local/nix-store
+   zfs create -o mountpoint=legacy rpool/local/cache
+   zfs set compression=lz4 rpool/local/cache
+   zfs create -o mountpoint=legacy rpool/safe/data
+   zfs set compression=lz4 rpool/local/data
+   #+end_src
+4. Set src_nix{networking.hostId} to src_bash{cat /etc/machine-id | head -c 8}
+
+* Filesystem quirks
+On startup the root dataset(=rpool/local/root=) gets wiped to its =@blank= snapshot.
+Important directories therefore have to be mounted\* from =rpool/safe/data= to the home directory by setting =config.asdf.core.zfs.homeLinks=.
+This gives me a fresh system smell each boot and marking the persistent directories as either =cache= or =data= makes it easy to backup only what matters.
+
+=systemd-mount= units are responsible for mounting =homeLinks=.
+One caveat with this approach is that it creates non-existing directories  with root as the owner.
+For now I manually change the directory owner with src_bash{chown hakanssn:users /data/${path}} etc.
+
+To discover directories that will be removed on next boot run:
+#+begin_src bash
+zfs diff rpool/local/root@blank | sk --query "/home/hakanssn/"
+#+end_src
+
+References:
+- [[https://grahamc.com/blog/erase-your-darlings][Erase your darlings: immutable infrastructure for mutable systems]]

@@ -1,0 +1,17 @@
+#+title: Gattsu
+#+author: Anton Hakansson
+#+date: 2022-03-20
+
+My main desktop computer.
+
+* Specs
+[[https://pcpartpicker.com/list/4HWjz7][Parts List]]
+
+| CPU          | AMD Ryzen 5 5600X 3.7 GHz 6-Core Processor               |
+| CPU Cooler   | be quiet! Pure Rock 2 CPU Cooler                         |
+| Motherboard  | Asus ROG Strix X570-F Gaming ATX AM4 Motherboard         |
+| Memory       | Crucial Ballistix 16 GB (2 x 8 GB) DDR4-3600 CL16 Memory |
+| Storage      | Samsung 980 Pro 1 TB M.2-2280 NVME Solid State Drive     |
+| Video Card   | KFA2 GeForce RTX 2070 SUPER                              |
+| Case         | Fractal Design Arc Midi R2 ATX Mid Tower Case            |
+| Power Supply | Corsair HX850W                                           |
