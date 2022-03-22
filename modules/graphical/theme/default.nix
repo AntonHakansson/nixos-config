@@ -31,53 +31,43 @@
     };
 
     programs.dconf.enable = true;
-    home-manager.users.hakanssn = { pkgs, ... }: {
-      home.packages = [ pkgs.vanilla-dmz ];
-      home.file = {
-        ".icons/default/index.theme".text = ''
-          [Icon Theme]
-          Name=Default
-          Comment=Default Cursor Theme
-          Inherits=Vanilla-DMZ
-        '';
-      };
-      dconf.settings."org/gnome/desktop/interface" = {
-        gtk-theme = "Breeze";
-        icon-theme = "breeze";
-        cursor-theme = "Vanilla-DMZ";
-      };
-      gtk = {
-        enable = true;
-        font = {
-          package = pkgs.noto-fonts;
-          name = "Noto Sans";
-          size = 10;
+    home-manager.users.hakanssn = { pkgs, ... }:
+      let flat-remix-theme = "Flat-Remix-GTK-Blue-Dark";
+      in {
+        home.packages = [ pkgs.vanilla-dmz ];
+        dconf.settings."org/gnome/desktop/interface" = {
+          gtk-theme = flat-remix-theme;
+          icon-theme = flat-remix-theme;
+          cursor-theme = "Vanilla-DMZ";
         };
-        gtk2.extraConfig = ''
-          gtk-cursor-theme-name = "Vanilla-DMZ"
-          gtk-cursor-theme-size = 0
-        '';
-        gtk3.extraConfig = {
-          gtk-cursor-theme-name = "Vanilla-DMZ";
-          gtk-cursor-theme-size = 0;
+        gtk = {
+          enable = true;
+          font = {
+            package = pkgs.noto-fonts;
+            name = "Noto Sans";
+            size = 10;
+          };
+          gtk2.extraConfig = ''
+            gtk-cursor-theme-name = "Vanilla-DMZ"
+            gtk-cursor-theme-size = 0
+          '';
+          gtk3.extraConfig = {
+            gtk-cursor-theme-name = "Vanilla-DMZ";
+            gtk-cursor-theme-size = 0;
+          };
+          iconTheme = {
+            package = pkgs.flat-remix-icon-theme;
+            name = flat-remix-theme;
+          };
+          theme = {
+            package = pkgs.flat-remix-gtk;
+            name = flat-remix-theme;
+          };
         };
-        iconTheme = {
-          package = pkgs.libsForQt5.breeze-icons;
-          name = "breeze";
-        };
-        theme = {
-          package = pkgs.libsForQt5.breeze-gtk;
-          name = "Breeze";
-        };
-      };
-      qt = {
-        enable = true;
-        platformTheme = "gnome";
-        style = {
-          name = "breeze";
-          package = pkgs.libsForQt5.breeze-qt5;
+        qt = {
+          enable = true;
+          platformTheme = "gtk";
         };
       };
-    };
   };
 }
