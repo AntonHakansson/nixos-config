@@ -9,10 +9,6 @@
   config = lib.mkIf config.asdf.graphical.xdg.enable {
     asdf.core.zfs.homeLinks = [
       {
-        path = "desktop";
-        type = "data";
-      }
-      {
         path = "documents";
         type = "data";
       }
@@ -31,10 +27,6 @@
       {
         path = "repos";
         type = "cache";
-      }
-      {
-        path = "templates";
-        type = "data";
       }
       {
         path = "videos";
