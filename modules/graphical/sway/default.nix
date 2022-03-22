@@ -5,7 +5,8 @@ let
     inherit pkgs;
     stdenv = pkgs.stdenv;
   };
-  # status-configuration = import ./status-configuration.nix { inherit pkgs config; };
+  status-configuration =
+    import ./status-configuration.nix { inherit pkgs lib config; };
 in {
   options.asdf.graphical.sway.enable = lib.mkOption {
     default = false;
@@ -34,67 +35,14 @@ in {
           fi
         '';
       };
-      services.kanshi = {
-        enable = true;
-        profiles = {
-          "home-undocked" = {
-            outputs = [{
-              criteria = "Unknown 0x2036 0x00000000";
-              position = "0,0";
-              mode = "2560x1440";
-              scale = 1.0;
-            }];
-          };
-          "home-docked" = {
-            outputs = [
-              {
-                criteria = "Unknown 0x2036 0x00000000";
-                position = "0,0";
-                mode = "2560x1440";
-                scale = 1.0;
-              }
-              {
-                criteria = "Dell Inc. DELL U2718Q FN84K01T095L";
-                position = "2560,0";
-                mode = "3840x2160";
-                scale = 1.0;
-              }
-            ];
-          };
-          "work-undocked" = {
-            outputs = [{
-              criteria = "Unknown 0x06D6 0x00000000";
-              position = "0,0";
-              mode = "1920x1080";
-              scale = 1.0;
-            }];
-          };
-          "work-docked" = {
-            outputs = [
-              {
-                criteria = "Unknown 0x06D6 0x00000000";
-                position = "0,0";
-                mode = "1920x1080";
-                scale = 1.0;
-              }
-              {
-                criteria = "Dell Inc. DELL U2718Q FN84K83Q1KHL";
-                position = "1920,0";
-                mode = "3840x2160";
-                scale = 1.0;
-              }
-            ];
-          };
-        };
-      };
+      # Wayland equivalent for tools like autorandr
+      # services.kanshi = {
+      #   enable = true;
+      # };
       wayland.windowManager.sway = {
         enable = true;
         config = rec {
           modifier = "Mod4";
-          left = "h";
-          down = "j";
-          up = "k";
-          right = "l";
           terminal = "${pkgs.kitty}/bin/kitty";
           menu = "${terminal} --class launcher -e ${launcher}/bin/launcher";
           fonts = {
@@ -133,18 +81,13 @@ in {
               style = "Normal";
             };
             position = "top";
-            # statusCommand = "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
+            statusCommand =
+              "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
             extraConfig = ''
               status_padding 0
               icon_theme Arc
             '';
           }];
-          # output = {
-          #   "Unknown 0x2036 0x00000000" = { position = "0,0"; mode = "2560x1440"; scale = "1.0"; };
-          #   "Dell Inc. DELL U2718Q FN84K01T095L" = { position = "2560,0"; mode = "3840x2160"; scale = "1.0"; };
-          #   "Chimei Innolux Corporation 0x14D3 0x00000000" = { position = "0,0"; mode = "1920x1080"; scale = "1.0"; };
-          #   "Dell Inc. DELL U2718Q FN84K83Q1KHL" = { position = "1920,0"; mode = "3840x2160"; scale = "1.0"; };
-          # };
           startup = [{
             command =
               "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${pkgs.swaylock}/bin/swaylock -f -c 000000' timeout 150 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${pkgs.swaylock}/bin/swaylock -f -c 000000'";
@@ -170,19 +113,17 @@ in {
           };
           modes = { }; # Unset default "resize" mode
           keybindings = lib.mkOptionDefault {
-            "${modifier}+Shift+q" = "nop Unset default kill";
-            "${modifier}+q" = "kill";
-            "${modifier}+r" = "nop Unset default resize mode";
+            ## Power
             "${modifier}+Shift+r" = "reload";
+            "${modifier}+q" = "kill";
             "${modifier}+c" = "exec ${pkgs.swaylock}/bin/swaylock -f -c 000000";
-            "${modifier}+i" =
-              "inhibit_idle open; border normal; mark --add inhibiting_idle";
-            "${modifier}+Shift+i" =
-              "inhibit_idle none; border pixel; unmark inhibiting_idle";
-            # "Print" = "exec ${screenshot}/bin/screenshot";
-            # "Alt+Print" = "exec ${screenshot}/bin/screenshot -d";
-            # "Shift+Print" = "exec ${screenshot}/bin/screenshot -r";
-            # "Alt+Shift+Print" = "exec ${screenshot}/bin/screenshot -r -d";
+
+            ## Bar
+            "${modifier}+b" = "exec swaymsg bar mode toggle";
+            "${modifier}+n" =
+              "exec ${pkgs.mako}/bin/makoctl invoke"; # Invoke default action on top notification.
+
+            ## Media keys
             "XF86AudioRaiseVolume" =
               "exec ${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%";
             "XF86AudioLowerVolume" =
@@ -195,29 +136,18 @@ in {
               "exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-";
             "XF86MonBrightnessUp" =
               "exec ${pkgs.brightnessctl}/bin/brightnessctl set +5%";
-            "${modifier}+Alt+Left" = "move workspace to output left";
-            "${modifier}+Alt+Right" = "move workspace to output right";
-            # Invoke default action on top notification.
-            "${modifier}+n" = "exec ${pkgs.mako}/bin/makoctl invoke";
+
+            ## Unset
+            "${modifier}+Shift+q" = "nop Unset default kill";
+            "${modifier}+r" = "nop Unset default resize mode";
           };
         };
         extraConfig = ''
-          workspace 1 output eDP-1
-          workspace 2 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 3 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 4 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 5 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 6 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 7 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 8 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-          workspace 9 output DP-3 DP-4 DP-5 HDMI-A-1 eDP-1
-
           no_focus [title="Microsoft Teams Notification"]
 
           default_border pixel
 
-          workspace 1
-          exec ${config.asdf.graphical.firefox.package}/bin/firefox
+          workspace 1 exec ${config.asdf.graphical.firefox.package}/bin/firefox
         '';
         # + (lib.optionalString config.asdf.programs.element.enable ''
         #   workspace 3
