@@ -15,6 +15,13 @@
     EMACSDIR = "${config.home-manager.users.hakanssn.xdg.configHome}/emacs";
     DOOMDIR = "${config.home-manager.users.hakanssn.xdg.configHome}/doom";
     DOOMLOCALDIR = "${config.home-manager.users.hakanssn.xdg.dataHome}/doom";
+    tangledPrivateDir = pkgs.runCommand "tangled-doom-private" { } ''
+      mkdir -p $out
+      cp ${./config.org} $out/config.org
+      cd $out
+      ${config.asdf.core.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "./config.org")'
+      rm $out/config.org
+    '';
     emacsDaemonScript = pkgs.writeScript "emacs-daemon" ''
       #!${pkgs.zsh}/bin/zsh -l
       if [ ! -d ${EMACSDIR}/.git ]; then
@@ -40,7 +47,7 @@
       }
     ];
 
-    home-manager.users.hakanssn = { ... }: {
+    home-manager.users.hakanssn = { lib, ... }: {
       home = {
         packages = with pkgs; [
           config.asdf.core.emacs.package
@@ -104,7 +111,19 @@
           ExecStart = toString emacsDaemonScript;
         };
       };
-      xdg.configFile."doom/config.org" = { source = ./config.org; };
+      xdg.configFile."doom/" = {
+        source = "${tangledPrivateDir}/";
+        recursive = true;
+      };
+      # xdg.configFile."doom/config.el" = {
+      #   source = "${tangledPrivateDir}/config.el";
+      # };
+      # xdg.configFile."doom/init.el" = {
+      #   source = "${tangledPrivateDir}/init.el";
+      # };
+      # xdg.configFile."doom/packages.el" = {
+      #   source = "${tangledPrivateDir}/packages.el";
+      # };
     };
     fonts.fonts = [ pkgs.emacs-all-the-icons-fonts ];
   };
