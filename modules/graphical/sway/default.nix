@@ -35,10 +35,18 @@ in {
           fi
         '';
       };
+
       # Wayland equivalent for tools like autorandr
       # services.kanshi = {
       #   enable = true;
       # };
+
+      services.wlsunset = {
+        enable = true;
+        latitude =  "57.7";
+        longitude = "11.9";
+      };
+
       wayland.windowManager.sway = {
         enable = true;
         config = rec {
@@ -111,12 +119,14 @@ in {
               xkb_variant = "altgr-intl";
             };
           };
-          modes = { }; # Unset default "resize" mode
           keybindings = lib.mkOptionDefault {
             ## Power
             "${modifier}+Shift+r" = "reload";
             "${modifier}+q" = "kill";
             "${modifier}+c" = "exec ${pkgs.swaylock}/bin/swaylock -f -c 000000";
+
+            ## Window
+            "${modifier}+Shift+t" = "sticky toggle"; # on top
 
             ## Bar
             "${modifier}+b" = "exec swaymsg bar mode toggle";
@@ -139,7 +149,6 @@ in {
 
             ## Unset
             "${modifier}+Shift+q" = "nop Unset default kill";
-            "${modifier}+r" = "nop Unset default resize mode";
           };
         };
         extraConfig = ''
