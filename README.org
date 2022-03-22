@@ -53,7 +53,7 @@ For now I manually change the directory owner with src_bash{chown hakanssn:users
 
 To discover directories that will be removed on next boot run:
 #+begin_src bash
-zfs diff rpool/local/root@blank | sk --query "/home/hakanssn/"
+zfsdiff
 #+end_src
 
 References:

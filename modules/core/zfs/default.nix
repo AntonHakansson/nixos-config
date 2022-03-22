@@ -1,4 +1,4 @@
-{ config, lib, ... }: {
+{ config, lib, pkgs, ... }: {
   options.asdf.core.zfs = {
     encrypted = lib.mkOption {
       default = false;
@@ -59,6 +59,13 @@
         trim.enable = true;
       };
     };
+
+    # Discover directories that will be removed on next boot
+    environment.systemPackages = [
+      (pkgs.writeScriptBin "zfsdiff" ''
+        doas zfs diff ${config.asdf.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/hakanssn/"
+      '')
+    ];
 
     system.activationScripts = let
       ensureSystemExistsScript = lib.concatStringsSep "\n"
