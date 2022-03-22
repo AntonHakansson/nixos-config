@@ -90,31 +90,44 @@ in {
           extensions = with pkgs.nur.repos.rycee.firefox-addons; [
             bitwarden
             browserpass
-            decentraleyes
             ff2mpv
+            zotero-connector
+            umatrix
+
+            darkreader
+            vimium
+
+            decentraleyes
             https-everywhere
             ublock-origin
-            umatrix
-            zotero-connector
             i-dont-care-about-cookies
           ];
-          profiles.default.settings = {
-            "browser.aboutConfig.showWarning" = false;
-            "browser.contentblocking.category" = "custom";
-            "browser.download.dir" = "/home/hakanssn/downloads";
-            "browser.newtabpage.enabled" = false;
-            "browser.safebrowsing.malware.enabled" = false;
-            "browser.safebrowsing.phishing.enabled" = false;
-            "browser.shell.checkDefaultBrowser" = false;
-            "browser.startup.homepage" = "about:blank";
-            "browser.startup.page" = 3; # Resume the previous browser session
-            "browser.fullscreen.autohide" = false; # Don't hide tabs/toolbar in fullscreen
-            "dom.security.https_only_mode_pbm" = true;
-            "network.cookie.cookieBehavior" = 1;
-            "privacy.annotate_channels.strict_list.enabled" = true;
-            "privacy.trackingprotection.enabled" = true;
-            "privacy.trackingprotection.socialtracking.enabled" = true;
-            "security.identityblock.show_extended_validation" = true;
+          profiles.hakanssn = {
+            id = 0;
+            userChrome = builtins.readFile ./userChrome.css;
+            settings = {
+              "devtools.theme" = "dark";
+              "toolkit.legacyUserProfileCustomizations.stylesheets" =
+                true; # look for userChrome.css
+
+              "browser.aboutConfig.showWarning" = false;
+              "browser.contentblocking.category" = "custom";
+              "browser.download.dir" = "/home/hakanssn/downloads";
+              "browser.newtabpage.enabled" = false;
+              "browser.safebrowsing.malware.enabled" = false;
+              "browser.safebrowsing.phishing.enabled" = false;
+              "browser.shell.checkDefaultBrowser" = false;
+              "browser.startup.homepage" = "about:blank";
+              "browser.startup.page" = 3; # Resume the previous browser session
+              "browser.fullscreen.autohide" =
+                false; # Don't hide tabs/toolbar in fullscreen
+              "dom.security.https_only_mode_pbm" = true;
+              "network.cookie.cookieBehavior" = 1;
+              "privacy.annotate_channels.strict_list.enabled" = true;
+              "privacy.trackingprotection.enabled" = true;
+              "privacy.trackingprotection.socialtracking.enabled" = true;
+              "security.identityblock.show_extended_validation" = true;
+            };
           };
         };
       };
