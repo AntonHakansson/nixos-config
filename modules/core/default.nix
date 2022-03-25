@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./emacs ./gpg ./nix ./sshd ./tmux ./vim ./zfs ./zsh ];
+  imports = [ ./emacs ./gpg ./nix ./ssh ./sshd ./tmux ./vim ./zfs ./zsh ];
 
   options.asdf = {
     stateVersion = lib.mkOption { example = "21.11"; };
@@ -68,6 +68,9 @@
       };
     };
 
+    # daemon allowing you to update some devices' firmware
+    services.fwupd.enable = true;
+
     time.timeZone = lib.mkDefault "Europe/Stockholm";
     i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
@@ -79,16 +82,14 @@
           isNormalUser = true;
           home = "/home/hakanssn";
           description = "Anton Hakansson";
-          extraGroups = [ "doas" "systemd-journal" ];
-          # passwordFile = config.age.secrets."passwords/users/hakanssn".path;
-          password = "nixos";
+          extraGroups = [ "systemd-journal" ];
+          passwordFile = config.age.secrets."passwords/users/hakanssn".path;
         };
-        # root.passwordFile = config.age.secrets."passwords/users/root".path;
-        root.password = "nixos";
+        root.passwordFile = config.age.secrets."passwords/users/root".path;
       };
     };
-    # age.secrets."passwords/users/hakanssn".file = ../../secrets/passwords/users/hakanssn.age;
-    # age.secrets."passwords/users/root".file = ../../secrets/passwords/users/root.age;
+    age.secrets."passwords/users/hakanssn".file = ../../secrets/passwords/users/hakanssn.age;
+    age.secrets."passwords/users/root".file = ../../secrets/passwords/users/root.age;
 
     # tldr cache
     asdf.core.zfs.homeLinks = [{

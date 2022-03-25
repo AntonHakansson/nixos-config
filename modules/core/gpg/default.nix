@@ -21,13 +21,9 @@
         programs.gpg.enable = true;
         services.gpg-agent = {
           enable = true;
-          enableSshSupport = true;
           defaultCacheTtl = 7200;
           maxCacheTtl = 99999;
           pinentryFlavor = pinentryFlavor;
-
-          # gpg --list-keys --with-keygrip
-          sshKeys = [ "789306B940E996B597D9D458942718C7E73B3A5F" ];
         };
       };
     };
