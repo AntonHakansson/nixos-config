@@ -156,7 +156,8 @@ in {
 
           default_border pixel
 
-          workspace 1 exec ${config.asdf.graphical.firefox.package}/bin/firefox
+          workspace 1
+          exec ${config.asdf.graphical.firefox.package}/bin/firefox
         '';
         # + (lib.optionalString config.asdf.programs.element.enable ''
         #   workspace 3
