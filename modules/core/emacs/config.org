@@ -466,7 +466,6 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
 #+end_src
 **** Evil Navigation
-
 #+begin_src emacs-lisp
 (package! org-evil-navigation :recipe (:repo "mskorzhinskiy/org-evil-navigation" :host github))
 #+end_src
@@ -481,11 +480,13 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 
 *** Defaults
 #+begin_src emacs-lisp :noweb-ref org-conf
-(setq org-directory "~/org" org-log-done 'time ; insert timestamp when an item
+(setq org-directory "~/documents/org" org-log-done 'time ; insert timestamp when an item
       org-list-allow-alphabetical t ; have a. A. a) A) list bullets
       org-export-in-background t
       org-catch-invisible-edits 'smart
-      org-export-with-sub-superscripts '{}) ; don't treat lone _ or ^ as sub/superscripts, require _{} or ^{}
+      org-export-with-sub-superscripts '{} ; don't treat lone _ or ^ as sub/superscripts, require _{} or ^{}
+      org-roam-directory (concat org-directory "/roam")
+      )
 
 (map! :map org-mode-map :n "SPC m l /" #'counsel-org-link)
 
