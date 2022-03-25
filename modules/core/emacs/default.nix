@@ -36,15 +36,9 @@
       exec ${config.asdf.core.emacs.package}/bin/emacs --daemon
     '';
   in {
-    asdf.core.zfs.homeLinks = [
-      {
-        path = ".local/share/doom";
-        type = "cache";
-      }
-      {
-        path = ".config/emacs";
-        type = "cache";
-      }
+    asdf.core.zfs.homeCacheLinks = [
+      ".config/emacs"
+      ".local/share/doom"
     ];
 
     home-manager.users.hakanssn = { lib, ... }: {

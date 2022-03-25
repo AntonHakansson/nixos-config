@@ -11,6 +11,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence.url =
+      "github:nix-community/impermanence"; # bind-mount directories
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
     nur.url = "github:nix-community/NUR";
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
@@ -23,8 +25,8 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, agenix, emacs-overlay, home-manager
-    , nixos-mailserver, nur, utils }:
+  outputs = inputs@{ self, nixpkgs, agenix, home-manager, impermanence, nur
+    , utils, emacs-overlay, nixos-mailserver }:
     let customPackages = callPackage: { };
     in utils.lib.mkFlake {
       inherit self inputs;
@@ -55,6 +57,7 @@
           })
           agenix.nixosModules.age
           home-manager.nixosModule
+          impermanence.nixosModule
           nixos-mailserver.nixosModule
           ./modules
         ];

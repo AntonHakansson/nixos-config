@@ -70,14 +70,8 @@ let
   });
 in {
   programs.zsh.enable = true;
-  asdf.core.zfs.systemLinks = [{
-    path = "/root/.local/share/autojump";
-    type = "cache";
-  }];
-  asdf.core.zfs.homeLinks = [{
-    path = ".local/share/autojump";
-    type = "cache";
-  }];
+  asdf.core.zfs.systemCacheLinks = [ "/root/.local/share/autojump" ];
+  asdf.core.zfs.homeCacheLinks = [ ".local/share/autojump" ];
   home-manager.users.hakanssn = { ... }: (base "/home/hakanssn");
   home-manager.users.root = { ... }: (base "/root");
 }

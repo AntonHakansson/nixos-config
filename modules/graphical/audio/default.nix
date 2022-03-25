@@ -7,16 +7,10 @@
   };
 
   config = lib.mkIf config.asdf.graphical.audio.enable {
-    asdf.core.zfs.homeLinks = [{
-      path = ".local/state/wireplumber";
-      type = "cache";
-    }];
+    asdf.core.zfs.homeCacheLinks = [ ".local/state/wireplumber" ];
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs;
-        [
-          pavucontrol
-        ];
+      home.packages = with pkgs; [ pavucontrol ];
     };
 
     sound.enable = true;

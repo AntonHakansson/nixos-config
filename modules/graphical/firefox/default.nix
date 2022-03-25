@@ -68,16 +68,9 @@ in {
   };
 
   config = lib.mkIf config.asdf.graphical.firefox.enable {
-    asdf.core.zfs.homeLinks = [
-      {
-        path = ".mozilla";
-        type = "data";
-      }
-      {
-        path = ".cache/mozilla";
-        type = "cache";
-      }
-    ];
+    asdf.core.zfs.homeCacheLinks = [ ".cache/mozilla" ];
+    asdf.core.zfs.homeDataLinks = [ ".mozilla" ];
+
     home-manager.users.hakanssn = { ... }: {
       programs = {
         browserpass = {

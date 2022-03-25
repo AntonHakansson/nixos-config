@@ -50,17 +50,13 @@ in {
   config = {
     asdf.core = {
       zfs = {
-        homeLinks = (lib.optional config.asdf.core.nix.enableDirenv {
-          path = ".local/share/direnv";
-          type = "cache";
-        }) ++ (lib.optional config.asdf.core.nix.enableNixIndex {
-          path = ".cache/nix-index";
-          type = "cache";
-        });
-        systemLinks = (lib.optional config.asdf.core.nix.enableDirenv {
-          path = "/root/.local/share/direnv";
-          type = "cache";
-        });
+        homeCacheLinks =
+          (lib.optional config.asdf.core.nix.enableDirenv ".local/share/direnv")
+          ++ (lib.optional config.asdf.core.nix.enableNixIndex
+            ".cache/nix-index");
+        systemCacheLinks =
+          (lib.optional config.asdf.core.nix.enableDirenv
+            "/root/.local/share/direnv");
       };
     };
 

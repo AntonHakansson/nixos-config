@@ -88,13 +88,12 @@
         root.passwordFile = config.age.secrets."passwords/users/root".path;
       };
     };
-    age.secrets."passwords/users/hakanssn".file = ../../secrets/passwords/users/hakanssn.age;
-    age.secrets."passwords/users/root".file = ../../secrets/passwords/users/root.age;
+    age.secrets."passwords/users/hakanssn".file =
+      ../../secrets/passwords/users/hakanssn.age;
+    age.secrets."passwords/users/root".file =
+      ../../secrets/passwords/users/root.age;
 
     # tldr cache
-    asdf.core.zfs.homeLinks = [{
-      path = ".cache/tealdeer";
-      type = "cache";
-    }];
+    asdf.core.zfs.homeCacheLinks = [ ".cache/tealdeer" ];
   };
 }

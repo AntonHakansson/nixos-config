@@ -4,32 +4,12 @@
       default = false;
       example = true;
     };
-    systemLinks = lib.mkOption {
-      default = [ ];
-      example = [
-        {
-          path = "/var/lib/docker";
-          type = "cache";
-        }
-        {
-          path = "/var/lib/docker/volumes";
-          type = "data";
-        }
-      ];
-    };
-    homeLinks = lib.mkOption {
-      default = [ ];
-      example = [
-        {
-          path = ".config/syncthing";
-          type = "data";
-        }
-        {
-          path = ".cache/nix-index";
-          type = "cache";
-        }
-      ];
-    };
+
+    systemCacheLinks = lib.mkOption { default = [ ]; };
+    systemDataLinks = lib.mkOption { default = [ ]; };
+    homeCacheLinks = lib.mkOption { default = [ ]; };
+    homeDataLinks = lib.mkOption { default = [ ]; };
+
     ensureSystemExists = lib.mkOption {
       default = [ ];
       example = [ "/data/etc/ssh" ];
@@ -52,6 +32,17 @@
   config = {
     asdf.dataPrefix = lib.mkDefault "/data";
     asdf.cachePrefix = lib.mkDefault "/cache";
+
+    environment.persistence."${config.asdf.cachePrefix}" = {
+      hideMounts = true;
+      directories = config.asdf.core.zfs.systemCacheLinks;
+      users.hakanssn.directories = config.asdf.core.zfs.homeCacheLinks;
+    };
+    environment.persistence."${config.asdf.dataPrefix}" = {
+      hideMounts = true;
+      directories = config.asdf.core.zfs.systemDataLinks;
+      users.hakanssn.directories = config.asdf.core.zfs.homeDataLinks;
+    };
 
     boot = {
       supportedFilesystems = [ "zfs" ];
@@ -108,9 +99,9 @@
     in {
       ensureSystemPathsExist = {
         text = ensureSystemExistsScript;
-        # deps = [ "agenixMountSecrets" ];
+        deps = [ "agenixMountSecrets" ];
       };
-      # agenixRoot.deps = [ "ensureSystemPathsExist" ];
+      agenixRoot.deps = [ "ensureSystemPathsExist" ];
 
       ensureHomePathsExist = {
         text = ''
@@ -119,75 +110,7 @@
         '';
         deps = [ "users" "groups" ];
       };
-      # agenix.deps = [ "ensureHomePathsExist" ];
+      agenix.deps = [ "ensureHomePathsExist" ];
     };
-
-    # NOTE: systemd-mount creates parent directories as root owner, therefore it is
-    # important that we create the directories locally with the right
-    # permissions.
-    systemd.services = let
-      makeLinkScript = config:
-        lib.concatStringsSep "\n"
-        (map (location: ''mkdir -p "${location.path}"'') config);
-      systemLinksScript = makeLinkScript config.asdf.core.zfs.systemLinks;
-      homeLinksScript = makeLinkScript config.asdf.core.zfs.homeLinks;
-    in {
-      make-system-links-destinations = {
-        script = systemLinksScript;
-        after = [ "local-fs.target" ];
-        wants = [ "local-fs.target" ];
-        before = [ "shutdown.target" "sysinit.target" ];
-        conflicts = [ "shutdown.target" ];
-        wantedBy = [ "sysinit.target" ];
-        serviceConfig = {
-          RemainAfterExit = "yes";
-          Type = "oneshot";
-          UMask = "0077";
-        };
-        unitConfig = { DefaultDependencies = "no"; };
-      };
-
-      make-home-links-destinations = {
-        script = homeLinksScript;
-        after = [ "local-fs.target" "make-system-links-destinations.service" ];
-        wants = [ "local-fs.target" "make-system-links-destinations.service" ];
-        before = [ "shutdown.target" "sysinit.target" ];
-        conflicts = [ "shutdown.target" ];
-        wantedBy = [ "sysinit.target" ];
-        serviceConfig = {
-          RemainAfterExit = "yes";
-          Type = "oneshot";
-          User = "hakanssn";
-          Group = "users";
-          UMask = "0077";
-          WorkingDirectory = "/home/hakanssn";
-        };
-        unitConfig = { DefaultDependencies = "no"; };
-      };
-    };
-
-    systemd.mounts = (map (location: {
-      what = "/${location.type}${location.path}";
-      where = "${location.path}";
-      type = "none";
-      options = "bind";
-      after = [ "local-fs.target" "make-system-links-destinations.service" ];
-      wants = [ "local-fs.target" "make-system-links-destinations.service" ];
-      before = [ "umount.target" "sysinit.target" ];
-      conflicts = [ "umount.target" ];
-      wantedBy = [ "sysinit.target" ];
-      unitConfig = { DefaultDependencies = "no"; };
-    }) config.asdf.core.zfs.systemLinks) ++ (map (location: {
-      what = "/${location.type}/home/hakanssn/${location.path}";
-      where = "/home/hakanssn/${location.path}";
-      type = "none";
-      options = "bind";
-      after = [ "local-fs.target" "make-home-links-destinations.service" ];
-      wants = [ "local-fs.target" "make-home-links-destinations.service" ];
-      before = [ "umount.target" "sysinit.target" ];
-      conflicts = [ "umount.target" ];
-      wantedBy = [ "sysinit.target" ];
-      unitConfig = { DefaultDependencies = "no"; };
-    }) config.asdf.core.zfs.homeLinks);
   };
 }

@@ -7,32 +7,9 @@
   };
 
   config = lib.mkIf config.asdf.graphical.xdg.enable {
-    asdf.core.zfs.homeLinks = [
-      {
-        path = "documents";
-        type = "data";
-      }
-      {
-        path = "downloads";
-        type = "cache";
-      }
-      {
-        path = "music";
-        type = "data";
-      }
-      {
-        path = "pictures";
-        type = "cache";
-      }
-      {
-        path = "repos";
-        type = "cache";
-      }
-      {
-        path = "videos";
-        type = "data";
-      }
-    ];
+    asdf.core.zfs.homeDataLinks =
+      [ "documents" "music" "pictures" "videos" ];
+    asdf.core.zfs.homeCacheLinks = [ "downloads" "repos" ];
 
     home-manager.users.hakanssn = { pkgs, ... }: {
       home.packages = with pkgs; [ xdg-user-dirs xdg_utils ];
