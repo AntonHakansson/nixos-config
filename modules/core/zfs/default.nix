@@ -38,6 +38,14 @@
       default = [ ];
       example = [ ".ssh" ];
     };
+    backups = lib.mkOption {
+      default = [ ];
+      example = [{
+        path = "rpool/safe/data";
+        remotePath = "zdata/recv/<hostname>/safe/data";
+        location = "vultr.hakanssn.com";
+      }];
+    };
     rootDataset = lib.mkOption { example = "rpool/local/root"; };
   };
 
@@ -58,6 +66,28 @@
         autoScrub.enable = true;
         trim.enable = true;
       };
+      # znapzend = {
+      #   enable = config.asdf.core.zfs.backups != [ ];
+      #   pure = true;
+      #   autoCreation = true;
+      #   zetup = builtins.listToAttrs (map (elem: {
+      #     name = elem.path;
+      #     value = {
+      #       enable = true;
+      #       # <retention> => <interval>
+      #       #   <retention>: how long to keep the backup
+      #       #   <interval>: create new backup each interval
+      #       plan =
+      #         "1day=>1hour,1week=>1day,4week=>1week,1year=>1month,10year=>6month";
+      #       timestampFormat = "%Y-%m-%d--%H%M%SZ";
+      #       destinations."${elem.location}" = {
+      #         # plan = "1day=>1hour,1week=>1day,4week=>1week,1year=>1month,10year=>6month";
+      #         host = "${elem.location}";
+      #         dataset = elem.remotePath;
+      #       };
+      #     };
+      #   }) config.asdf.core.zfs.backups);
+      # };
     };
 
     # Discover directories that will be removed on next boot

@@ -59,7 +59,10 @@
           ./modules
         ];
       };
-      hosts = { gattsu.modules = [ ./machines/gattsu ]; };
+      hosts = {
+        gattsu.modules = [ ./machines/gattsu ];
+        rickert.modules = [ ./machines/rickert ];
+      };
       outputsBuilder = channels:
         let pkgs = channels.nixpkgs;
         in {

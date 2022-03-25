@@ -10,10 +10,10 @@
     };
     initrd = {
       availableKernelModules =
-        [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
+        [ "xhci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_usb_sdmmc" ];
       kernelModules = [ ];
     };
-    kernelModules = [ "kvm-amd" ];
+    kernelModules = [ "kvm-intel" ];
     kernelPackages = pkgs.linuxPackages_latest;
     extraModulePackages = [ ];
   };
@@ -49,28 +49,23 @@
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/F717-B071";
+    device = "/dev/disk/by-uuid/D5F9-2BEF";
     fsType = "vfat";
   };
 
   swapDevices = [{ device = "/dev/disk/by-label/swap"; }];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware = {
-    cpu.amd.updateMicrocode = true;
+    cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;
     opengl.enable = true;
-    opengl.extraPackages = with pkgs; [
-      vaapiVdpau
-      libvdpau-va-gl
-      intel-media-driver
-    ];
+    # opengl.extraPackages = with pkgs; [
+    #   vaapiVdpau
+    #   libvdpau-va-gl
+    #   intel-media-driver
+    # ];
     nvidia = { package = config.boot.kernelPackages.nvidiaPackages.beta; };
   };
   services.fstrim.enable = true;
-
-  # Anne Pro 2 keyboard disconnects after inactivity
-  # boot with usb quirk HID_QUIRK_ALWAYS_POLL(0x00000400)
-  # ref: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
-  boot.kernelParams = [ "usbhid.quirks=0x04D9:0xA292:0x00000400" ];
 }
