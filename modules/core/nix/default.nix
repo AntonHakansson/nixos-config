@@ -54,9 +54,8 @@ in {
           (lib.optional config.asdf.core.nix.enableDirenv ".local/share/direnv")
           ++ (lib.optional config.asdf.core.nix.enableNixIndex
             ".cache/nix-index");
-        systemCacheLinks =
-          (lib.optional config.asdf.core.nix.enableDirenv
-            "/root/.local/share/direnv");
+        systemCacheLinks = (lib.optional config.asdf.core.nix.enableDirenv
+          "/root/.local/share/direnv");
       };
     };
 

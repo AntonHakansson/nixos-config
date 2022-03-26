@@ -13,6 +13,6 @@ in {
   "secrets/passwords/users/hakanssn.age".publicKeys = hosts ++ users;
   "secrets/passwords/users/root.age".publicKeys = hosts ++ users;
 
-  # "secrets/authorized_keys/hakanssn.age".publicKeys = hosts ++ users;
-  # "secrets/authorized_keys/root.age".publicKeys = hosts ++ users;
+  "secrets/authorized_keys/hakanssn.age".publicKeys = hosts ++ users;
+  "secrets/authorized_keys/root.age".publicKeys = hosts ++ users;
 }

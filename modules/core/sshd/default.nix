@@ -21,4 +21,15 @@
       }
     ];
   };
+  age.secrets."authorized_keys/root" = {
+    file = ../../../secrets/authorized_keys/root.age;
+    path = "/root/.ssh/authorized_keys";
+    symlink = false;
+  };
+  age.secrets."authorized_keys/hakanssn" = {
+    file = ../../../secrets/authorized_keys/hakanssn.age;
+    owner = "hakanssn";
+    path = "/home/hakanssn/.ssh/authorized_keys";
+    symlink = false;
+  };
 }
