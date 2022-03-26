@@ -1,7 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./emacs ./gpg ./nix ./ssh ./sshd ./tmux ./vim ./zfs ./zsh ];
+  imports =
+    [ ./emacs ./gpg ./network ./nix ./ssh ./sshd ./tmux ./vim ./zfs ./zsh ];
 
   options.asdf = {
     stateVersion = lib.mkOption { example = "21.11"; };

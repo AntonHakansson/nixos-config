@@ -11,6 +11,7 @@
         rootDataset = "rpool/local/root";
       };
       emacs.enable = true;
+      network.enable = true;
     };
     development = {
       enable = true;
