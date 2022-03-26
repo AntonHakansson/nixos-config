@@ -19,6 +19,7 @@
     };
     graphical = {
       enable = true;
+      laptop = true;
       syncthing.enable = true;
     };
   };

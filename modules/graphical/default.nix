@@ -3,9 +3,15 @@
 {
   imports = [ ./audio ./firefox ./mail ./sway ./syncthing ./terminal ./theme ./xdg ];
 
-  options.asdf.graphical.enable = lib.mkOption {
-    default = false;
-    example = true;
+  options.asdf.graphical = {
+    enable = lib.mkOption {
+      default = false;
+      example = true;
+    };
+    laptop = lib.mkOption {
+      default = false;
+      example = true;
+    };
   };
 
   config = lib.mkIf config.asdf.graphical.enable {

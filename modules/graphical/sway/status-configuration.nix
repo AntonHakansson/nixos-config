@@ -1,4 +1,4 @@
-{ config, lib, pkgs, isLaptop ? false, ... }:
+{ config, lib, pkgs, ... }:
 let
   mail-status = pkgs.writeShellScript "mail-status" ''
     mails=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
@@ -28,7 +28,7 @@ in pkgs.writeText "configuration.toml" (''
 
   [icons]
   name = "awesome5"
-'' + (lib.optionalString isLaptop ''
+'' + (lib.optionalString config.asdf.graphical.laptop ''
   [[block]]
   block = "battery"
 
