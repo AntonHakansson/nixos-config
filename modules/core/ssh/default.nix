@@ -3,12 +3,10 @@ let
   ssh_wrapper = pkgs.symlinkJoin {
     name = "ssh";
     paths = [
-      (
-        pkgs.writeShellScriptBin "ssh" ''
-          export TERM=xterm-256color
-          ${pkgs.openssh}/bin/ssh $@
-        ''
-      )
+      (pkgs.writeShellScriptBin "ssh" ''
+        export TERM=xterm-256color
+        ${pkgs.openssh}/bin/ssh $@
+      '')
       pkgs.openssh
     ];
   };
@@ -20,7 +18,8 @@ let
         IdentityFile = "${config.asdf.dataPrefix}${home}/.ssh/id_ed25519";
       };
     };
-    home.packages = lib.mkIf config.asdf.graphical.enable [ ssh_wrapper pkgs.sshfs ];
+    home.packages =
+      lib.mkIf config.asdf.graphical.enable [ ssh_wrapper pkgs.sshfs ];
   };
 in {
   home-manager.users.root = { ... }: (base "/root" "root");
