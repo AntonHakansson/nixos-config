@@ -1,5 +1,5 @@
 { ... }:
 
 {
-  imports = [ ./core ./development ./graphical ];
+  imports = [ ./core ./development ./graphical ./services ];
 }
