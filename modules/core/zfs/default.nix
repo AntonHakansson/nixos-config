@@ -46,7 +46,10 @@
 
     boot = {
       supportedFilesystems = [ "zfs" ];
-      zfs.requestEncryptionCredentials = config.asdf.core.zfs.encrypted;
+      zfs = {
+        devNodes = "/dev/";
+        requestEncryptionCredentials = config.asdf.core.zfs.encrypted;
+      };
       initrd.postDeviceCommands = lib.mkAfter ''
         zfs rollback -r ${config.asdf.core.zfs.rootDataset}@blank
       '';
@@ -88,29 +91,29 @@
       '')
     ];
 
-    system.activationScripts = let
-      ensureSystemExistsScript = lib.concatStringsSep "\n"
-        (map (path: ''mkdir -p "${path}"'')
-          config.asdf.core.zfs.ensureSystemExists);
-      ensureHomeExistsScript = lib.concatStringsSep "\n" (map (path:
-        ''
-          mkdir -p "/home/hakanssn/${path}"; chown hakanssn:users /home/hakanssn/${path};'')
-        config.asdf.core.zfs.ensureHomeExists);
-    in {
-      ensureSystemPathsExist = {
-        text = ensureSystemExistsScript;
-        deps = [ "agenixMountSecrets" ];
-      };
-      agenixRoot.deps = [ "ensureSystemPathsExist" ];
+    # system.activationScripts = let
+    #   ensureSystemExistsScript = lib.concatStringsSep "\n"
+    #     (map (path: ''mkdir -p "${path}"'')
+    #       config.asdf.core.zfs.ensureSystemExists);
+    #   ensureHomeExistsScript = lib.concatStringsSep "\n" (map (path:
+    #     ''
+    #       mkdir -p "/home/hakanssn/${path}"; chown hakanssn:users /home/hakanssn/${path};'')
+    #     config.asdf.core.zfs.ensureHomeExists);
+    # in {
+    #   ensureSystemPathsExist = {
+    #     text = ensureSystemExistsScript;
+    #     deps = [ "agenixMountSecrets" ];
+    #   };
+    #   agenixRoot.deps = [ "ensureSystemPathsExist" ];
 
-      ensureHomePathsExist = {
-        text = ''
-          mkdir -p /home/hakanssn/
-          ${ensureHomeExistsScript}
-        '';
-        deps = [ "users" "groups" ];
-      };
-      agenix.deps = [ "ensureHomePathsExist" ];
-    };
+    #   ensureHomePathsExist = {
+    #     text = ''
+    #       mkdir -p /home/hakanssn/
+    #       ${ensureHomeExistsScript}
+    #     '';
+    #     deps = [ "users" "groups" ];
+    #   };
+    #   agenix.deps = [ "ensureHomePathsExist" ];
+    # };
   };
 }

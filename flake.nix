@@ -63,6 +63,7 @@
         ];
       };
       hosts = {
+        falconia.modules = [ ./machines/falconia ];
         gattsu.modules = [ ./machines/gattsu ];
         rickert.modules = [ ./machines/rickert ];
       };
