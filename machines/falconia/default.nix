@@ -20,6 +20,7 @@
         fqdn = "hakanssn.com";
         options = {};
       }];
+      mail.enable = true;
     };
   };
 

@@ -1,5 +1,5 @@
 { ... }:
 
 {
-  imports = [ ./nginx ];
+  imports = [ ./nginx ./mail ];
 }
