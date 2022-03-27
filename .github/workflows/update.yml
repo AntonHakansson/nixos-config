@@ -13,6 +13,7 @@ jobs:
       - uses: cachix/install-nix-action@v16
       - run: nix flake update
       - run: nix flake check
+      - run: nix build -L --no-link .#nixosConfigurations.gattsu.config.system.build.toplevel
       - uses: stefanzweifel/git-auto-commit-action@v4.14.0
         with:
           commit_message: "bump"
