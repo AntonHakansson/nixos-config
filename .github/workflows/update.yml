@@ -13,6 +13,6 @@ jobs:
       - uses: cachix/install-nix-action@v16
       - run: nix flake update
       - run: nix flake check
-      - uses: stefanzweifel/git-auto-commit-action@v4.13.1
+      - uses: stefanzweifel/git-auto-commit-action@v4.14.0
         with:
           commit_message: "bump"
