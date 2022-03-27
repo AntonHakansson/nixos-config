@@ -21,6 +21,7 @@
         options = {};
       }];
       mail.enable = true;
+      nextcloud.enable = true;
     };
   };
 

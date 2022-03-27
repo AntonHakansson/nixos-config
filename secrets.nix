@@ -16,4 +16,6 @@ in {
 
   "secrets/authorized_keys/hakanssn.age".publicKeys = hosts ++ users;
   "secrets/authorized_keys/root.age".publicKeys = hosts ++ users;
+
+  "secrets/passwords/services/nextcloud-admin.age".publicKeys = [ falconia ] ++ users;
 }
