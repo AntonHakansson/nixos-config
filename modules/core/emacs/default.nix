@@ -2,6 +2,7 @@
 
 {
   options.asdf.core.emacs = {
+    enable = lib.mkOption { default = false; };
     doomEmacsRevision =
       lib.mkOption { default = "5e6689fe5e4307476e518441d99ecdd1baf3255e"; };
     package = lib.mkOption {
@@ -35,11 +36,8 @@
       fi
       exec ${config.asdf.core.emacs.package}/bin/emacs --daemon
     '';
-  in {
-    asdf.core.zfs.homeCacheLinks = [
-      ".config/emacs"
-      ".local/share/doom"
-    ];
+  in lib.mkIf config.asdf.core.emacs.enable {
+    asdf.core.zfs.homeCacheLinks = [ ".config/emacs" ".local/share/doom" ];
 
     home-manager.users.hakanssn = { lib, ... }: {
       home = {

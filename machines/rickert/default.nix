@@ -10,6 +10,7 @@
         encrypted = true;
         rootDataset = "rpool/local/root";
       };
+      emacs.enable = true;
     };
     development = {
       enable = true;
