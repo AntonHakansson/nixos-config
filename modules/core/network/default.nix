@@ -1,5 +1,5 @@
 { config, lib, ... }: {
-  options.asdf.core.network = { enable = lib.mkOption { default = false; }; };
+  options.asdf.core.network.enable = lib.mkEnableOption "wireless";
 
   config = lib.mkIf config.asdf.core.network.enable {
     networking.wireless = {

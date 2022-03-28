@@ -1,10 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.terminal.enable = lib.mkOption {
-    default = false;
-    example = true;
-  };
+  options.asdf.graphical.terminal.enable = lib.mkEnableOption "terminal";
 
   config = lib.mkIf config.asdf.graphical.terminal.enable {
     home-manager.users.hakanssn = { pkgs, ... }: {

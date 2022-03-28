@@ -1,17 +1,12 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./audio ./firefox ./mail ./sway ./syncthing ./terminal ./theme ./xdg ];
+  imports =
+    [ ./audio ./firefox ./mail ./sway ./syncthing ./terminal ./theme ./xdg ];
 
   options.asdf.graphical = {
-    enable = lib.mkOption {
-      default = false;
-      example = true;
-    };
-    laptop = lib.mkOption {
-      default = false;
-      example = true;
-    };
+    enable = lib.mkEnableOption "graphical environment";
+    laptop = lib.mkEnableOption "laptop configuration";
   };
 
   config = lib.mkIf config.asdf.graphical.enable {

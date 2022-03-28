@@ -25,7 +25,6 @@
         extraConfig = {
           core = { whitespace = "trailing-space"; };
           github.user = "AntonHakansson";
-          # tag.gpgSign = true;
 
           # Aliases
           url."https://github.com/".insteadOf = "gh:";

@@ -1,10 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.theme.enable = lib.mkOption {
-    default = false;
-    example = true;
-  };
+  options.asdf.graphical.theme.enable = lib.mkEnableOption "theme";
 
   config = lib.mkIf config.asdf.graphical.theme.enable {
     fonts = {

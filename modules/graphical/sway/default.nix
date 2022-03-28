@@ -8,10 +8,7 @@ let
   status-configuration =
     import ./status-configuration.nix { inherit pkgs lib config; };
 in {
-  options.asdf.graphical.sway.enable = lib.mkOption {
-    default = false;
-    example = true;
-  };
+  options.asdf.graphical.sway.enable = lib.mkEnableOption "swaywm";
 
   config = lib.mkIf config.asdf.graphical.sway.enable {
     services.dbus.packages = with pkgs; [ dconf ];

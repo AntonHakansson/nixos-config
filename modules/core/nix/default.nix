@@ -32,19 +32,13 @@ let
   };
 in {
   options.asdf.core.nix = {
-    enableDirenv = lib.mkOption {
-      default = true;
-      example = false;
-    };
+    enableDirenv = lib.mkOption { default = true; };
     unfreePackages = lib.mkOption {
       default = [ ];
       example = [ "teams" ];
     };
     # Note that this is only enabled for hakanssn, until https://github.com/bennofs/nix-index/issues/143 is resolved.
-    enableNixIndex = lib.mkOption {
-      default = true;
-      example = false;
-    };
+    enableNixIndex = lib.mkOption { default = true; };
   };
 
   config = {

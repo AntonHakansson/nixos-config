@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }: {
   options.asdf.core.zfs = {
-    encrypted = lib.mkOption {
-      default = false;
-      example = true;
-    };
+    encrypted = lib.mkEnableOption "zfs request credentials";
 
     systemCacheLinks = lib.mkOption { default = [ ]; };
     systemDataLinks = lib.mkOption { default = [ ]; };

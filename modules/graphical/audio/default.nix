@@ -1,10 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.audio.enable = lib.mkOption {
-    default = false;
-    example = true;
-  };
+  options.asdf.graphical.audio.enable = lib.mkEnableOption "audio";
 
   config = lib.mkIf config.asdf.graphical.audio.enable {
     asdf.core.zfs.homeCacheLinks = [ ".local/state/wireplumber" ];
