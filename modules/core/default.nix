@@ -17,13 +17,12 @@
 
     system = {
       stateVersion = config.asdf.stateVersion;
-      # TODO
-      # autoUpgrade = {
-      #   enable = true;
-      #   flake = "github:AntonHakansson/nixos-config";
-      #   dates = "01/4:00";
-      #   randomizedDelaySec = "10min";
-      # };
+      autoUpgrade = {
+        enable = true;
+        flake = "github:AntonHakansson/nixos-config";
+        dates = "01/4:00";
+        randomizedDelaySec = "10min";
+      };
     };
     home-manager.users = {
       hakanssn = { ... }: { home.stateVersion = config.asdf.stateVersion; };
