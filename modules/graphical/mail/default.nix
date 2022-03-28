@@ -5,7 +5,7 @@
     notifyScript = name:
       pkgs.writeShellScript "notify_${name}_mail" ''
         unseen_count=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
-        ${pkgs.libnotify}/bin/notify-send -t 5000 'New ${name} mail arrived ($unseen_count)'
+        ${pkgs.libnotify}/bin/notify-send -t 5000 "New ${name} mail arrived ($unseen_count)"
       '';
   in {
     asdf.core.zfs.homeDataLinks = [ "mail" ];
