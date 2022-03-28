@@ -63,7 +63,6 @@
     opengl.extraPackages = with pkgs; [
       vaapiVdpau
       libvdpau-va-gl
-      intel-media-driver
     ];
     nvidia = { package = config.boot.kernelPackages.nvidiaPackages.beta; };
   };
