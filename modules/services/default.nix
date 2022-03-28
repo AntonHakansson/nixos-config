@@ -1,5 +1,5 @@
 { ... }:
 
 {
-  imports = [ ./nextcloud ./nginx ./mail ];
+  imports = [ ./nextcloud ./nginx ./mail ./syncthing ];
 }

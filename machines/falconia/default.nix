@@ -22,6 +22,7 @@
       }];
       mail.enable = true;
       nextcloud.enable = true;
+      syncthing.enable = true;
     };
   };
 

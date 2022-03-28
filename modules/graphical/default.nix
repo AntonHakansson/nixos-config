@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./audio ./firefox ./mail ./sway ./terminal ./theme ./xdg ];
+  imports = [ ./audio ./firefox ./mail ./sway ./syncthing ./terminal ./theme ./xdg ];
 
   options.asdf.graphical.enable = lib.mkOption {
     default = false;

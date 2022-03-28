@@ -19,4 +19,6 @@ in {
   "secrets/passwords/mail/antonhakanssn.age".publicKeys = hosts ++ users;
 
   "secrets/passwords/services/nextcloud-admin.age".publicKeys = [ falconia ] ++ users;
+
+  "secrets/passwords/services/syncthing-basic-auth.age".publicKeys = [ falconia ] ++ users;
 }

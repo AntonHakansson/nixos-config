@@ -16,6 +16,9 @@
       enable = true;
       git.email = "anton.hakansson98@gmail.com";
     };
-    graphical = { enable = true; };
+    graphical = {
+      enable = true;
+      syncthing.enable = true;
+    };
   };
 }
