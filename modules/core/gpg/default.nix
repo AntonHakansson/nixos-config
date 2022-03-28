@@ -14,10 +14,6 @@
         pinentryFlavor = pinentryFlavor;
       };
       home-manager.users.hakanssn = { lib, ... }: {
-        home.activation.fixPermissionsCommands =
-          lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            $DRY_RUN_CMD chmod u=rwX,go= /home/hakanssn/.gnupg
-          '';
         programs.gpg.enable = true;
         services.gpg-agent = {
           enable = true;
