@@ -1,6 +1,15 @@
 { config, lib, pkgs, isLaptop ? false, ... }:
-
-pkgs.writeText "configuration.toml" (''
+let
+  mail-status = pkgs.writeShellScript "mail-status" ''
+    mails=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
+    if [ "$mails" -gt 0 ]
+    then
+      echo "{ \"state\": \"Info\", \"text\": \"✉️ $mails\" }"
+    else
+      echo "{ \"state\": \"Idle\", \"text\": \"\" }"
+    fi
+  '';
+in pkgs.writeText "configuration.toml" (''
   [theme]
   name = "gruvbox-light"
 
@@ -37,7 +46,14 @@ pkgs.writeText "configuration.toml" (''
   block = "sound"
 
   [[block]]
+  block = "custom"
+  json = true
+  command = "${mail-status}"
+  interval = 60
+  # on_click = "mbsync -a && emacsclient --eval \"(mu4e-update-index)\""
+
+  [[block]]
   block = "time"
-  interval = 1
+  interval = 5
   format = "%a %d/%m %H:%M"
 '')

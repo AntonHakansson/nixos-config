@@ -36,14 +36,12 @@ in {
         '';
       };
 
-      # Wayland equivalent for tools like autorandr
-      # services.kanshi = {
-      #   enable = true;
-      # };
+      # Wayland equivalent autorandr
+      services.kanshi = { enable = true; };
 
       services.wlsunset = {
         enable = true;
-        latitude =  "57.7";
+        latitude = "57.7";
         longitude = "11.9";
       };
 
@@ -159,10 +157,6 @@ in {
           workspace 1
           exec ${config.asdf.graphical.firefox.package}/bin/firefox
         '';
-        # + (lib.optionalString config.asdf.programs.element.enable ''
-        #   workspace 3
-        #   exec ${pkgs.element-desktop}/bin/element-desktop
-        # '');
         extraSessionCommands = ''
           export XDG_SESSION_TYPE=wayland
           export XDG_CURRENT_DESKTOP=sway

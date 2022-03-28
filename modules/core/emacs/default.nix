@@ -107,15 +107,6 @@
         source = "${tangledPrivateDir}/";
         recursive = true;
       };
-      # xdg.configFile."doom/config.el" = {
-      #   source = "${tangledPrivateDir}/config.el";
-      # };
-      # xdg.configFile."doom/init.el" = {
-      #   source = "${tangledPrivateDir}/init.el";
-      # };
-      # xdg.configFile."doom/packages.el" = {
-      #   source = "${tangledPrivateDir}/packages.el";
-      # };
     };
     fonts.fonts = [ pkgs.emacs-all-the-icons-fonts ];
   };
