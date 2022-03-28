@@ -2,6 +2,8 @@
 
 {
   config = let
+    passwordScript = pkgs.writeShellScript "get_mail_password"
+      ''${pkgs.pass}/bin/pass show "$@" | head -n1 | tr -d "\n"'';
     notifyScript = name:
       pkgs.writeShellScript "notify_${name}_mail" ''
         unseen_count=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
@@ -20,9 +22,8 @@
             address = "anton@hakanssn.com";
             realName = "Anton Håkansson";
             userName = "anton@hakanssn.com";
-            passwordCommand = "${pkgs.coreutils}/bin/cat ${
-                config.age.secrets."passwords/mail/antonhakanssn".path
-              }";
+            passwordCommand = "${passwordScript} mail/personal";
+
             imap = {
               host = "mail.hakanssn.com";
               port = 993;
@@ -32,7 +33,7 @@
               enable = true;
               boxes = [ "Inbox" ];
               onNotify = "${pkgs.isync}/bin/mbsync personal:Inbox";
-              onNotifyPost = "mu index -m /home/hakanssn/mail && ${notifyScript "personal"}";
+              onNotifyPost = "mu index && ${notifyScript "personal"}";
             };
             mbsync = {
               enable = true;
@@ -63,10 +64,6 @@
         imapnotify.enable = true;
         mbsync.enable = true;
       };
-    };
-    age.secrets."passwords/mail/antonhakanssn" = {
-      file = ../../../secrets/passwords/mail/antonhakanssn.age;
-      owner = "hakanssn";
     };
   };
 }

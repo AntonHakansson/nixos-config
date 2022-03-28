@@ -1,8 +1,17 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports =
-    [ ./audio ./firefox ./mail ./sway ./syncthing ./terminal ./theme ./xdg ];
+  imports = [
+    ./audio
+    ./firefox
+    ./mail
+    ./pass
+    ./sway
+    ./syncthing
+    ./terminal
+    ./theme
+    ./xdg
+  ];
 
   options.asdf.graphical = {
     enable = lib.mkEnableOption "graphical environment";
@@ -13,8 +22,9 @@
     users.users.hakanssn.extraGroups = [ "input" "video" ];
     asdf = {
       graphical = {
-        firefox.enable = lib.mkDefault true;
         audio.enable = lib.mkDefault true;
+        firefox.enable = lib.mkDefault true;
+        pass.enable = lib.mkDefault true;
         sway.enable = lib.mkDefault true;
         terminal.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
