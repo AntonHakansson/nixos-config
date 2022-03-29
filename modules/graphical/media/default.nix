@@ -13,8 +13,12 @@
   config = {
     home-manager.users.hakanssn = { ... }: {
       home.packages = with pkgs;
-        (lib.optionals config.asdf.graphical.media.spotify.enable [ ncspot ])
-        ++ (lib.optionals config.asdf.graphical.media.recording.enable
+        (lib.optionals config.asdf.graphical.media.spotify.enable [
+          (ncspot.override {
+            withALSA = false;
+            withPulseAudio = true;
+          })
+        ]) ++ (lib.optionals config.asdf.graphical.media.recording.enable
           [ obs-studio ]);
     };
   };

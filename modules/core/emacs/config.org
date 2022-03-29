@@ -989,11 +989,23 @@ Doom theme's extra fontification is more problematic than helpful.
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail
-        mu4e-sent-folder "/Sent"
-        mu4e-trash-folder "/Trash"
-        mu4e-drafts-folder "/Drafts"
-        mu4e-refile-folder "/Archive"))
+        message-send-mail-function #'message-send-mail-with-sendmail)
+
+  (set-email-account! "personal"
+                      '((mu4e-sent-folder       . "/personal/Sent")
+                        (mu4e-drafts-folder     . "/personal/Drafts")
+                        (mu4e-trash-folder      . "/personal/Trash")
+                        (mu4e-refile-folder     . "/personal/Archive")
+                        (smtpmail-smtp-user     . "anton@hakanssn.com"))
+                      t)
+  (set-email-account! "webmaster"
+                      '((mu4e-sent-folder       . "/webmaster/Sent")
+                        (mu4e-drafts-folder     . "/webmaster/Drafts")
+                        (mu4e-trash-folder      . "/webmaster/Trash")
+                        (mu4e-refile-folder     . "/webmaster/Archive")
+                        (smtpmail-smtp-user     . "webmaster@hakanssn.com"))
+                      t)
+  )
 #+end_src
 ** Calculator
 *** Defaults

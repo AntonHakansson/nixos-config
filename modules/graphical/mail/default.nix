@@ -53,6 +53,40 @@
             };
             mu.enable = true;
           };
+          webmaster = {
+            address = "webmaster@hakanssn.com";
+            realName = "Anton Håkansson";
+            userName = "webmaster@hakanssn.com";
+            passwordCommand = "${passwordScript} mail/webmaster";
+            imap = {
+              host = "mail.hakanssn.com";
+              port = 993;
+              tls.enable = true;
+            };
+            imapnotify = {
+              enable = true;
+              boxes = [ "Inbox" ];
+              onNotify = "${pkgs.isync}/bin/mbsync webmaster:Inbox";
+              onNotifyPost = "mu index && ${notifyScript "webmaster"}";
+            };
+            mbsync = {
+              enable = true;
+              create = "both";
+              expunge = "both";
+              remove = "both";
+              flatten = ".";
+            };
+            msmtp.enable = true;
+            smtp = {
+              host = "mail.hakanssn.com";
+              port = 587;
+              tls = {
+                enable = true;
+                useStartTls = true;
+              };
+            };
+            mu.enable = true;
+          };
         };
       };
       programs = {

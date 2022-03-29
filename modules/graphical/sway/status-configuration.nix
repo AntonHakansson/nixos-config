@@ -50,7 +50,7 @@ in pkgs.writeText "configuration.toml" (''
   json = true
   command = "${mail-status}"
   interval = 60
-  # on_click = "mbsync -a && emacsclient --eval \"(mu4e-update-index)\""
+  on_click = "mbsync -a && emacsclient --eval \"(mu4e-update-index)\""
 
   [[block]]
   block = "time"

@@ -53,12 +53,17 @@
       # nix run nixpkgs.apacheHttpd -c htpasswd -nbB "" "super secret password" | cut -d: -f2
       loginAccounts = {
         "anton@hakanssn.com" = {
-          hashedPassword =
-            "$2y$05$eG.yuSDKHx6aZZZhWbZ8Uuyr5yNWtTWR8DA1dZBn/th4kzyoYMFrS";
+          hashedPasswordFile =
+            config.age.secrets."passwords/services/mail/anton@hakanssn.com".path;
         };
         "webmaster@hakanssn.com" = {
-          hashedPassword =
-            "$2y$05$KxHSaRSluJtNYeQccl5T0.ErdRZfn3qIa.AqNnAMxa19QdNDx6i9G";
+          hashedPasswordFile =
+            config.age.secrets."passwords/services/mail/webmaster@hakanssn.com".path;
+        };
+        "postbot@hakanssn.com" = {
+          hashedPasswordFile = config.age.secrets."passwords/services/mail/postbot@hakanssn.com".path;
+          # Allow to send from arbitrary email addresses from @hakanssn.com domains.
+          aliases = [ "@hakanssn.com" ];
         };
       };
 
@@ -75,6 +80,15 @@
       # whether to scan inbound emails for viruses (note that this requires at least
       # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
       virusScanning = false;
+    };
+
+    age.secrets = {
+      "passwords/services/mail/anton@hakanssn.com".file =
+        ../../../secrets/passwords/services/mail/anton_at_hakanssn.com.age;
+      "passwords/services/mail/webmaster@hakanssn.com".file =
+        ../../../secrets/passwords/services/mail/webmaster_at_hakanssn.com.age;
+      "passwords/services/mail/postbot@hakanssn.com".file =
+        ../../../secrets/passwords/services/mail/postbot_at_hakanssn.com.age;
     };
   };
 }

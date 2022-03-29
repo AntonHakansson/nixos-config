@@ -16,8 +16,14 @@ in {
   "secrets/authorized_keys/hakanssn.age".publicKeys = hosts ++ users;
   "secrets/authorized_keys/root.age".publicKeys = hosts ++ users;
 
+  "secrets/passwords/network.age".publicKeys = hosts ++ users;
+
+  "secrets/passwords/services/mail/anton_at_hakanssn.com.age".publicKeys = [ falconia ] ++ users;
+  "secrets/passwords/services/mail/webmaster_at_hakanssn.com.age".publicKeys = [ falconia ] ++ users;
+  "secrets/passwords/services/mail/postbot_at_hakanssn.com.age".publicKeys = [ falconia ] ++ users;
+  "secrets/passwords/services/mail/ssmtp-webmaster-pass.age".publicKeys = hosts ++ users;
+
   "secrets/passwords/services/nextcloud-admin.age".publicKeys = [ falconia ] ++ users;
 
   "secrets/passwords/services/syncthing-basic-auth.age".publicKeys = [ falconia ] ++ users;
-  "secrets/passwords/network.age".publicKeys = hosts ++ users;
 }
