@@ -11,6 +11,8 @@
   };
 
   config = {
+    asdf.core.zfs.homeCacheLinks = [ ".config/obs-studio" ];
+
     home-manager.users.hakanssn = { ... }: {
       home.packages = with pkgs;
         (lib.optionals config.asdf.graphical.media.spotify.enable [
