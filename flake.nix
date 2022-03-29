@@ -73,7 +73,7 @@
           packages = customPackages pkgs.callPackage;
           devShell = pkgs.mkShell {
             buildInputs =
-              [ pkgs.nixpkgs-fmt agenix.defaultPackage.x86_64-linux ];
+              [ pkgs.nixpkgs-fmt agenix.defaultPackage.x86_64-linux pkgs.cachix ];
           };
         };
     };
