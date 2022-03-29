@@ -5,6 +5,7 @@
     ./audio
     ./firefox
     ./mail
+    ./media
     ./pass
     ./sway
     ./syncthing
@@ -29,11 +30,17 @@
         terminal.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
+        media = {
+          documents.enable = lib.mkDefault true;
+          mpv.enable = lib.mkDefault true;
+          recording.enable = lib.mkDefault true;
+          spotify.enable = lib.mkDefault true;
+        };
       };
     };
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ brave mpv okular ranger youtube-dl ];
+      home.packages = with pkgs; [ ranger youtube-dl ];
     };
   };
 }
