@@ -7,6 +7,7 @@ let
   };
   status-configuration =
     import ./status-configuration.nix { inherit pkgs lib config; };
+  c = config.asdf.graphical.theme.colorscheme.colors;
 in {
   options.asdf.graphical.sway.enable = lib.mkEnableOption "swaywm";
 
@@ -54,30 +55,6 @@ in {
             style = "Normal";
           };
           bars = [{
-            colors = {
-              background = "#ffffff";
-              statusline = "#000000";
-              activeWorkspace = {
-                border = "#f2eff3";
-                background = "#f2eff3";
-                text = "#000000";
-              };
-              focusedWorkspace = {
-                border = "#6aaeff";
-                background = "#6aaeff";
-                text = "#000000";
-              };
-              inactiveWorkspace = {
-                border = "#ffffff";
-                background = "#ffffff";
-                text = "#000000";
-              };
-              urgentWorkspace = {
-                border = "#ff8892";
-                background = "#ff8892";
-                text = "#000000";
-              };
-            };
             fonts = {
               names = [ "Fira Code" ];
               size = 9.0;
@@ -89,6 +66,17 @@ in {
             extraConfig = ''
               status_padding 0
               icon_theme Arc
+              colors {
+                background ${c.base00}
+                separator  ${c.base01}
+                statusline ${c.base04}
+                #                   Border      BG          Text
+                focused_workspace   ${c.base05} ${c.base0D} ${c.base00}
+                active_workspace    ${c.base05} ${c.base03} ${c.base00}
+                inactive_workspace  ${c.base03} ${c.base01} ${c.base05}
+                urgent_workspace    ${c.base08} ${c.base08} ${c.base00}
+                binding_mode        ${c.base00} ${c.base0A} ${c.base00}
+              }
             '';
           }];
           startup = [{
@@ -147,6 +135,12 @@ in {
           };
         };
         extraConfig = ''
+          #                       Border      BG          Text        Ind         Child Border
+          client.focused          ${c.base05} ${c.base0D} ${c.base00} ${c.base0D} ${c.base0D}
+          client.focused_inactive ${c.base01} ${c.base01} ${c.base05} ${c.base03} ${c.base01}
+          client.unfocused        ${c.base01} ${c.base00} ${c.base05} ${c.base01} ${c.base01}
+          client.urgent           ${c.base08} ${c.base08} ${c.base00} ${c.base08} ${c.base08}
+
           no_focus [title="Microsoft Teams Notification"]
 
           default_border pixel
