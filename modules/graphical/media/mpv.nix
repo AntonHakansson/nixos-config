@@ -6,9 +6,6 @@
       programs.mpv = {
         enable = true;
         config = {
-          # Uses GPU-accelerated video output by default.
-          vo = "gpu";
-
           # Saves the seekbar position on exit
           save-position-on-quit = "yes";
 
@@ -39,7 +36,7 @@
         };
         bindings = {
           l = "seek 5";
-          h = "seek - 5";
+          h = "seek -5";
 
           ">" = "add speed 0.25";
           "<" = "add speed -0.25";
