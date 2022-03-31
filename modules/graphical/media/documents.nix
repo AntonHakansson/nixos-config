@@ -52,6 +52,7 @@
         map i recolor
         map p print
       '';
+      xdg.configFile."zathura/zathurarc".text =
     };
   };
 }
