@@ -7,7 +7,10 @@
     asdf.core.zfs.homeDataLinks = [ ".config/syncthing" ];
 
     home-manager.users.hakanssn = { pkgs, ... }: {
-      services.syncthing.enable = true;
+      services.syncthing = {
+        enable = true;
+        extraOptions = [ "--no-default-folder" ];
+      };
     };
   };
 }
