@@ -1,7 +1,19 @@
-#+title: NixOS config
+#+title: NixOS configuration
 #+author: Anton Hakansson
 #+date: 2022-03-20
 
+[[https://github.com/AntonHakansson/dotfiles/actions/workflows/check.yml][https://github.com/AntonHakansson/nixos-config/actions/workflows/cachix.yml/badge.svg]]
+
+* Filesystem quirks
+On boot the root mount(=rpool/local/root=) gets wiped to its =@blank= snapshot.
+To preserve directories, mount them from either the =rpool/safe/data= dataset mounted to =/data= or the =rpool/local/cache= dataset mounted to =/cache=.
+- =/data= is for files that we want to preserve and backup.
+- =/cache= is for files that we want to preserve.
+
+Run src_sh{zfsdiff} tool to discover directories that will be erased on next boot.
+
+References:
+- [[https://grahamc.com/blog/erase-your-darlings][Erase your darlings: immutable infrastructure for mutable systems]]
 * First time setup
 See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and advanced options for configuring zpool.
 
@@ -9,25 +21,25 @@ See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and a
    - Boot
    - Swap
    - ZFS
-    #+begin_src bash
-    disk=/dev/disk/by-id/foo
-    sudo parted "$disk" -- mklabel gpt
-    sudo parted "$disk" -- mkpart primary 512MiB -8GiB # zfs
-    sudo parted "$disk" -- mkpart primary linux-swap -8GiB 100% # swap
-    sudo parted "$disk" -- mkpart ESP fat32 1MiB 512MiB # boot
-    sudo parted "$disk" -- set 3 esp on
+   #+begin_src sh
+   disk=/dev/disk/by-id/foo
+   sudo parted "$disk" -- mklabel gpt
+   sudo parted "$disk" -- mkpart primary 512MiB -8GiB # zfs
+   sudo parted "$disk" -- mkpart primary linux-swap -8GiB 100% # swap
+   sudo parted "$disk" -- mkpart ESP fat32 1MiB 512MiB # boot
+   sudo parted "$disk" -- set 3 esp on
 
-    sudo mkswap -L swap "${disk}-part2"
-    sudo mkfs.fat -F 32 -n EFI "${disk}-part3"
-    #+end_src
+   sudo mkswap -L swap "${disk}-part2"
+   sudo mkfs.fat -F 32 -n EFI "${disk}-part3"
+   #+end_src
 2. Create ZPool:
-   #+begin_src bash
+   #+begin_src sh
    zpool create -O mountpoint=none -O encryption=aes-256-gcm -O keyformat=passphrase rpool "${disk}-part1"
    #+end_src
-3. Create datasets:
-   #+begin_src bash
-   zfs create -o mountpoint=legacy rpool/local # ?
-   zfs create -o mountpoint=legacy rpool/safe  # ?
+3. Create datasets and mount them:
+   #+begin_src sh
+   zfs create -o mountpoint=legacy rpool/local
+   zfs create -o mountpoint=legacy rpool/safe
 
    zfs create -o mountpoint=legacy rpool/local/root
    zfs snapshot rpool/local/root@blank
@@ -39,22 +51,21 @@ See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and a
    zfs set compression=lz4 rpool/local/cache
    zfs create -o mountpoint=legacy rpool/safe/data
    zfs set compression=lz4 rpool/local/data
+
+   mount -t zfs rpool/local/root /mnt
+
+   mkdir -p /mnt/boot
+   mount "${disk}-part3" /mnt/boot
+
+   mkdir -p /mnt/nix/store
+   mount -t zfs rpool/local/nix /mnt/nix
+   mount -t zfs rpool/local/nix-store /mnt/nix/store
+
+   mkdir -p /mnt/cache
+   mount -t zfs rpool/local/cache /mnt/cache
+
+   mkdir -p /mnt/data
+   mount -t zfs rpool/local/data /mnt/data
    #+end_src
-4. Set src_nix{networking.hostId} to src_bash{cat /etc/machine-id | head -c 8}
+4. Set src_nix{networking.hostId} to src_sh{cat /etc/machine-id | head -c 8}
 
-* Filesystem quirks
-On startup the root dataset(=rpool/local/root=) gets wiped to its =@blank= snapshot.
-Important directories therefore have to be mounted\* from =rpool/safe/data= to the home directory by setting =config.asdf.core.zfs.homeLinks=.
-This gives me a fresh system smell each boot and marking the persistent directories as either =cache= or =data= makes it easy to backup only what matters.
-
-=systemd-mount= units are responsible for mounting =homeLinks=.
-One caveat with this approach is that it creates non-existing directories  with root as the owner.
-For now I manually change the directory owner with src_bash{chown hakanssn:users /data/${path}} etc.
-
-To discover directories that will be removed on next boot run:
-#+begin_src bash
-zfsdiff
-#+end_src
-
-References:
-- [[https://grahamc.com/blog/erase-your-darlings][Erase your darlings: immutable infrastructure for mutable systems]]
