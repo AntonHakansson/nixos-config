@@ -7,7 +7,7 @@
       lib.mkOption { default = "5e6689fe5e4307476e518441d99ecdd1baf3255e"; };
     package = lib.mkOption {
       readOnly = true;
-      default = ((pkgs.emacsPackagesFor pkgs.emacsGcc).emacsWithPackages
+      default = ((pkgs.emacsPackagesFor pkgs.emacsPgtkGcc).emacsWithPackages
         (epkgs: [ epkgs.vterm ]));
     };
   };
