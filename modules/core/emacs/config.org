@@ -419,12 +419,18 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
       org-catch-invisible-edits 'smart
       org-export-with-sub-superscripts '{} ; don't treat lone _ or ^ as sub/superscripts, require _{} or ^{}
       org-roam-directory (concat org-directory "/roam")
-      )
+      org-agenda-files
+       (mapcar (lambda (f) (concat org-directory f))
+         '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org")))
 
 (map! :map org-mode-map :n "SPC m l /" #'counsel-org-link)
 
-(map! :map org-mode-map :leader (:prefix-map ("=" . "calc") "=" #'calc-dispatch
-      "c" #'calc "q" #'quick-calc "g" #'calc-grab-region))
+(map! :map org-mode-map
+       :leader (:prefix-map ("=" . "calc")
+                            "=" #'calc-dispatch
+                            "c" #'calc
+                            "q" #'quick-calc
+                            "g" #'calc-grab-region))
 #+end_src
 *** Functionality
 **** Spellcheck
