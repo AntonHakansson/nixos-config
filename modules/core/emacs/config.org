@@ -419,9 +419,7 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
       org-catch-invisible-edits 'smart
       org-export-with-sub-superscripts '{} ; don't treat lone _ or ^ as sub/superscripts, require _{} or ^{}
       org-roam-directory (concat org-directory "/roam")
-      org-agenda-files
-       (mapcar (lambda (f) (concat org-directory f))
-         '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org")))
+      )
 
 (map! :map org-mode-map :n "SPC m l /" #'counsel-org-link)
 
@@ -431,7 +429,40 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
                             "c" #'calc
                             "q" #'quick-calc
                             "g" #'calc-grab-region))
+
+(setq +org-capture-todo-file "gtd/inbox.org"
+      org-agenda-files
+        (mapcar (lambda (f) (concat org-directory f))
+          '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org"))
+      org-capture-templates
+        '(("t" "Todo [inbox]" entry
+            (file+headline +org-capture-todo-file "Tasks")
+            "* TODO %i%?")
+        ("T" "Tickler" entry
+            (file+headline "gtd/tickler.org" "Tickler")
+            "* %i%? \n %U")
+        ("n" "Personal notes" entry
+            (file+headline +org-capture-notes-file "Inbox")
+            "* %u %?\n%i\n%a" :prepend t)
+        ("j" "Journal" entry
+            (file+olp+datetree +org-capture-journal-file)
+            "* %U %?\n%i\n%a" :prepend t)
+        ("p" "Templates for projects")
+        ("pt" "Project-local todo" entry
+            (file+headline +org-capture-project-todo-file "Inbox")
+            "* TODO %?\n%i\n%a" :prepend t)
+        ("pn" "Project-local notes" entry
+            (file+headline +org-capture-project-notes-file "Inbox")
+            "* %U %?\n%i\n%a" :prepend t)
+        ("pc" "Project-local changelog" entry
+            (file+headline +org-capture-project-changelog-file "Unreleased")
+            "* %U %?\n%i\n%a" :prepend t)
+        ("o" "Centralized templates for projects")
+        ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
+        ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
+        ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
 #+end_src
+
 *** Functionality
 **** Spellcheck
 Turn on spellchecking.
