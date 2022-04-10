@@ -4,7 +4,7 @@
   options.asdf.core.emacs = {
     enable = lib.mkEnableOption "emacs";
     doomEmacsRevision =
-      lib.mkOption { default = "5e6689fe5e4307476e518441d99ecdd1baf3255e"; };
+      lib.mkOption { default = "7121e993ca1ccaf05bafbfe1c3d9f605fc7c0f78"; };
     package = lib.mkOption {
       readOnly = true;
       default = ((pkgs.emacsPackagesFor pkgs.emacsPgtkGcc).emacsWithPackages
