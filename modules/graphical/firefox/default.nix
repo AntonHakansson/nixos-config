@@ -121,6 +121,20 @@ in {
               "privacy.trackingprotection.socialtracking.enabled" = true;
               "security.identityblock.show_extended_validation" = true;
             };
+            bookmarks = {
+              wikipedia = {
+                url =
+                  "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
+              };
+              nixpkgs = {
+                url =
+                  "https://search.nixos.org/options?channel=unstable&type=packages&query=%s";
+              };
+              nixos-discourse = { url = "https://discourse.nixos.org/"; };
+              home-manager = {
+                url = "https://rycee.gitlab.io/home-manager/options.html";
+              };
+            };
           };
         };
       };
