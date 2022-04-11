@@ -23,9 +23,8 @@ let
     '';
   };
   ffPackage = pkgs.firefox.override {
-    extraNativeMessagingHosts = [ ff2mpv-host ];
-    pkcs11Modules = [ pkgs.eid-mw ];
     forceWayland = true;
+    extraNativeMessagingHosts = [ ff2mpv-host ];
     extraPolicies = {
       DisableFirefoxStudies = true;
       DisablePocket = true;
@@ -42,21 +41,6 @@ let
       };
     };
   };
-  zotero-connector =
-    pkgs.nur.repos.rycee.firefox-addons.buildFirefoxXpiAddon rec {
-      pname = "zotero-connector";
-      version = "5.0.92";
-      addonId = "zotero@chnm.gmu.edu";
-      url =
-        "https://download.zotero.org/connector/firefox/release/Zotero_Connector-${version}.xpi";
-      sha256 = "DfaDjjgJiSGJ0q9ScStAVRN3IcH8HY30K7IssuHZi2A=";
-      meta = with lib; {
-        homepage = "https://www.zotero.org";
-        description = "Save references to Zotero from your web browser";
-        license = licenses.agpl3;
-        platforms = platforms.all;
-      };
-    };
 in {
   options.asdf.graphical.firefox = {
     enable = lib.mkEnableOption "firefox";
@@ -83,25 +67,30 @@ in {
           extensions = with pkgs.nur.repos.rycee.firefox-addons; [
             bitwarden
             browserpass
-            ff2mpv
-            zotero-connector
-            umatrix
-
             darkreader
+            ff2mpv
             vimium
+            swedish-dictionary
 
+            tree-style-tab
+            tst-tab-search
+
+            bypass-paywalls-clean
             decentraleyes
-            https-everywhere
-            ublock-origin
             i-dont-care-about-cookies
+            ublock-origin
           ];
           profiles.hakanssn = {
-            id = 0;
+            isDefault = true;
             userChrome = builtins.readFile ./userChrome.css;
             settings = {
               "devtools.theme" = "dark";
-              "toolkit.legacyUserProfileCustomizations.stylesheets" =
-                true; # look for userChrome.css
+              # look for userChrome.css
+              "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+              # Resume the previous browser session
+              "browser.startup.page" = 3;
+              # Don't hide tabs/toolbar in fullscreen
+              "browser.fullscreen.autohide" = false;
 
               "browser.aboutConfig.showWarning" = false;
               "browser.contentblocking.category" = "custom";
@@ -111,9 +100,6 @@ in {
               "browser.safebrowsing.phishing.enabled" = false;
               "browser.shell.checkDefaultBrowser" = false;
               "browser.startup.homepage" = "about:blank";
-              "browser.startup.page" = 3; # Resume the previous browser session
-              "browser.fullscreen.autohide" =
-                false; # Don't hide tabs/toolbar in fullscreen
               "dom.security.https_only_mode_pbm" = true;
               "network.cookie.cookieBehavior" = 1;
               "privacy.annotate_channels.strict_list.enabled" = true;
