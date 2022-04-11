@@ -32,7 +32,6 @@ pass_options(){
   password_files=( "$prefix"/**/*.gpg )
   printf 'password %s\n' ${${password_files%.gpg}#$prefix/}
   printf 'username %s\n' ${${password_files%.gpg}#$prefix/}
-  printf 'otp %s\n' ${${password_files%.gpg}#$prefix/}
 }
 
 username() {
@@ -40,9 +39,6 @@ username() {
 }
 password() {
   swaymsg exec -- "@pass@/bin/pass show -c0 '$@'"
-}
-otp() {
-  swaymsg exec -- "@pass@/bin/pass otp -c '$@'"
 }
 
 record_options() {

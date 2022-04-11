@@ -6,9 +6,7 @@
   config = lib.mkIf config.asdf.graphical.pass.enable {
     nixpkgs.overlays = [
       (self: super: {
-        pass =
-          (super.pass.override { pass = super.pass-wayland; }).withExtensions
-          (ext: [ ext.pass-otp ]);
+        pass = (super.pass.override { pass = super.pass-wayland; });
       })
     ];
 
