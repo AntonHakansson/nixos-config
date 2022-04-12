@@ -256,24 +256,58 @@ irc                 ; how neckbeards socialize
 (setq-default history-length 1000)
 (setq-default prescient-history-length 1000)
 #+end_src
-*** Tabnine
-#+begin_src emacs-lisp :tangle packages.el
-(package! company-tabnine :recipe (:host github :repo "TommyX12/company-tabnine"))
-#+end_src
-
-#+begin_src emacs-lisp
-;; (use-package! company-tabnine
-;;   :after company
-  ;; :config
-  ;; (cl-pushnew 'company-tabnine (default-value 'company-backends))
-  ;; )
-#+end_src
 
 ** YASnippet
+:PROPERTIES:
+:header-args:snippet: :mkdirp t
+:END:
 Allow nested snippets.
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
 #+end_src
+
+*** org-mode
+
+#+begin_src snippet :tangle snippets/org-mode/__
+# -*- mode: snippet -*-
+# name: Org template
+# --
+#+title: ${1:`(s-titleized-words (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]-" "" (file-name-base (or buffer-file-name "new buffer"))))`}
+#+author: ${2:`(user-full-name)`}
+#+date: ${3:`(format-time-string "%Y-%m-%d")`}
+
+$0
+#+end_src
+
+#+begin_src snippet :tangle snippets/org-mode/inline_math
+# -*- mode: snippet -*-
+# name: inline math
+# key: m
+# condition: t
+# --
+\\( `%`$0 \\)
+#+end_src
+
+#+begin_src snippet :tangle snippets/org-mode/display_math
+# -*- mode: snippet -*-
+# name: display math
+# key: M
+# condition: t
+# --
+\\[ `%`$0 \\]
+#+end_src
+
+#+begin_src snippet :tangle snippets/org-mode/src
+# -*- mode: snippet -*-
+# name: #+begin_src
+# uuid: src
+# key: src
+# --
+#+begin_src ${1:`(or (+yas/org-last-src-lang) "?")`}
+`%`$0
+,#+end_src
+#+end_src
+
 ** Emacs Everywhere
 Easier to match with a =bspwm= rule.
 #+begin_src emacs-lisp
