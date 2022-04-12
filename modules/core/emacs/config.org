@@ -371,11 +371,25 @@ Fight the blank page!
      (?t    "\\text"          nil          t    nil  nil)
      (?a    "\\abs"           nil          t    nil  nil)))
 
-    (org-defkey org-cdlatex-mode-map (kbd ";") #'cdlatex-math-symbol)
-    (map! :map cdlatex-mode-map
-          :i ";" #'cdlatex-math-symbol)
+    ;; (org-defkey org-cdlatex-mode-map (kbd ";") #'cdlatex-math-symbol)
+    ;; (map! :map cdlatex-mode-map
+    ;;       :i ";" #'cdlatex-math-symbol)
   )
+
+(when EMACS28+
+  (add-hook 'latex-mode-hook #'TeX-latex-mode))
 #+end_src
+
+** Latex Auto activating snippets
+#+begin_src emacs-lisp :tangle packages.el
+(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package laas
+  :hook (LaTeX-mode . laas-mode))
+#+end_src
+
 ** Org
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :noweb-ref org-conf
