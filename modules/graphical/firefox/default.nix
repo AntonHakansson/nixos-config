@@ -106,7 +106,6 @@ in {
               "privacy.trackingprotection.enabled" = true;
               "privacy.trackingprotection.socialtracking.enabled" = true;
               "security.identityblock.show_extended_validation" = true;
-              "security.sandbox.content.level" = 3;
             };
             bookmarks = {
               wikipedia = {
