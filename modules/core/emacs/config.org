@@ -10,7 +10,6 @@
 #+end_src
 
 ** Better Defaults
-
 #+begin_src emacs-lisp
 (setq-default
  delete-by-moving-to-trash t)
@@ -446,18 +445,6 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
 #+end_src
-**** Evil Navigation
-#+begin_src emacs-lisp
-(package! org-evil-navigation :recipe (:repo "mskorzhinskiy/org-evil-navigation" :host github))
-#+end_src
-
-#+begin_src emacs-lisp :tangle config.el
-(map! :map org-mode-map
-  :n "C-h" #'org-evil-navigation-up
-  :n "C-l" #'org-evil-navigation-down
-  :n "C-j" #'org-evil-navigation-next
-  :n "C-k" #'org-evil-navigation-prev)
-#+end_src
 
 *** Defaults
 #+begin_src emacs-lisp :noweb-ref org-conf
@@ -512,6 +499,10 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 #+end_src
 
 *** Functionality
+**** LaTeX Export
+#+begin_src emacs-lisp
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
 **** Spellcheck
 Turn on spellchecking.
 #+begin_src emacs-lisp
@@ -725,34 +716,6 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
                 (url-unhex-string (plist-get (cadr context) :path)))))))
   )
 #+end_src
-**** inkscape
-#+begin_src emacs-lisp
-(defun my/inkscape-create (&optional use-default-filename)
-  (interactive "P")
-  (require 'org-download)
-  (let* ((basename (if (not use-default-filename) (read-string (format "Filename [%s]: " "figure.svg") nil nil "figure.svg") nil))
-         (dir org-download-image-dir)
-         (filepath (concat dir "/" (org-download-file-format-default basename))))
-    (make-directory dir t)
-    (when (not (file-exists-p filepath)) (start-process-shell-command "Inkscape" nil (format "inkscape -o %s" filepath))) ; create empty svg file
-    (start-process-shell-command "Inkscape" nil (format "inkscape %s" filepath)) ; open svg file
-    (org-download-insert-link basename filepath)
-    )
-  )
-(defun my/write-stylus-create (&optional use-default-filename)
-  (interactive "P")
-  (require 'org-download)
-  (let*((basename (if (not use-default-filename) (read-string (format "Filename [%s]: " "figure.svg") nil nil "figure.svg") nil))
-        (dir org-download-image-dir)
-        (filepath (concat dir "/" (org-download-file-format-default basename)))
-        (org-download-image-org-width 400))
-      (make-directory dir t)
-      (when (not (file-exists-p filepath)) (copy-file "~/.doom.d/template.svg" filepath)) ; create empty svg file
-      (start-process-shell-command "write_stylus" nil (format "write_stylus %s" filepath)) ; open svg file
-      (org-download-insert-link basename filepath)
-    )
-  )
-#+end_src
 *** Visuals
 **** Font
 Mixed pitch is great. As is ~+org-pretty-mode~, let's use them.
@@ -795,7 +758,6 @@ We can then have quote blocks stand out a bit more by making them /italic/.
 #+end_src
 
 **** Symbols
-
 It's also nice to change the character used for collapsed items (by default ~…~),
 I think ~▾~ is better for indicating 'collapsed section'.
 and add an extra ~org-bullet~ to the default list of four.
@@ -816,6 +778,7 @@ I've also added some fun alternatives, just commented out.
         (?D . 'all-the-icons-green)
         (?E . 'all-the-icons-blue)))
 #+end_src
+
 It's also nice to make use of the Unicode characters for check boxes, and other commands.
 #+begin_src emacs-lisp :tangle no
 (appendq! +ligatures-extra-symbols
@@ -1010,12 +973,6 @@ Doom theme's extra fontification is more problematic than helpful.
 (setq doom-themes-org-fontify-special-tags nil)
 #+end_src
 
-**** LaTeX Export
-***** Compiling
-#+begin_src emacs-lisp
-;; org-latex-compilers = ("pdflatex" "xelatex" "lualatex"), which are the possible values for %latex
-(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
-#+end_src
 ** Latex
 #+begin_src emacs-lisp
 (setq TeX-save-query nil
