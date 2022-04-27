@@ -43,6 +43,8 @@
 
           "Ctrl+n" = "playlist-next";
           "Ctrl+p" = "playlist-prev";
+          PGUP = "playlist-prev";
+          PGDWN = "playlist-next";
         };
       };
     };
