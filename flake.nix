@@ -13,7 +13,7 @@
     };
     impermanence.url =
       "github:nix-community/impermanence"; # bind-mount directories
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
     utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
 
@@ -72,8 +72,11 @@
         in {
           packages = customPackages pkgs.callPackage;
           devShell = pkgs.mkShell {
-            buildInputs =
-              [ pkgs.nixpkgs-fmt agenix.defaultPackage.x86_64-linux pkgs.cachix ];
+            buildInputs = [
+              pkgs.nixpkgs-fmt
+              agenix.defaultPackage.x86_64-linux
+              pkgs.cachix
+            ];
           };
         };
     };
