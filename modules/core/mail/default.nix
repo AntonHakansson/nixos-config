@@ -2,14 +2,21 @@
 { config, lib, pkgs, ... }:
 
 {
-  services.ssmtp = {
+  programs.msmtp = {
     enable = lib.mkDefault true;
-    authUser = "postbot@hakanssn.com";
-    authPassFile =
-      config.age.secrets."passwords/services/mail/ssmtp-webmaster-pass".path;
-    domain = "hakanssn.com";
-    hostName = "mail.hakanssn.com:465";
-    useTLS = true;
+    accounts.default = {
+      auth = true;
+      from = "postbot@hakanssn.com";
+      host = "mail.hakanssn.com";
+      passwordeval = "${pkgs.coreutils}/bin/cat ${
+          config.age.secrets."passwords/services/mail/ssmtp-webmaster-pass".path
+        }";
+      port = 465;
+      tls = true;
+      tls_starttls = false;
+      tls_trust_file = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+      user = "postbot@hakanssn.com";
+    };
     setSendmail = !config.asdf.services.mail.enable;
   };
 
