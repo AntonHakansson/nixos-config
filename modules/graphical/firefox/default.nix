@@ -105,21 +105,14 @@ in {
               "security.identityblock.show_extended_validation" = true;
             };
             bookmarks = {
-              wikipedia = {
-                url =
-                  "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-              };
-              nixpkgs = {
-                url =
-                  "https://search.nixos.org/options?channel=unstable&type=packages&query=%s";
-              };
-              nur = {
-                url = "https://nur.nix-community.org/";
-              };
-              nixos-discourse = { url = "https://discourse.nixos.org/"; };
-              home-manager = {
-                url = "https://rycee.gitlab.io/home-manager/options.html";
-              };
+              wikipedia.url =
+                "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
+              nixpkgs.url =
+                "https://search.nixos.org/options?channel=unstable&type=packages&query=%s";
+              nur.url = "https://nur.nix-community.org/";
+              nixos-discourse.url = "https://discourse.nixos.org/";
+              home-manager.url =
+                "https://rycee.gitlab.io/home-manager/options.html";
             };
           };
         };
