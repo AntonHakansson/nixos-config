@@ -79,7 +79,17 @@ in {
           ];
           profiles.hakanssn = {
             isDefault = true;
-            userChrome = builtins.readFile ./userChrome.css;
+            # Hide tabs and navbar
+            userChrome = ''
+              #TabsToolbar { visibility: collapse !important; }
+              /* hide navigation bar when it is not focused; use Ctrl+L to get focus */
+              #main-window:not([customizing]) #navigator-toolbox:not(:focus-within):not(:hover) {
+                margin-top: -45px;
+              }
+              #navigator-toolbox {
+                transition: 0.2s margin-top ease-out;
+              }
+            '';
             settings = {
               "devtools.theme" = "dark";
               # look for userChrome.css
