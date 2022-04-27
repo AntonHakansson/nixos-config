@@ -71,10 +71,7 @@ in {
             ff2mpv
             vimium
             swedish-dictionary
-
             tree-style-tab
-            tst-tab-search
-
             bypass-paywalls-clean
             decentraleyes
             i-dont-care-about-cookies
@@ -115,6 +112,9 @@ in {
               nixpkgs = {
                 url =
                   "https://search.nixos.org/options?channel=unstable&type=packages&query=%s";
+              };
+              nur = {
+                url = "https://nur.nix-community.org/";
               };
               nixos-discourse = { url = "https://discourse.nixos.org/"; };
               home-manager = {
