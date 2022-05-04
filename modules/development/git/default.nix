@@ -25,6 +25,7 @@
         extraConfig = {
           core = { whitespace = "trailing-space"; };
           github.user = "AntonHakansson";
+          safe.directory = "/home/hakanssn/repos/nixos-config";
 
           # Aliases
           url."https://github.com/".insteadOf = "gh:";
