@@ -7,6 +7,13 @@ let
   };
   status-configuration =
     import ./status-configuration.nix { inherit pkgs lib config; };
+  sway-which-key = pkgs.writeShellApplication {
+    name = "sway-which-key";
+    runtimeInputs = with pkgs; [ skim gnugrep ];
+    text = ''
+      sk --reverse -c 'cat .config/sway/config | grep bindsym | sed "s/^[[:blank:]]*bindsym//"'
+    '';
+  };
   c = config.asdf.graphical.theme.colorscheme.colors;
 in {
   options.asdf.graphical.sway.enable = lib.mkEnableOption "swaywm";
@@ -90,6 +97,10 @@ in {
             }
             {
               command = "floating enable";
+              criteria = { app_id = "sway-which-key"; };
+            }
+            {
+              command = "floating enable";
               criteria = {
                 title = "Quick Format Citation";
                 class = "Zotero";
@@ -115,6 +126,9 @@ in {
             "${modifier}+b" = "exec swaymsg bar mode toggle";
             "${modifier}+n" =
               "exec ${pkgs.mako}/bin/makoctl invoke"; # Invoke default action on top notification.
+
+            ## Programs
+            "${modifier}+Slash" = "exec ${terminal} --class sway-which-key -e ${sway-which-key}/bin/sway-which-key";
 
             ## Media keys
             "XF86AudioRaiseVolume" =
