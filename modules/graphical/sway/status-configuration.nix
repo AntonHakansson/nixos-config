@@ -44,6 +44,7 @@ in pkgs.writeText "configuration.toml" (''
 
   [[block]]
   block = "sound"
+  on_click = "${pkgs.pavucontrol}/bin/pavucontrol --tab=3"
 
   [[block]]
   block = "time"
