@@ -38,6 +38,7 @@ let
         set shiftwidth=2
         set expandtab
         set smartindent
+        set clipboard+=unnamedplus
 
         " Doom Emacs bindings
         nnoremap <leader>wj <C-W>j
