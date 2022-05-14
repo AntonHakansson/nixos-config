@@ -70,6 +70,9 @@ let
         set wildignore+=**/.git/*
       '';
     };
+    home.sessionVariables = {
+      MANPAGER = "nvim +Man!";
+    };
   };
 in {
   config = {
