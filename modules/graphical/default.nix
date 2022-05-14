@@ -40,7 +40,7 @@
     };
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ ranger youtube-dl ];
+      home.packages = with pkgs; [ ranger yt-dlp ];
     };
   };
 }
