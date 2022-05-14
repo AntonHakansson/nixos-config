@@ -10,15 +10,15 @@ let
       enable = true;
       plugins = with pkgs.vimPlugins; [
         # :ui
+        onedark-nvim
         telescope-nvim
         telescope-fzf-native-nvim
-        onedark-nvim
-        which-key-nvim
 
-        # :
+        # :editor
         vim-surround
 
         # :completion
+        which-key-nvim
         nvim-lspconfig
         nvim-treesitter
 
