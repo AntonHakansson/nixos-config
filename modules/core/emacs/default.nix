@@ -62,6 +62,8 @@
           ## Module dependencies
           # :checkers spell
           (aspellWithDicts (ds: with ds; [ en en-computers en-science sv ]))
+          proselint
+          nodePackages.textlint
           # :checkers grammar
           languagetool
           # :tools editorconfig
