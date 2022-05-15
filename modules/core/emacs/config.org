@@ -258,63 +258,18 @@ irc                 ; how neckbeards socialize
 #+end_src
 
 ** YASnippet
-:PROPERTIES:
-:header-args:snippet: :mkdirp t
-:END:
 Allow nested snippets.
 #+begin_src emacs-lisp
 (setq yas-triggers-in-field t)
 #+end_src
 
-*** org-mode
-
-#+begin_src snippet :tangle snippets/org-mode/__
-# -*- mode: snippet -*-
-# name: Org template
-# --
-#+title: ${1:`(s-titleized-words (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]-" "" (file-name-base (or buffer-file-name "new buffer"))))`}
-#+author: ${2:`(user-full-name)`}
-#+date: ${3:`(format-time-string "%Y-%m-%d")`}
-
-$0
-#+end_src
-
-#+begin_src snippet :tangle snippets/org-mode/inline_math
-# -*- mode: snippet -*-
-# name: inline math
-# key: m
-# condition: t
-# --
-\\( `%`$0 \\)
-#+end_src
-
-#+begin_src snippet :tangle snippets/org-mode/display_math
-# -*- mode: snippet -*-
-# name: display math
-# key: M
-# condition: t
-# --
-\\[ `%`$0 \\]
-#+end_src
-
-#+begin_src snippet :tangle snippets/org-mode/src
-# -*- mode: snippet -*-
-# name: #+begin_src
-# uuid: src
-# key: src
-# --
-#+begin_src ${1:`(or (+yas/org-last-src-lang) "?")`}
-`%`$0
-,#+end_src
-#+end_src
-
 ** Emacs Everywhere
-Easier to match with a =bspwm= rule.
+Make it easy to match window with a window manger rule.
 #+begin_src emacs-lisp
 (setq emacs-everywhere-frame-name-format "emacs-anywhere")
 #+end_src
 
-Then we can match it with:
+In =bspwm= we can match it with:
 #+begin_src sh :tangle no
 bspc rule -a 'Emacs:emacs-everywhere' state=floating sticky=on
 #+end_src
@@ -340,7 +295,7 @@ Fight the blank page!
 #+begin_src emacs-lisp :tangle packages.el
 (package! academic-phrases)
 #+end_src
-** cdlatex
+** CDLaTeX
 #+begin_src emacs-lisp
 (after! cdlatex
   (setq
@@ -370,10 +325,6 @@ Fight the blank page!
      (?B    "\\mathbb"        nil          t    nil  nil)
      (?t    "\\text"          nil          t    nil  nil)
      (?a    "\\abs"           nil          t    nil  nil)))
-
-    ;; (org-defkey org-cdlatex-mode-map (kbd ";") #'cdlatex-math-symbol)
-    ;; (map! :map cdlatex-mode-map
-    ;;       :i ";" #'cdlatex-math-symbol)
   )
 
 (when EMACS28+
@@ -447,7 +398,8 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
 #+end_src
 
-*** Defaults
+*** Behavior
+**** Defaults
 #+begin_src emacs-lisp :noweb-ref org-conf
 (setq org-directory "~/documents/org" org-log-done 'time ; insert timestamp when an item
       org-list-allow-alphabetical t ; have a. A. a) A) list bullets
@@ -499,18 +451,13 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
         ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
 #+end_src
 
-*** Functionality
-**** LaTeX Export
-#+begin_src emacs-lisp
-(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
-#+end_src
 **** Spellcheck
 Turn on spellchecking.
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 #+end_src
 
-**** cdlatex
+**** CDLaTeX
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
 #+end_src
@@ -630,7 +577,7 @@ Return nil otherwise."
 
     (car (cl-set-difference src-langs header-langs :test #'string=))))
 #+end_src
-**** lsp mode in src blocks
+**** lsp-mode in src blocks
 #+begin_src emacs-lisp
 (cl-defmacro lsp-org-babel-enable (lang)
   "Support LANG in org source code block."
@@ -662,7 +609,7 @@ Return nil otherwise."
   (eval `(lsp-org-babel-enable ,lang)))
 #+end_src
 
-**** Convert syntax
+**** Translate capital keywords (old) to lower case (new)
 Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercase~ is actually both marginally easier and visually nicer, so now the capital version is just used in the manual.
 
 #+begin_src emacs-lisp
@@ -679,7 +626,7 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
           (setq count (1+ count))))
       (message "Replaced %d occurances" count))))
 #+end_src
-**** draw.io
+**** Create figures with =draw.io=
 #+begin_src emacs-lisp
 (defvar my/drawio-svg-template
 "
@@ -717,7 +664,7 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
                 (url-unhex-string (plist-get (cadr context) :path)))))))
   )
 #+end_src
-*** Visuals
+*** Emacs Visuals
 **** Font
 Mixed pitch is great. As is ~+org-pretty-mode~, let's use them.
 #+begin_src emacs-lisp
@@ -973,6 +920,54 @@ Doom theme's extra fontification is more problematic than helpful.
 #+begin_src emacs-lisp
 (setq doom-themes-org-fontify-special-tags nil)
 #+end_src
+*** LaTeX Export
+#+begin_src emacs-lisp
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
+*** Snippets
+:PROPERTIES:
+:header-args:snippet: :mkdirp t
+:END:
+
+#+begin_src snippet :tangle snippets/org-mode/__
+# -*- mode: snippet -*-
+# name: Org template
+# --
+#+title: ${1:`(s-titleized-words (replace-regexp-in-string "^[0-9]\\{4\\}-[0-9][0-9]-[0-9][0-9]-" "" (file-name-base (or buffer-file-name "new buffer"))))`}
+#+author: ${2:`(user-full-name)`}
+#+date: ${3:`(format-time-string "%Y-%m-%d")`}
+
+$0
+#+end_src
+
+#+begin_src snippet :tangle snippets/org-mode/inline_math
+# -*- mode: snippet -*-
+# name: inline math
+# key: m
+# condition: t
+# --
+\\( `%`$0 \\)
+#+end_src
+
+#+begin_src snippet :tangle snippets/org-mode/display_math
+# -*- mode: snippet -*-
+# name: display math
+# key: M
+# condition: t
+# --
+\\[ `%`$0 \\]
+#+end_src
+
+#+begin_src snippet :tangle snippets/org-mode/src
+# -*- mode: snippet -*-
+# name: #+begin_src
+# uuid: src
+# key: src
+# --
+#+begin_src ${1:`(or (+yas/org-last-src-lang) "?")`}
+`%`$0
+,#+end_src
+#+end_src
 
 ** Latex
 #+begin_src emacs-lisp
@@ -987,7 +982,7 @@ Doom theme's extra fontification is more problematic than helpful.
 #+begin_src emacs-lisp
 (setq +latex-viewers '(pdf-tools zathura okular skim sumatrapdf))
 #+end_src
-** Elfeed
+** RSS Reader
 #+begin_src emacs-lisp
 (map! :map elfeed-search-mode-map
       :after elfeed-search
@@ -1025,7 +1020,7 @@ Doom theme's extra fontification is more problematic than helpful.
 (add-hook! 'elfeed-show-mode-hook 'mixed-pitch-mode)
 (add-hook! 'elfeed-search-mode-hook 'elfeed-update)
 #+end_src
-** Mu4e
+** Mail
 #+begin_src emacs-lisp
 (after! mu4e
   (setq sendmail-program (executable-find "msmtp")
