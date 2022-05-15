@@ -2,6 +2,8 @@
 #+property: header-args:emacs-lisp :tangle config.el :comments link
 #+property: header-args:elisp :exports code
 
+Credits to [[https://tecosaur.github.io/emacs-config/config.html][Tecosaur's Doom Emacs Configuration]] for *a lot* of configuration snippets.
+
 * Basic Configuration
 ** Personal Information
 #+begin_src emacs-lisp
@@ -331,16 +333,6 @@ Fight the blank page!
   (add-hook 'latex-mode-hook #'TeX-latex-mode))
 #+end_src
 
-** Latex Auto activating snippets
-#+begin_src emacs-lisp :tangle packages.el
-(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package laas
-  :hook (LaTeX-mode . laas-mode))
-#+end_src
-
 ** Org
 :PROPERTIES:
 :header-args:emacs-lisp: :tangle no :noweb-ref org-conf
@@ -462,7 +454,6 @@ Turn on spellchecking.
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
 #+end_src
 **** Snippet Helpers
-
 I often want to set =src-block= headers, and it's a pain to
 + type them out
 + remember what the accepted values are
@@ -982,6 +973,17 @@ $0
 #+begin_src emacs-lisp
 (setq +latex-viewers '(pdf-tools zathura okular skim sumatrapdf))
 #+end_src
+
+*** Latex Auto activating snippets
+#+begin_src emacs-lisp :tangle packages.el
+(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package laas
+  :hook (LaTeX-mode . laas-mode))
+#+end_src
+
 ** RSS Reader
 #+begin_src emacs-lisp
 (map! :map elfeed-search-mode-map
