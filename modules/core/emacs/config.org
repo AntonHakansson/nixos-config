@@ -247,6 +247,12 @@ Then configure a supplementary font:
       doom-serif-font (font-spec :family "Iosevka" :weight 'light))
 #+end_src
 
+The text scaling of the =:ui zen= module is a bit too much.
+I prefer it to approximately match the default font size.
+#+begin_src emacs-lisp
+(setq +zen-text-scale 0.65)
+#+end_src
+
 * Package Configuration
 ** Evil
 #+begin_src emacs-lisp
