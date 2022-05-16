@@ -11,12 +11,22 @@ let
     name = "sway-which-key";
     runtimeInputs = with pkgs; [ skim gnugrep ];
     text = ''
+      # Utility to fuzzy-search sway keybindings
       sk --reverse -c 'cat .config/sway/config | grep bindsym | sed "s/^[[:blank:]]*bindsym//"'
     '';
   };
-  c = config.asdf.graphical.theme.colorscheme.colors;
 in {
-  options.asdf.graphical.sway.enable = lib.mkEnableOption "swaywm";
+  options.asdf.graphical.sway = {
+    enable = lib.mkEnableOption "swaywm";
+    top-bar.extraConfig = lib.mkOption {
+      default = "";
+      type = lib.types.lines;
+    };
+    status-configuration.extraConfig = lib.mkOption {
+      default = "";
+      type = lib.types.lines;
+    };
+  };
 
   config = lib.mkIf config.asdf.graphical.sway.enable {
     services.dbus.packages = with pkgs; [ dconf ];
@@ -62,29 +72,15 @@ in {
             style = "Normal";
           };
           bars = [{
+            position = "top";
+            statusCommand =
+              "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
             fonts = {
               names = [ "Fira Code" ];
               size = 9.0;
               style = "Normal";
             };
-            position = "top";
-            statusCommand =
-              "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
-            extraConfig = ''
-              status_padding 0
-              icon_theme Arc
-              colors {
-                background ${c.base00}
-                separator  ${c.base01}
-                statusline ${c.base04}
-                #                   Border      BG          Text
-                focused_workspace   ${c.base05} ${c.base0D} ${c.base00}
-                active_workspace    ${c.base05} ${c.base03} ${c.base00}
-                inactive_workspace  ${c.base03} ${c.base01} ${c.base05}
-                urgent_workspace    ${c.base08} ${c.base08} ${c.base00}
-                binding_mode        ${c.base00} ${c.base0A} ${c.base00}
-              }
-            '';
+            extraConfig = config.asdf.graphical.sway.top-bar.extraConfig;
           }];
           startup = [{
             command =
@@ -128,7 +124,8 @@ in {
               "exec ${pkgs.mako}/bin/makoctl invoke"; # Invoke default action on top notification.
 
             ## Programs
-            "${modifier}+Slash" = "exec ${terminal} --class sway-which-key -e ${sway-which-key}/bin/sway-which-key";
+            "${modifier}+Slash" =
+              "exec ${terminal} --class sway-which-key -e ${sway-which-key}/bin/sway-which-key";
 
             ## Media keys
             "XF86AudioRaiseVolume" =
@@ -149,12 +146,6 @@ in {
           };
         };
         extraConfig = ''
-          #                       Border      BG          Text        Ind         Child Border
-          client.focused          ${c.base05} ${c.base0D} ${c.base00} ${c.base0D} ${c.base0D}
-          client.focused_inactive ${c.base01} ${c.base01} ${c.base05} ${c.base03} ${c.base01}
-          client.unfocused        ${c.base01} ${c.base00} ${c.base05} ${c.base01} ${c.base01}
-          client.urgent           ${c.base08} ${c.base08} ${c.base00} ${c.base08} ${c.base08}
-
           no_focus [title="Microsoft Teams Notification"]
 
           default_border pixel

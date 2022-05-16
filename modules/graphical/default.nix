@@ -28,7 +28,6 @@
         pass.enable = lib.mkDefault true;
         sway.enable = lib.mkDefault true;
         terminal.enable = lib.mkDefault true;
-        theme.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
         media = {
           documents.enable = lib.mkDefault true;
