@@ -763,10 +763,7 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
 #+begin_src emacs-lisp
 (use-package! org-modern
   :hook (org-mode . org-modern-mode)
-  :commands org-modern-mode
-  :config
-  (custom-set-faces! '(org-modern-label :height 1.0 :box (:background (face-attribute 'default :background nil t) :line-width (0 . -2))))
-  )
+  :commands org-modern-mode)
 #+end_src
 
 =org-modern= expects that ~org-indent-mode~ is off.
