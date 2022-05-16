@@ -1,5 +1,6 @@
 #+title: Emacs Config
-#+property: header-args:emacs-lisp :tangle config.el :comments link
+#+startup: show2levels
+#+property: header-args:emacs-lisp :tangle config.el :comments link :results none
 #+property: header-args:elisp :exports code
 
 Credits to [[https://tecosaur.github.io/emacs-config/config.html][Tecosaur's Doom Emacs Configuration]] for *a lot* of configuration snippets.
@@ -231,13 +232,19 @@ everywhere
 irc                 ; how neckbeards socialize
 (rss +org)          ; emacs as an RSS reader
 #+end_src
-
 ** Visual
-*** Font
+Let's pick a cozy theme:
 #+begin_src emacs-lisp
-;; (setq doom-font (font-spec :family "Fira Code" :size 10)
-;;       doom-big-font (font-spec :family "Fira Code" :size 18)
-;;       doom-variable-pitch-font (font-spec :family "Noto Sans" :size 9))
+(setq doom-theme 'modus-operandi)
+#+end_src
+
+Then configure a supplementary font:
+#+begin_src emacs-lisp
+(setq doom-font (font-spec :family "Iosevka" :size 14)
+      doom-big-font (font-spec :family "Iosevka" :size 18)
+      doom-variable-pitch-font (font-spec :family "Iosevka Aile" :size 14)
+      doom-unicode-font (font-spec :family "Iosevka")
+      doom-serif-font (font-spec :family "Iosevka" :weight 'light))
 #+end_src
 
 * Package Configuration
@@ -442,7 +449,6 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
         ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
         ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
 #+end_src
-
 **** Spellcheck
 Turn on spellchecking.
 #+begin_src emacs-lisp
@@ -746,8 +752,30 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
   )
 #+end_src
 *** Emacs Visuals
-**** Font
-Mixed pitch is great. As is ~+org-pretty-mode~, let's use them.
+**** Org-modern
+
+=org-modern= implements a "modern" style of an Org buffer that looks amazing; let's use it.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-modern)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :commands org-modern-mode
+  :config
+  (custom-set-faces! '(org-modern-label :height 1.0 :box (:background (face-attribute 'default :background nil t) :line-width (0 . -2))))
+  )
+#+end_src
+
+=org-modern= expects that ~org-indent-mode~ is off.
+#+begin_src emacs-lisp
+(setq org-startup-indented nil)
+#+end_src
+
+**** Font Display
+Mixed pitch is great. As is ~+org-pretty-mode~.
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook #'mixed-pitch-mode)
 (add-hook 'org-mode-hook #'+org-pretty-mode)
@@ -763,7 +791,16 @@ Let's make headings a bit bigger
   '(outline-5 :weight semi-bold :height 1.06)
   '(outline-6 :weight semi-bold :height 1.03)
   '(outline-8 :weight semi-bold)
-  '(outline-9 :weight semi-bold))
+  '(outline-9 :weight semi-bold)
+  '(org-level-1 :weight semi-bold :height 1.25)
+  '(org-level-2 :weight semi-bold :height 1.15)
+  '(org-level-3 :weight semi-bold :height 1.12)
+  '(org-level-4 :weight semi-bold :height 1.09)
+  '(org-level-5 :weight semi-bold :height 1.06)
+  '(org-level-6 :weight semi-bold :height 1.03)
+  '(org-level-7 :weight semi-bold)
+  '(org-level-8 :weight semi-bold)
+  )
 #+end_src
 
 And the same with the title.
@@ -787,111 +824,9 @@ We can then have quote blocks stand out a bit more by making them /italic/.
 #+end_src
 
 **** Symbols
-It's also nice to change the character used for collapsed items (by default ~…~),
-I think ~▾~ is better for indicating 'collapsed section'.
-and add an extra ~org-bullet~ to the default list of four.
-I've also added some fun alternatives, just commented out.
+It's also nice to change the character used for collapsed items (by default ~…~).
 #+begin_src emacs-lisp
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-        org-superstar-prettify-item-bullets t ))
-
-(setq org-ellipsis " ▾ "
-      org-hide-leading-stars t
-      org-priority-highest ?A
-      org-priority-lowest ?E
-      org-priority-faces
-      '((?A . 'all-the-icons-red)
-        (?B . 'all-the-icons-orange)
-        (?C . 'all-the-icons-yellow)
-        (?D . 'all-the-icons-green)
-        (?E . 'all-the-icons-blue)))
-#+end_src
-
-It's also nice to make use of the Unicode characters for check boxes, and other commands.
-#+begin_src emacs-lisp :tangle no
-(appendq! +ligatures-extra-symbols
-          `(:checkbox      "☐"
-            :pending       "◼"
-            :checkedbox    "☑"
-            :list_property "∷"
-            :em_dash       "—"
-            :ellipses      "…"
-            :arrow_right   "→"
-            :arrow_left    "←"
-            ;; :title         "𝙏"
-            ;; :subtitle      "𝙩"
-            ;; :author        "𝘼"
-            ;; :date          "𝘿"
-            :property      "☸"
-            :options       "⌥"
-            :startup       "⏻"
-            ;; :macro         "𝓜"
-            :html_head     "🅷"
-            :html          "🅗"
-            :latex_class   "🄻"
-            :latex_header  "🅻"
-            :beamer_header "🅑"
-            :latex         "🅛"
-            :attr_latex    "🄛"
-            :attr_html     "🄗"
-            :attr_org      "⒪"
-            :begin_quote   "❝"
-            :end_quote     "❞"
-            :caption       "☰"
-            :header        "›"
-            ;; :results       "🠶"
-            :begin_export  "⏩"
-            :end_export    "⏪"
-            :properties    "⚙"
-            :end           "∎"
-            :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
-            :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
-            :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
-            :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
-            :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)))
-(set-ligatures! 'org-mode
-  :merge t
-  :checkbox      "[ ]"
-  :pending       "[-]"
-  :checkedbox    "[X]"
-  :list_property "::"
-  :em_dash       "---"
-  :ellipsis      "..."
-  :arrow_right   "->"
-  :arrow_left    "<-"
-  :title         "#+title:"
-  :subtitle      "#+subtitle:"
-  :author        "#+author:"
-  :date          "#+date:"
-  :property      "#+property:"
-  :options       "#+options:"
-  :startup       "#+startup:"
-  :macro         "#+macro:"
-  :html_head     "#+html_head:"
-  :html          "#+html:"
-  :latex_class   "#+latex_class:"
-  :latex_header  "#+latex_header:"
-  :beamer_header "#+beamer_header:"
-  :latex         "#+latex:"
-  :attr_latex    "#+attr_latex:"
-  :attr_html     "#+attr_html:"
-  :attr_org      "#+attr_org:"
-  :begin_quote   "#+begin_quote"
-  :end_quote     "#+end_quote"
-  :caption       "#+caption:"
-  :header        "#+header:"
-  :begin_export  "#+begin_export"
-  :end_export    "#+end_export"
-  :results       "#+RESULTS:"
-  :property      ":PROPERTIES:"
-  :end           ":END:"
-  :priority_a    "[#A]"
-  :priority_b    "[#B]"
-  :priority_c    "[#C]"
-  :priority_d    "[#D]"
-  :priority_e    "[#E]")
-(plist-put +ligatures-extra-symbols :name "⁍")
+(setq org-ellipsis "…")
 #+end_src
 
 **** Fontifying inline src blocks
@@ -1001,6 +936,7 @@ Doom theme's extra fontification is more problematic than helpful.
 #+begin_src emacs-lisp
 (setq doom-themes-org-fontify-special-tags nil)
 #+end_src
+
 *** LaTeX Export
 #+begin_src emacs-lisp
 (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
