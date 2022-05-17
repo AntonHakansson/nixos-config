@@ -116,6 +116,11 @@ in {
           };
         };
 
+        programs.neovim = {
+          plugins = with pkgs.vimPlugins; [ onedark-nvim ];
+          extraConfig = "colorscheme onedark";
+        };
+
         programs.kitty.settings = {
           font_family = "Fira Code";
           font_size = 9;

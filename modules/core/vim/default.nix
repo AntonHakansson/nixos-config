@@ -26,8 +26,6 @@ let
         vim-nix
       ];
       extraConfig = ''
-        colorscheme onedark
-
         let mapleader = " "
         inoremap <C-c> <esc>
 
