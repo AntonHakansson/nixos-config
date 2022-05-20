@@ -50,7 +50,7 @@ See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and a
    zfs create -o mountpoint=legacy rpool/local/cache
    zfs set compression=lz4 rpool/local/cache
    zfs create -o mountpoint=legacy rpool/safe/data
-   zfs set compression=lz4 rpool/local/data
+   zfs set compression=lz4 rpool/safe/data
 
    mount -t zfs rpool/local/root /mnt
 
@@ -65,7 +65,7 @@ See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and a
    mount -t zfs rpool/local/cache /mnt/cache
 
    mkdir -p /mnt/data
-   mount -t zfs rpool/local/data /mnt/data
+   mount -t zfs rpool/safe/data /mnt/data
    #+end_src
 4. Set src_nix{networking.hostId} to src_sh{cat /etc/machine-id | head -c 8}
 
