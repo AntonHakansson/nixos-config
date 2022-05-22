@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+ {config, lib, pkgs, ... }:
 
 let
   launcher = import ./launcher.nix {
@@ -18,9 +18,9 @@ let
 in {
   options.asdf.graphical.sway = {
     enable = lib.mkEnableOption "swaywm";
-    top-bar.extraConfig = lib.mkOption {
-      default = "";
-      type = lib.types.lines;
+    top-bar = lib.mkOption {
+      default = { };
+      type = lib.types.attrs;
     };
     status-configuration.extraConfig = lib.mkOption {
       default = "";
@@ -66,22 +66,13 @@ in {
           modifier = "Mod4";
           terminal = "${pkgs.kitty}/bin/kitty";
           menu = "${terminal} --class launcher -e ${launcher}/bin/launcher";
-          fonts = {
-            names = [ "Fira Code" ];
-            size = 9.0;
-            style = "Normal";
-          };
-          bars = [{
-            position = "top";
-            statusCommand =
-              "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
-            fonts = {
-              names = [ "Fira Code" ];
-              size = 9.0;
-              style = "Normal";
-            };
-            extraConfig = config.asdf.graphical.sway.top-bar.extraConfig;
-          }];
+          bars = [
+            ({
+              position = "top";
+              statusCommand =
+                "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
+            } // config.asdf.graphical.sway.top-bar)
+          ];
           startup = [{
             command =
               "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${pkgs.swaylock}/bin/swaylock -f -c 000000' timeout 150 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${pkgs.swaylock}/bin/swaylock -f -c 000000'";

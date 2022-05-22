@@ -3,8 +3,9 @@
 {
   options.asdf.graphical.theme = {
     active = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "onedark" ]);
-      default = "onedark";
+      type = lib.types.nullOr (lib.types.enum [ "onedark" "modus-operandi"]);
+      # default = "modus-operandi";
+      default = "modus-operandi";
       apply = v:
         let envTheme = builtins.getEnv "THEME";
         in if envTheme != "" then envTheme else v;
@@ -15,7 +16,7 @@
     };
   };
 
-  imports = [ ./onedark.nix ];
+  imports = [ ./onedark.nix ./modus-operandi.nix ];
 
   config = lib.mkIf (config.asdf.graphical.theme.active != null) {
     fonts = {

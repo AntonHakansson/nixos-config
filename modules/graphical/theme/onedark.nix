@@ -39,9 +39,9 @@ in {
       fontconfig = {
         defaultFonts = {
           emoji = [ "Noto Color Emoji" ];
-          monospace = [ "Fira Code" "Font Awesome 5 Free" ];
-          sansSerif = [ "Noto Sans" "Font Awesome 5 Free" ];
-          serif = [ "Noto Serif" "Font Awesome 5 Free" ];
+          monospace = [ "Fira Code" "Font Awesome 6 Free" ];
+          sansSerif = [ "Noto Sans" "Font Awesome 6 Free" ];
+          serif = [ "Noto Serif" "Font Awesome 6 Free" ];
         };
       };
       fonts = with pkgs; [ fira-code fira-code-symbols ];
@@ -85,34 +85,41 @@ in {
           platformTheme = "gtk";
         };
 
-        wayland.windowManager.sway.config.colors = {
-          focused = {
-            border = c.base05;
-            background = c.base0D;
-            text = c.base00;
-            indicator = c.base0D;
-            childBorder = c.base0D;
+        wayland.windowManager.sway.config = {
+          fonts = {
+            names = config.fonts.fontconfig.defaultFonts.sansSerif;
+            size = 9.0;
+            style = "Normal";
           };
-          focusedInactive = {
-            border = c.base01;
-            background = c.base01;
-            text = c.base05;
-            indicator = c.base03;
-            childBorder = c.base01;
-          };
-          unfocused = {
-            border = c.base01;
-            background = c.base00;
-            text = c.base05;
-            indicator = c.base01;
-            childBorder = c.base01;
-          };
-          urgent = {
-            border = c.base08;
-            background = c.base08;
-            text = c.base00;
-            indicator = c.base08;
-            childBorder = c.base08;
+          colors = {
+            focused = {
+              border = c.base05;
+              background = c.base0D;
+              text = c.base00;
+              indicator = c.base0D;
+              childBorder = c.base0D;
+            };
+            focusedInactive = {
+              border = c.base01;
+              background = c.base01;
+              text = c.base05;
+              indicator = c.base03;
+              childBorder = c.base01;
+            };
+            unfocused = {
+              border = c.base01;
+              background = c.base00;
+              text = c.base05;
+              indicator = c.base01;
+              childBorder = c.base01;
+            };
+            urgent = {
+              border = c.base08;
+              background = c.base08;
+              text = c.base00;
+              indicator = c.base08;
+              childBorder = c.base08;
+            };
           };
         };
 
@@ -199,23 +206,30 @@ in {
       separator=""
 
       [icons]
-      name = "awesome5"
+      name = "awesome6"
     '';
 
-    asdf.graphical.sway.top-bar.extraConfig = ''
-      status_padding 0
-      icon_theme Arc
-      colors {
-        background ${c.base00}
-        separator  ${c.base01}
-        statusline ${c.base04}
-        #                   Border      BG          Text
-        focused_workspace   ${c.base05} ${c.base0D} ${c.base00}
-        active_workspace    ${c.base05} ${c.base03} ${c.base00}
-        inactive_workspace  ${c.base03} ${c.base01} ${c.base05}
-        urgent_workspace    ${c.base08} ${c.base08} ${c.base00}
-        binding_mode        ${c.base00} ${c.base0A} ${c.base00}
-      }
-    '';
+    asdf.graphical.sway.top-bar = {
+      fonts = {
+        names = config.fonts.fontconfig.defaultFonts.sansSerif;
+        size = 9.0;
+        style = "Normal";
+      };
+      extraConfig = ''
+        status_padding 0
+        icon_theme Arc
+        colors {
+          background ${c.base00}
+          separator  ${c.base01}
+          statusline ${c.base04}
+          #                   Border      BG          Text
+          focused_workspace   ${c.base05} ${c.base0D} ${c.base00}
+          active_workspace    ${c.base05} ${c.base03} ${c.base00}
+          inactive_workspace  ${c.base03} ${c.base01} ${c.base05}
+          urgent_workspace    ${c.base08} ${c.base08} ${c.base00}
+          binding_mode        ${c.base00} ${c.base0A} ${c.base00}
+        }
+      '';
+    };
   };
 }

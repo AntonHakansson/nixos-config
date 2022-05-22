@@ -4,9 +4,9 @@ let
     mails=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
     if [ "$mails" -gt 0 ]
     then
-      echo "{ \"state\": \"Info\", \"text\": \"✉️ $mails\" }"
+      echo "{ \"state\": \"Info\", \"text\": \"\uf0e0 $mails\" }"
     else
-      echo "{ \"state\": \"Idle\", \"text\": \"✉️\" }"
+      echo "{ \"state\": \"Idle\", \"text\": \"\" }"
     fi
   '';
 in pkgs.writeText "configuration.toml" (""
@@ -19,10 +19,12 @@ in pkgs.writeText "configuration.toml" (""
   '') + ''
     [[block]]
     block = "music"
-    player = "firefox"
-    buttons = ["prev", "play", "next"]
-    marquee = false
+    marquee = false # don't scroll text
+    buttons = [ "play", "next" ]
+    smart_trim = true
+    dynamic_width = true
     hide_when_empty = true
+    format = "{combo} "
 
     [[block]]
     block = "custom"
@@ -30,6 +32,7 @@ in pkgs.writeText "configuration.toml" (""
     command = "${mail-status}"
     interval = 60
     on_click = "mbsync -a && mu index"
+    hide_when_empty = true
 
     [[block]]
     block = "sound"
