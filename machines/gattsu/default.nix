@@ -19,6 +19,7 @@
     graphical = {
       enable = true;
       syncthing.enable = true;
+      games.enable = true;
     };
   };
 }

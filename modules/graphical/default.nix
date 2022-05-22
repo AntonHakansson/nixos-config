@@ -4,6 +4,7 @@
   imports = [
     ./audio
     ./firefox
+    ./games
     ./mail
     ./media
     ./pass
