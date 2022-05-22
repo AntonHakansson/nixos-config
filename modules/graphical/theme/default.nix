@@ -4,7 +4,6 @@
   options.asdf.graphical.theme = {
     active = lib.mkOption {
       type = lib.types.nullOr (lib.types.enum [ "onedark" "modus-operandi"]);
-      # default = "modus-operandi";
       default = "modus-operandi";
       apply = v:
         let envTheme = builtins.getEnv "THEME";

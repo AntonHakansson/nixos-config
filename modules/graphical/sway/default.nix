@@ -70,7 +70,7 @@ in {
             ({
               position = "top";
               statusCommand =
-                "${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
+                "env I3RS_GITHUB_TOKEN=$(<${config.age.secrets."passwords/services/github-notification-token".path}) ${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
             } // config.asdf.graphical.sway.top-bar)
           ];
           startup = [{
@@ -161,6 +161,10 @@ in {
         };
         xwayland = true;
       };
+    };
+    age.secrets."passwords/services/github-notification-token" = {
+      file = ../../../secrets/passwords/services/github-notification-token.age;
+      owner = "hakanssn";
     };
   };
 }

@@ -27,6 +27,10 @@ in pkgs.writeText "configuration.toml" (""
     format = "{combo} "
 
     [[block]]
+    block = "github"
+    hide_if_total_is_zero = true
+
+    [[block]]
     block = "custom"
     json = true
     command = "${mail-status}"
