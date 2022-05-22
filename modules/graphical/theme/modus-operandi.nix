@@ -211,8 +211,6 @@ in {
           foreground = c.fg-main;
           selection_background = c.bg-region;
           selection_foreground = c.fg-main;
-          cursor = c.fg-main;
-          cursor_text_color = c.bg-main;
           # url_color = c.base04;
           # active_border_color = c.base03;
           # inactive_border_color = c.base01;
@@ -220,31 +218,6 @@ in {
           # active_tab_foreground = c.base05;
           # inactive_tab_background = c.base01;
           # inactive_tab_foreground = c.base04;
-
-          # black
-          color0 = c.bg-main;
-          # color8 = c.bg-dim;
-          # red
-          color1 = c.red;
-          # color9 = c.base12;
-          # # green
-          color2 = c.green;
-          # color10 = c.base14;
-          # # yellow
-          color3 = c.yellow;
-          # color11 = c.base13;
-          # # blue
-          color4 = c.blue;
-          # color12 = c.base16;
-          # magenta
-          color5 = c.magenta;
-          # color13 = c.base17;
-          # cyan
-          color6 = c.cyan;
-          # color14 = c.base15;
-          # white
-          # color7 = c.base06;
-          color15 = c.fg-main;
         };
 
         programs.zathura.options = {
@@ -289,13 +262,6 @@ in {
       critical_fg = "${c.fg-main}"
       separator_bg = "${c.bg-main}"
       separator = " "
-
-      [icons]
-      name = "awesome6"
-
-      [icons.overrides]
-      music_next = ""
-      music_prev = ""
     '';
 
     asdf.graphical.sway.top-bar = {

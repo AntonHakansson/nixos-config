@@ -204,9 +204,6 @@ in {
       idle_bg="${c.base00}"
       idle_fg="${c.base05}"
       separator=""
-
-      [icons]
-      name = "awesome6"
     '';
 
     asdf.graphical.sway.top-bar = {

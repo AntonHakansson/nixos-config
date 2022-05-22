@@ -3,7 +3,7 @@
 {
   options.asdf.graphical.theme = {
     active = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "onedark" "modus-operandi"]);
+      type = lib.types.nullOr (lib.types.enum [ "onedark" "modus-operandi" ]);
       default = "modus-operandi";
       apply = v:
         let envTheme = builtins.getEnv "THEME";
@@ -30,5 +30,14 @@
       ];
     };
     programs.dconf.enable = true;
+
+    asdf.graphical.sway.status-configuration.extraConfig = ''
+      [icons]
+      name = "awesome6"
+
+      [icons.overrides]
+      music_next = ""
+      music_prev = ""
+    '';
   };
 }
