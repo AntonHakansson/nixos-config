@@ -155,7 +155,9 @@ in {
             size = 9.0;
             style = "Light";
           };
-          output = { "*" = { bg = "${./modus-operandi-wallpaper.png} fill"; }; };
+          output = {
+            "*" = { bg = "${./modus-operandi-wallpaper.png} fill"; };
+          };
           colors = {
             focused = {
               border = c.cyan;
