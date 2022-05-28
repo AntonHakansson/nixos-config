@@ -26,6 +26,7 @@ let
           "history-substring-search"
           "systemd"
           "tmux"
+          "vi-mode"
         ];
         theme = "robbyrussell";
       };
