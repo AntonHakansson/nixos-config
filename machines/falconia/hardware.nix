@@ -15,7 +15,6 @@
         [ "ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk" ];
     };
     kernelModules = [ ];
-    kernelPackages = pkgs.linuxPackages_latest;
   };
 
   fileSystems."/" = {
