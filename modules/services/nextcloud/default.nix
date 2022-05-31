@@ -24,7 +24,7 @@
         autoUpdateApps.enable = true;
         autoUpdateApps.startAt = "05:00:00";
 
-        package = pkgs.nextcloud23;
+        package = pkgs.nextcloud24;
         config = {
           # Further forces Nextcloud to use HTTPS
           overwriteProtocol = "https";
