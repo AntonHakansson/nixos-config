@@ -277,11 +277,11 @@ in {
       extraConfig = ''
         colors {
           background ${c.bg-main}
-          #                   Border          BG             Text
-          focused_workspace  ${c.bg-active}   ${c.bg-active} ${c.fg-main}
-          active_workspace   ${c.bg-inactive} ${c.bg-inactive} ${c.fg-inactive}
-          inactive_workspace ${c.bg-inactive} ${c.bg-inactive} ${c.fg-inactive}
-          urgent_workspace   ${c.bg-active}   ${c.red-fringe-bg} ${c.bg-main}
+          #                   Border          BG                    Text
+          focused_workspace  ${c.bg-active}   ${c.bg-active}        ${c.fg-main}
+          active_workspace   ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
+          inactive_workspace ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
+          urgent_workspace   ${c.bg-active}   ${c.red-fringe-bg}    ${c.bg-main}
           binding_mode       ${c.bg-main}     ${c.bg-active-accent} ${c.fg-active}
         }
       '';
