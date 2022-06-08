@@ -415,19 +415,12 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
       org-catch-invisible-edits 'smart
       org-export-with-sub-superscripts '{} ; don't treat lone _ or ^ as sub/superscripts, require _{} or ^{}
       )
-
-(map! :map org-mode-map :n "SPC m l /" #'counsel-org-link)
-
-(map! :map org-mode-map
-       :leader (:prefix-map ("=" . "calc")
-                            "=" #'calc-dispatch
-                            "c" #'calc
-                            "q" #'quick-calc
-                            "g" #'calc-grab-region))
-
+#+end_src
+**** Org-Capture
+#+begin_src emacs-lisp
 (setq +org-capture-todo-file "gtd/inbox.org"
       org-agenda-files
-        (mapcar (lambda (f) (concat org-directory f))
+        (mapcar (lambda (f) (f-join org-directory f))
           '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org"))
       org-capture-templates
         '(("t" "Todo [inbox]" entry
@@ -457,6 +450,7 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
         ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
         ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
 #+end_src
+
 **** Spellcheck
 Turn on spellchecking.
 #+begin_src emacs-lisp
@@ -495,10 +489,23 @@ Turn on spellchecking.
               (message "No exported file found"))))
 #+end_src
 
-**** CDLaTeX
+**** Math editing
+=cdlatex= is useful for quickly inserting math symbols.
 #+begin_src emacs-lisp
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
 #+end_src
+
+Quickly grabbing input from the buffer and evaluation mathematical expressions is useful.
+Let us add some custom keybindings.
+#+begin_src emacs-lisp
+(map! :map org-mode-map
+      :leader (:prefix-map ("=" . "calc")
+               "=" #'calc-dispatch
+               "c" #'calc
+               "q" #'quick-calc
+                            "g" #'calc-grab-region))
+#+end_src
+
 **** Snippet Helpers
 I often want to set =src-block= headers, and it's a pain to
 + type them out
