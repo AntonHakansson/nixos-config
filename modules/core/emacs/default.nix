@@ -80,7 +80,11 @@
           # :lang cc
           ccls
           # :lang latex & :lang org (latex previews)
-          texlive.combined.scheme-medium
+          (texlive.combine {
+            inherit (texlive)
+              scheme-medium xifthen ifmtarg framed paralist titlesec wrapfig
+              amsmath svg capt-of trimspaces catchfile transparent;
+          })
           # :lang rust
           rustfmt
           rust-analyzer
