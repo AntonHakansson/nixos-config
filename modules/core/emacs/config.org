@@ -17,7 +17,7 @@ Credits to [[https://tecosaur.github.io/emacs-config/config.html][Tecosaur's Doo
 (setq-default
  delete-by-moving-to-trash t)
 
-(setq evil-want-fine-undo t         ; undoing a whole insert session is a bit too much. Make it more granular.
+(setq evil-want-fine-undo t          ; undoing a whole insert session is a bit too much. Make it more granular.
       truncate-string-ellipsis "…") ; unicode ellipsis saves some space
 
 (setq display-line-numbers-type 'relative)
@@ -370,6 +370,7 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 #+begin_src emacs-lisp
 (package! org-appear)
 #+end_src
+
 #+begin_src emacs-lisp :tangle config.el
 (use-package! org-appear
   :hook (org-mode . org-appear-mode)
@@ -430,11 +431,6 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
         ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
 #+end_src
 
-**** Spellcheck
-Turn on spellchecking.
-#+begin_src emacs-lisp
-(add-hook 'org-mode-hook 'turn-on-flyspell)
-#+end_src
 **** View Exported file
 ~:localleader v~ has no pre-existing binding, so let's use it to view possible output files.
 
@@ -689,7 +685,6 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
 #+end_src
 *** Emacs Visuals
 **** Org-modern
-
 =org-modern= implements a "modern" style of an Org buffer that looks amazing; let's use it.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -705,6 +700,13 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
 =org-modern= expects that ~org-indent-mode~ is off.
 #+begin_src emacs-lisp
 (setq org-startup-indented nil)
+#+end_src
+
+Since org-modern’s tag face supplants Org’s tag face, we need to adjust the spell-check face ignore list
+
+#+begin_src emacs-lisp
+(after! spell-fu
+  (push 'org-modern-tag (alist-get 'org-mode +spell-excluded-faces-alist)))
 #+end_src
 
 **** Font Display
@@ -764,7 +766,7 @@ It's also nice to change the character used for collapsed items (by default ~…
 
 **** Fontifying inline src blocks
 Org does lovely things with =#+begin_src= blocks, like using font-lock for
-language's major-mode behind the scenes and pulling out the lovely colourful
+language's major-mode behind the scenes and pulling out the lovely colorful
 results. By contrast, inline =src_= blocks are somewhat neglected.
 
 I am not the first person to feel this way, thankfully others have [[https://stackoverflow.com/questions/20309842/how-to-syntax-highlight-for-org-mode-inline-source-code-src-lang/28059832][taken to
