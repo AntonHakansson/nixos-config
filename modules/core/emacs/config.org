@@ -160,7 +160,7 @@ grammar                      ; tasing grammar mistake every you make
 
 #+name: doom-tools
 #+begin_src emacs-lisp
-ansible                      ; a crucible for infrastructure as code
+;;ansible                    ; a crucible for infrastructure as code
 direnv                       ; be direct about your environment
 (docker                      ; port everything to containers
  +lsp)
@@ -204,7 +204,6 @@ lua                          ; one-based indices? one-based indices
 markdown                     ; writing docs for people to ignore
 nix                          ; I hereby declare "nix geht mehr!"
 (org                         ; organize your plain life in plain text
- +pretty                     ; yessss my pretties! (nice unicode symbols)
  +dragndrop                  ; drag & drop files/images into org buffers
  +noter                      ; enhanced PDF notetaking
  +jupyter                    ; ipython/jupyter support for babel
@@ -228,7 +227,7 @@ yaml                         ; JSON, but readable
 
 #+name: doom-app
 #+begin_src emacs-lisp
-everywhere
+;;everywhere
 irc                 ; how neckbeards socialize
 (rss +org)          ; emacs as an RSS reader
 #+end_src
@@ -278,16 +277,6 @@ Allow nested snippets.
 (setq yas-triggers-in-field t)
 #+end_src
 
-** Emacs Everywhere
-Make it easy to match window with a window manger rule.
-#+begin_src emacs-lisp
-(setq emacs-everywhere-frame-name-format "emacs-anywhere")
-#+end_src
-
-In =bspwm= we can match it with:
-#+begin_src sh :tangle no
-bspc rule -a 'Emacs:emacs-everywhere' state=floating sticky=on
-#+end_src
 ** String inflection
 For when we want to change the case pattern for some piece of code.
 #+begin_src emacs-lisp :tangle packages.el
@@ -391,16 +380,6 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
   ;; for proper first-time setup, `org-appear--set-elements'
   ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))
-#+end_src
-**** Pretty tables
-#+begin_src emacs-lisp
-(package! org-pretty-table
-  :recipe (:host github :repo "Fuco1/org-pretty-table"))
-#+end_src
-
-#+begin_src emacs-lisp :tangle config.el
-(use-package! org-pretty-table
-  :commands (org-pretty-table-mode global-org-pretty-table-mode))
 #+end_src
 
 *** Behavior
