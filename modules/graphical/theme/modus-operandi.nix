@@ -226,24 +226,18 @@ in {
         programs.zathura.options = {
           default-bg = c.bg-main;
           default-fg = c.fg-main;
-          statusbar-bg = c.base04;
-          statusbar-fg = c.base02;
-          inputbar-bg = c.base00;
-          inputbar-fg = c.base07;
-          notification-bg = c.base00;
-          notification-fg = c.base07;
-          notification-error-bg = c.base00;
-          notification-error-fg = c.base08;
-          notification-warning-bg = c.base00;
-          notification-warning-fg = c.base09;
-          highlight-color = c.base0A;
-          highlight-active-color = c.base0D;
-          completion-bg = c.base01;
-          completion-fg = c.base0D;
-          completion-highlight-bg = c.base0D;
-          completion-highlight-fg = c.base07;
-          recolor-lightcolor = c.base00;
-          recolor-darkcolor = c.base06;
+          statusbar-bg = c.bg-dim;
+          statusbar-fg = c.fg-dim;
+          inputbar-bg = c.bg-alt;
+          inputbar-fg = c.fg-alt;
+          notification-bg = c.bg-active-accent;
+          notification-fg = c.fg-main;
+          notification-error-bg = c.red-fringe-bg;
+          notification-error-fg = c.fg-main;
+          notification-warning-bg = c.yellow-fringe-bg;
+          notification-warning-fg = c.fg-main;
+          recolor-lightcolor = c.fg-main;
+          recolor-darkcolor = c.bg-main;
         };
       };
 
