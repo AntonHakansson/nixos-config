@@ -381,6 +381,17 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
   (run-at-time nil nil #'org-appear--set-elements))
 #+end_src
 
+**** Sage Math
+#+begin_src emacs-lisp
+(package! sage-shell-mode)
+(package! ob-sagemath)
+#+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! sage-shell-mode)
+(use-package! ob-sagemath)
+#+end_src
+
 *** Behavior
 **** Defaults
 #+begin_src emacs-lisp :noweb-ref org-conf
