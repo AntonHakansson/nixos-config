@@ -57,22 +57,6 @@
         "type": "github"
       }
     },
-    "flake-compat": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1650374568,
-        "narHash": "sha256-Z+s0J8/r907g149rllvwhb4pKi8Wam5ij0st8PwAh+E=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "b4a34015c698c7793d592d66adbab377907a2be8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "locked": {
         "lastModified": 1656065134,
@@ -105,20 +89,17 @@
     },
     "home-manager": {
       "inputs": {
-        "flake-compat": "flake-compat",
         "nixpkgs": [
           "nixpkgs"
         ],
-        "nmd": "nmd",
-        "nmt": "nmt",
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1656272360,
-        "narHash": "sha256-ceFmGObEq5GjObuZ3rI5PUad/OI6yulvsa6mMPciaic=",
+        "lastModified": 1656274966,
+        "narHash": "sha256-jU+OTSvUbvKKmbNNl4XkUyW3EGdqZDNEZtGs++NbDlM=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "0434f8e4cab4f200c9b4d3741a9e5d89705e6754",
+        "rev": "9550595502bf437be7eb32f312a924ec891872d1",
         "type": "github"
       },
       "original": {
@@ -196,45 +177,13 @@
         "type": "indirect"
       }
     },
-    "nmd": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1653339422,
-        "narHash": "sha256-RNLq09vfj21TyYuUCeD6BNTNC6Ew8bLhQULZytN4Xx8=",
-        "owner": "rycee",
-        "repo": "nmd",
-        "rev": "91dee681dd1c478d6040a00835d73c0f4a4c5c29",
-        "type": "gitlab"
-      },
-      "original": {
-        "owner": "rycee",
-        "repo": "nmd",
-        "type": "gitlab"
-      }
-    },
-    "nmt": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1648075362,
-        "narHash": "sha256-u36WgzoA84dMVsGXzml4wZ5ckGgfnvS0ryzo/3zn/Pc=",
-        "owner": "rycee",
-        "repo": "nmt",
-        "rev": "d83601002c99b78c89ea80e5e6ba21addcfe12ae",
-        "type": "gitlab"
-      },
-      "original": {
-        "owner": "rycee",
-        "repo": "nmt",
-        "type": "gitlab"
-      }
-    },
     "nur": {
       "locked": {
-        "lastModified": 1656273455,
-        "narHash": "sha256-pk7bC+T2TnBg5wqgbnrBpkTb+xBYbsQpLXt7eDfOPiI=",
+        "lastModified": 1656277200,
+        "narHash": "sha256-6z1eLdYaJbN1K1A6wJaGBwhOsFSQFktrhzJJsJLNGFU=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "912b297b26b263842b3e2d0f8bdcf8bd14877566",
+        "rev": "2b15f00595c7234ece4c657094cee2ddcaea14e7",
         "type": "github"
       },
       "original": {
