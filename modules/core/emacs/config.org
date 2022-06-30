@@ -395,6 +395,7 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 *** Behavior
 **** Defaults
 #+begin_src emacs-lisp :noweb-ref org-conf
+(require 'f) ;; f-join function
 (setq org-directory "~/documents/org"
       org-roam-directory (concat org-directory "/roam")
       +org-capture-journal-file (f-join org-directory "journal.org")
