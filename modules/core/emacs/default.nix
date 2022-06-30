@@ -9,7 +9,7 @@
       readOnly = true;
       default =
         ((pkgs.emacsPackagesFor pkgs.emacsPgtkNativeComp).emacsWithPackages
-          (epkgs: [ epkgs.vterm ]));
+          (epkgs: with epkgs; [ vterm pdf-tools ]));
     };
   };
 
