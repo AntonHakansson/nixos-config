@@ -58,6 +58,7 @@
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
+    bluetooth.enable = true;
     opengl.enable = true;
     opengl.extraPackages = with pkgs;
       [
