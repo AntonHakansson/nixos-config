@@ -111,8 +111,12 @@ in {
 
             ## Bar
             "${modifier}+b" = "exec swaymsg bar mode toggle";
+
+            ## Notifications
             "${modifier}+n" =
-              "exec ${pkgs.mako}/bin/makoctl invoke"; # Invoke default action on top notification.
+              "exec ${pkgs.mako}/bin/makoctl dismiss";
+            "${modifier}+Shift+n" =
+              "exec ${pkgs.mako}/bin/makoctl invoke";
 
             ## Programs
             "${modifier}+Slash" =
