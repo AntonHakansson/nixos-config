@@ -1,4 +1,4 @@
- {config, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   launcher = import ./launcher.nix {
@@ -69,8 +69,9 @@ in {
           bars = [
             ({
               position = "top";
-              statusCommand =
-                "env I3RS_GITHUB_TOKEN=$(<${config.age.secrets."passwords/services/github-notification-token".path}) ${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
+              statusCommand = "env I3RS_GITHUB_TOKEN=$(<${
+                  config.age.secrets."passwords/services/github-notification-token".path
+                }) ${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
             } // config.asdf.graphical.sway.top-bar)
           ];
           startup = [{
@@ -113,10 +114,8 @@ in {
             "${modifier}+b" = "exec swaymsg bar mode toggle";
 
             ## Notifications
-            "${modifier}+n" =
-              "exec ${pkgs.mako}/bin/makoctl dismiss";
-            "${modifier}+Shift+n" =
-              "exec ${pkgs.mako}/bin/makoctl invoke";
+            "${modifier}+n" = "exec ${pkgs.mako}/bin/makoctl dismiss";
+            "${modifier}+Shift+n" = "exec ${pkgs.mako}/bin/makoctl invoke";
 
             ## Programs
             "${modifier}+Slash" =
