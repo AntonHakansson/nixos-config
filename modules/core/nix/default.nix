@@ -31,7 +31,7 @@ let
     };
   };
 in {
-  options.asdf.core.nix = {
+  options.hakanssn.core.nix = {
     enableDirenv = lib.mkOption { default = true; };
     unfreePackages = lib.mkOption {
       default = [ ];
@@ -42,13 +42,13 @@ in {
   };
 
   config = {
-    asdf.core = {
+    hakanssn.core = {
       zfs = {
         homeCacheLinks =
-          (lib.optional config.asdf.core.nix.enableDirenv ".local/share/direnv")
-          ++ (lib.optional config.asdf.core.nix.enableNixIndex
+          (lib.optional config.hakanssn.core.nix.enableDirenv ".local/share/direnv")
+          ++ (lib.optional config.hakanssn.core.nix.enableNixIndex
             ".cache/nix-index");
-        systemCacheLinks = (lib.optional config.asdf.core.nix.enableDirenv
+        systemCacheLinks = (lib.optional config.hakanssn.core.nix.enableDirenv
           "/root/.local/share/direnv");
       };
     };
@@ -74,20 +74,20 @@ in {
         ];
         trusted-users = [ "@wheel" ];
       };
-      extraOptions = lib.mkIf config.asdf.core.nix.enableDirenv ''
+      extraOptions = lib.mkIf config.hakanssn.core.nix.enableDirenv ''
         keep-outputs = true
         keep-derivations = true
       '';
     };
 
     nixpkgs.config.allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) config.asdf.core.nix.unfreePackages;
+      builtins.elem (lib.getName pkg) config.hakanssn.core.nix.unfreePackages;
 
     home-manager.users.hakanssn = { ... }:
       lib.recursiveUpdate
-      (lib.optionalAttrs config.asdf.core.nix.enableDirenv baseDirenv)
-      (lib.optionalAttrs config.asdf.core.nix.enableNixIndex baseNixIndex);
+      (lib.optionalAttrs config.hakanssn.core.nix.enableDirenv baseDirenv)
+      (lib.optionalAttrs config.hakanssn.core.nix.enableNixIndex baseNixIndex);
     home-manager.users.root = { ... }:
-      lib.optionalAttrs config.asdf.core.nix.enableDirenv baseDirenv;
+      lib.optionalAttrs config.hakanssn.core.nix.enableDirenv baseDirenv;
   };
 }

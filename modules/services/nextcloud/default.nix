@@ -1,9 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.services.nextcloud.enable = lib.mkEnableOption "nextcloud";
-  config = lib.mkIf config.asdf.services.nextcloud.enable {
-    asdf.core.zfs.systemDataLinks = [
+  options.hakanssn.services.nextcloud.enable = lib.mkEnableOption "nextcloud";
+  config = lib.mkIf config.hakanssn.services.nextcloud.enable {
+    hakanssn.core.zfs.systemDataLinks = [
       {
         directory = "/var/lib/nextcloud";
         user = "nextcloud";
@@ -20,7 +20,7 @@
         hostName = "nextcloud.hakanssn.com";
         https = true;
 
-        home = "${config.asdf.dataPrefix}/var/lib/nextcloud";
+        home = "${config.hakanssn.dataPrefix}/var/lib/nextcloud";
         autoUpdateApps.enable = true;
         autoUpdateApps.startAt = "05:00:00";
 
@@ -45,7 +45,7 @@
       postgresql = {
         enable = true;
         dataDir =
-          "${config.asdf.dataPrefix}/var/lib/postgresql/${config.services.postgresql.package.psqlSchema}";
+          "${config.hakanssn.dataPrefix}/var/lib/postgresql/${config.services.postgresql.package.psqlSchema}";
         ensureDatabases = [ "nextcloud" ];
         ensureUsers = [{
           name = "nextcloud";

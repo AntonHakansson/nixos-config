@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }: {
-  options.asdf.development.git = {
+  options.hakanssn.development.git = {
     enable = lib.mkOption {
       default = true;
       example = false;
@@ -17,7 +17,7 @@
       programs.git = {
         enable = true;
 
-        userEmail = config.asdf.development.git.email;
+        userEmail = config.hakanssn.development.git.email;
         userName = "Anton Hakansson";
 
         lfs.enable = true;
@@ -41,11 +41,11 @@
         ignores = [ ".direnv" ".envrc" ];
         # signing = {
         #   key = "anton@hakanssn.com";
-        #   signByDefault = config.asdf.graphical.enable;
+        #   signByDefault = config.hakanssn.graphical.enable;
         # };
       };
     };
-  in lib.mkIf config.asdf.development.git.enable {
+  in lib.mkIf config.hakanssn.development.git.enable {
     home-manager.users.hakanssn = { ... }: base;
     home-manager.users.root = { ... }: base;
   };

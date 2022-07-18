@@ -1,9 +1,9 @@
 { config, lib, ... }:
 
 {
-  options.asdf.graphical.pass.enable = lib.mkEnableOption "passwordstore";
+  options.hakanssn.graphical.pass.enable = lib.mkEnableOption "passwordstore";
 
-  config = lib.mkIf config.asdf.graphical.pass.enable {
+  config = lib.mkIf config.hakanssn.graphical.pass.enable {
     nixpkgs.overlays = [
       (self: super: {
         pass = (super.pass.override { pass = super.pass-wayland; });

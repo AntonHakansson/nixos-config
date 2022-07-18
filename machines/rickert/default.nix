@@ -3,7 +3,7 @@
 
   networking.hostId = "258f6cbd";
 
-  asdf = {
+  hakanssn = {
     stateVersion = "21.11";
     core = {
       zfs = {

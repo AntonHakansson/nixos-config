@@ -42,7 +42,7 @@ let
     };
   };
 in {
-  options.asdf.graphical.firefox = {
+  options.hakanssn.graphical.firefox = {
     enable = lib.mkEnableOption "firefox";
     package = lib.mkOption {
       description = "Final used firefox package";
@@ -51,9 +51,9 @@ in {
     };
   };
 
-  config = lib.mkIf config.asdf.graphical.firefox.enable {
-    asdf.core.zfs.homeCacheLinks = [ ".cache/mozilla" ];
-    asdf.core.zfs.homeDataLinks = [ ".mozilla" ];
+  config = lib.mkIf config.hakanssn.graphical.firefox.enable {
+    hakanssn.core.zfs.homeCacheLinks = [ ".cache/mozilla" ];
+    hakanssn.core.zfs.homeDataLinks = [ ".mozilla" ];
 
     home-manager.users.hakanssn = { ... }: {
       programs = {

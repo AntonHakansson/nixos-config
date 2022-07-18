@@ -1,7 +1,7 @@
 { config, lib, ... }: {
-  options.asdf.core.network.enable = lib.mkEnableOption "wireless";
+  options.hakanssn.core.network.enable = lib.mkEnableOption "wireless";
 
-  config = lib.mkIf config.asdf.core.network.enable {
+  config = lib.mkIf config.hakanssn.core.network.enable {
     networking.wireless = {
       enable = true;
       environmentFile = config.age.secrets."passwords/networks.age".path;

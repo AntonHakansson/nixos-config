@@ -78,7 +78,7 @@
   services.fstrim.enable = true;
 
   # Nvidia proprietary drivers
-  # asdf.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
+  # hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
   # services.xserver.videoDrivers = [ "nvidia" ];
   # hardware.nvidia.modesetting.enable = true;
   # home-manager.users.hakanssn = { pkgs, ... }: {

@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }: {
-  options.asdf.core.zfs = {
+  options.hakanssn.core.zfs = {
     encrypted = lib.mkEnableOption "zfs request credentials";
 
     systemCacheLinks = lib.mkOption { default = [ ]; };
@@ -27,28 +27,28 @@
   };
 
   config = {
-    asdf.dataPrefix = lib.mkDefault "/data";
-    asdf.cachePrefix = lib.mkDefault "/cache";
+    hakanssn.dataPrefix = lib.mkDefault "/data";
+    hakanssn.cachePrefix = lib.mkDefault "/cache";
 
-    environment.persistence."${config.asdf.cachePrefix}" = {
+    environment.persistence."${config.hakanssn.cachePrefix}" = {
       hideMounts = true;
-      directories = config.asdf.core.zfs.systemCacheLinks;
-      users.hakanssn.directories = config.asdf.core.zfs.homeCacheLinks;
+      directories = config.hakanssn.core.zfs.systemCacheLinks;
+      users.hakanssn.directories = config.hakanssn.core.zfs.homeCacheLinks;
     };
-    environment.persistence."${config.asdf.dataPrefix}" = {
+    environment.persistence."${config.hakanssn.dataPrefix}" = {
       hideMounts = true;
-      directories = config.asdf.core.zfs.systemDataLinks;
-      users.hakanssn.directories = config.asdf.core.zfs.homeDataLinks;
+      directories = config.hakanssn.core.zfs.systemDataLinks;
+      users.hakanssn.directories = config.hakanssn.core.zfs.homeDataLinks;
     };
 
     boot = {
       supportedFilesystems = [ "zfs" ];
       zfs = {
         devNodes = "/dev/";
-        requestEncryptionCredentials = config.asdf.core.zfs.encrypted;
+        requestEncryptionCredentials = config.hakanssn.core.zfs.encrypted;
       };
       initrd.postDeviceCommands = lib.mkAfter ''
-        zfs rollback -r ${config.asdf.core.zfs.rootDataset}@blank
+        zfs rollback -r ${config.hakanssn.core.zfs.rootDataset}@blank
       '';
     };
 
@@ -58,7 +58,7 @@
         trim.enable = true;
       };
       # znapzend = {
-      #   enable = config.asdf.core.zfs.backups != [ ];
+      #   enable = config.hakanssn.core.zfs.backups != [ ];
       #   pure = true;
       #   autoCreation = true;
       #   zetup = builtins.listToAttrs (map (elem: {
@@ -77,25 +77,25 @@
       #         dataset = elem.remotePath;
       #       };
       #     };
-      #   }) config.asdf.core.zfs.backups);
+      #   }) config.hakanssn.core.zfs.backups);
       # };
     };
 
     # Discover directories that will be removed on next boot
     environment.systemPackages = [
       (pkgs.writeScriptBin "zfsdiff" ''
-        doas zfs diff ${config.asdf.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/hakanssn/"
+        doas zfs diff ${config.hakanssn.core.zfs.rootDataset}@blank -F | ${pkgs.ripgrep}/bin/rg -e "\+\s+/\s+" | cut -f3- | ${pkgs.skim}/bin/sk --query "/home/hakanssn/"
       '')
     ];
 
     system.activationScripts = let
       ensureSystemExistsScript = lib.concatStringsSep "\n"
         (map (path: ''mkdir -p "${path}"'')
-          config.asdf.core.zfs.ensureSystemExists);
+          config.hakanssn.core.zfs.ensureSystemExists);
       ensureHomeExistsScript = lib.concatStringsSep "\n" (map (path:
         ''
           mkdir -p "/home/hakanssn/${path}"; chown hakanssn:users /home/hakanssn/${path};'')
-        config.asdf.core.zfs.ensureHomeExists);
+        config.hakanssn.core.zfs.ensureHomeExists);
     in {
       ensureSystemPathsExist = {
         text = ensureSystemExistsScript;

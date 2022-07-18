@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.core.emacs = {
+  options.hakanssn.core.emacs = {
     enable = lib.mkEnableOption "emacs";
     doomEmacsRevision =
       lib.mkOption { default = "bea3cc161c0a803dcf574f32ee555dccf565a5ce"; };
@@ -21,7 +21,7 @@
       mkdir -p $out
       cp ${./config.org} $out/config.org
       cd $out
-      ${config.asdf.core.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "./config.org")'
+      ${config.hakanssn.core.emacs.package}/bin/emacs --batch --eval "(require 'org)" --eval '(org-babel-tangle-file "./config.org")'
       rm $out/config.org
     '';
     emacsDaemonScript = pkgs.writeScript "emacs-daemon" ''
@@ -30,20 +30,20 @@
         mkdir -p ${EMACSDIR}
         git -C ${EMACSDIR} init
       fi
-      if [ $(git -C ${EMACSDIR} rev-parse HEAD) != ${config.asdf.core.emacs.doomEmacsRevision} ]; then
+      if [ $(git -C ${EMACSDIR} rev-parse HEAD) != ${config.hakanssn.core.emacs.doomEmacsRevision} ]; then
         git -C ${EMACSDIR} fetch https://github.com/hlissner/doom-emacs.git || true
-        git -C ${EMACSDIR} checkout ${config.asdf.core.emacs.doomEmacsRevision} || true
+        git -C ${EMACSDIR} checkout ${config.hakanssn.core.emacs.doomEmacsRevision} || true
         ${EMACSDIR}/bin/doom sync || true
       fi
-      exec ${config.asdf.core.emacs.package}/bin/emacs --daemon
+      exec ${config.hakanssn.core.emacs.package}/bin/emacs --daemon
     '';
-  in lib.mkIf config.asdf.core.emacs.enable {
-    asdf.core.zfs.homeCacheLinks = [ ".config/emacs" ".local/share/doom" ];
+  in lib.mkIf config.hakanssn.core.emacs.enable {
+    hakanssn.core.zfs.homeCacheLinks = [ ".config/emacs" ".local/share/doom" ];
 
     home-manager.users.hakanssn = { lib, ... }: {
       home = {
         packages = with pkgs; [
-          config.asdf.core.emacs.package
+          config.hakanssn.core.emacs.package
 
           gcc
           binutils # native-comp needs 'as', provided by this

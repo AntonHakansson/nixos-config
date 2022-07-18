@@ -1,12 +1,12 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.games.enable =
+  options.hakanssn.graphical.games.enable =
     lib.mkEnableOption "Enable game launchers";
 
-  config = lib.mkIf config.asdf.graphical.games.enable {
-    asdf.core.zfs.homeCacheLinks = [ ".local/share/Steam" ];
+  config = lib.mkIf config.hakanssn.graphical.games.enable {
+    hakanssn.core.zfs.homeCacheLinks = [ ".local/share/Steam" ];
     programs.steam.enable = true;
-    asdf.core.nix.unfreePackages = [ "steam" "steam-original" "steam-runtime" ];
+    hakanssn.core.nix.unfreePackages = [ "steam" "steam-original" "steam-runtime" ];
   };
 }

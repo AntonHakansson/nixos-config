@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  config = lib.mkIf config.asdf.graphical.media.documents.enable {
+  config = lib.mkIf config.hakanssn.graphical.media.documents.enable {
     home-manager.users.hakanssn = { ... }: {
       home.packages = with pkgs; [ okular ];
       programs.zathura = {

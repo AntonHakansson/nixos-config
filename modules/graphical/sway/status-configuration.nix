@@ -10,7 +10,7 @@ let
     fi
   '';
 in pkgs.writeText "configuration.toml" (""
-  + (lib.optionalString config.asdf.graphical.laptop ''
+  + (lib.optionalString config.hakanssn.graphical.laptop ''
     [[block]]
     block = "battery"
 
@@ -46,4 +46,4 @@ in pkgs.writeText "configuration.toml" (""
     block = "time"
     interval = 5
     format = "%a %d/%m %H:%M"
-  '' + config.asdf.graphical.sway.status-configuration.extraConfig)
+  '' + config.hakanssn.graphical.sway.status-configuration.extraConfig)

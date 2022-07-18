@@ -1,9 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.terminal.enable = lib.mkEnableOption "terminal";
+  options.hakanssn.graphical.terminal.enable = lib.mkEnableOption "terminal";
 
-  config = lib.mkIf config.asdf.graphical.terminal.enable {
+  config = lib.mkIf config.hakanssn.graphical.terminal.enable {
     home-manager.users.hakanssn = { pkgs, ... }: {
       programs.kitty = {
         enable = true;

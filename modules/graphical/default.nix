@@ -15,14 +15,14 @@
     ./xdg
   ];
 
-  options.asdf.graphical = {
+  options.hakanssn.graphical = {
     enable = lib.mkEnableOption "graphical environment";
     laptop = lib.mkEnableOption "laptop configuration";
   };
 
-  config = lib.mkIf config.asdf.graphical.enable {
+  config = lib.mkIf config.hakanssn.graphical.enable {
     users.users.hakanssn.extraGroups = [ "input" "video" ];
-    asdf = {
+    hakanssn = {
       graphical = {
         audio.enable = lib.mkDefault true;
         firefox.enable = lib.mkDefault true;

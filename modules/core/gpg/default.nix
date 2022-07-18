@@ -2,9 +2,9 @@
 
 {
   config =
-    let pinentryFlavor = if config.asdf.graphical.enable then "gtk2" else "tty";
+    let pinentryFlavor = if config.hakanssn.graphical.enable then "gtk2" else "tty";
     in {
-      asdf.core.zfs.homeDataLinks = [{
+      hakanssn.core.zfs.homeDataLinks = [{
         directory = ".gnupg";
         mode = "0700";
       }];

@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.services.mail.enable = lib.mkEnableOption "mail";
+  options.hakanssn.services.mail.enable = lib.mkEnableOption "mail";
 
-  config = lib.mkIf config.asdf.services.mail.enable {
-    asdf.core.zfs.systemCacheLinks = [
+  config = lib.mkIf config.hakanssn.services.mail.enable {
+    hakanssn.core.zfs.systemCacheLinks = [
       {
         directory = "/var/lib/dhparams";
         group = "dhcpcd";
@@ -31,7 +31,7 @@
       }
     ];
 
-    asdf.core.zfs.systemDataLinks = [
+    hakanssn.core.zfs.systemDataLinks = [
       {
         directory = "/var/vmail";
         user = "virtualMail";
@@ -67,7 +67,7 @@
         };
       };
 
-      indexDir = "${config.asdf.cachePrefix}/var/lib/dovecot/indices";
+      indexDir = "${config.hakanssn.cachePrefix}/var/lib/dovecot/indices";
 
       # Enable POP3 for retrieving mail with gmail because it does not support imap
       # When configuring POP3 on gmail client use SSL on port 995

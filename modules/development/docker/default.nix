@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.development.docker.enable = lib.mkEnableOption "docker";
+  options.hakanssn.development.docker.enable = lib.mkEnableOption "docker";
 
-  config = lib.mkIf config.asdf.development.docker.enable {
-    asdf.core.zfs.systemDataLinks = [ "/var/lib/docker" ];
+  config = lib.mkIf config.hakanssn.development.docker.enable {
+    hakanssn.core.zfs.systemDataLinks = [ "/var/lib/docker" ];
 
     virtualisation.docker = {
       enable = true;

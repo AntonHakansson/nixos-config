@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  config = lib.mkIf config.asdf.graphical.media.mpv.enable {
+  config = lib.mkIf config.hakanssn.graphical.media.mpv.enable {
     home-manager.users.hakanssn = { ... }: {
       programs.mpv = {
         enable = true;

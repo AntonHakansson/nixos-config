@@ -98,7 +98,7 @@ let
   iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
   iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
 in {
-  config = lib.mkIf (config.asdf.graphical.theme.active == "modus-operandi") {
+  config = lib.mkIf (config.hakanssn.graphical.theme.active == "modus-operandi") {
     fonts = {
       fontconfig = {
         defaultFonts = {
@@ -242,7 +242,7 @@ in {
       };
 
     # Available options: https://github.com/greshake/i3status-rust/blob/master/doc/themes.md#available-theme-overrides
-    asdf.graphical.sway.status-configuration.extraConfig = ''
+    hakanssn.graphical.sway.status-configuration.extraConfig = ''
       [theme]
       name = "plain"
 
@@ -261,7 +261,7 @@ in {
       separator = " "
     '';
 
-    asdf.graphical.sway.top-bar = {
+    hakanssn.graphical.sway.top-bar = {
       fonts = {
         names = config.fonts.fontconfig.defaultFonts.sansSerif;
         size = 9.0;

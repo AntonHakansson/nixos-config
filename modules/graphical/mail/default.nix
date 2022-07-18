@@ -10,8 +10,8 @@
         ${pkgs.libnotify}/bin/notify-send -t 5000 "New ${name} mail arrived ($unseen_count)"
       '';
   in {
-    asdf.core.zfs.homeDataLinks = [ "mail" ];
-    asdf.core.zfs.homeCacheLinks = [ ".cache/mu" ];
+    hakanssn.core.zfs.homeDataLinks = [ "mail" ];
+    hakanssn.core.zfs.homeCacheLinks = [ ".cache/mu" ];
 
     home-manager.users.hakanssn = { ... }: {
       accounts.email = {

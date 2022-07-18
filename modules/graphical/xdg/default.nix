@@ -1,11 +1,11 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.xdg.enable = lib.mkEnableOption "xdg folders";
+  options.hakanssn.graphical.xdg.enable = lib.mkEnableOption "xdg folders";
 
-  config = lib.mkIf config.asdf.graphical.xdg.enable {
-    asdf.core.zfs.homeDataLinks = [ "documents" "music" "pictures" "videos" ];
-    asdf.core.zfs.homeCacheLinks = [ "downloads" "repos" ];
+  config = lib.mkIf config.hakanssn.graphical.xdg.enable {
+    hakanssn.core.zfs.homeDataLinks = [ "documents" "music" "pictures" "videos" ];
+    hakanssn.core.zfs.homeCacheLinks = [ "downloads" "repos" ];
 
     home-manager.users.hakanssn = { pkgs, ... }: {
       home.packages = with pkgs; [ xdg-user-dirs xdg_utils ];

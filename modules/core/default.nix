@@ -16,7 +16,7 @@
     ./zsh
   ];
 
-  options.asdf = {
+  options.hakanssn = {
     stateVersion = lib.mkOption { example = "21.11"; };
 
     dataPrefix = lib.mkOption { example = "/data"; };
@@ -28,7 +28,7 @@
     home-manager.useGlobalPkgs = true;
 
     system = {
-      stateVersion = config.asdf.stateVersion;
+      stateVersion = config.hakanssn.stateVersion;
       autoUpgrade = {
         enable = true;
         flake = "github:AntonHakansson/nixos-config";
@@ -37,8 +37,8 @@
       };
     };
     home-manager.users = {
-      hakanssn = { ... }: { home.stateVersion = config.asdf.stateVersion; };
-      root = { ... }: { home.stateVersion = config.asdf.stateVersion; };
+      hakanssn = { ... }: { home.stateVersion = config.hakanssn.stateVersion; };
+      root = { ... }: { home.stateVersion = config.hakanssn.stateVersion; };
     };
 
     environment.systemPackages = with pkgs; [
@@ -106,6 +106,6 @@
       ../../secrets/passwords/users/root.age;
 
     # tldr cache
-    asdf.core.zfs.homeCacheLinks = [ ".cache/tealdeer" ];
+    hakanssn.core.zfs.homeCacheLinks = [ ".cache/tealdeer" ];
   };
 }

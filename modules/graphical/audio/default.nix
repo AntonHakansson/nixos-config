@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.audio.enable = lib.mkEnableOption "audio";
+  options.hakanssn.graphical.audio.enable = lib.mkEnableOption "audio";
 
-  config = lib.mkIf config.asdf.graphical.audio.enable {
-    asdf.core.zfs.homeCacheLinks = [ ".local/state/wireplumber" ];
+  config = lib.mkIf config.hakanssn.graphical.audio.enable {
+    hakanssn.core.zfs.homeCacheLinks = [ ".local/state/wireplumber" ];
 
     home-manager.users.hakanssn = { ... }: {
       home.packages = with pkgs; [ pavucontrol ];

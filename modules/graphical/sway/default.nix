@@ -16,7 +16,7 @@ let
     '';
   };
 in {
-  options.asdf.graphical.sway = {
+  options.hakanssn.graphical.sway = {
     enable = lib.mkEnableOption "swaywm";
     top-bar = lib.mkOption {
       default = { };
@@ -28,7 +28,7 @@ in {
     };
   };
 
-  config = lib.mkIf config.asdf.graphical.sway.enable {
+  config = lib.mkIf config.hakanssn.graphical.sway.enable {
     services.dbus.packages = with pkgs; [ dconf ];
     security.pam.services.swaylock = { };
     xdg.portal = {
@@ -72,7 +72,7 @@ in {
               statusCommand = "env I3RS_GITHUB_TOKEN=$(<${
                   config.age.secrets."passwords/services/github-notification-token".path
                 }) ${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
-            } // config.asdf.graphical.sway.top-bar)
+            } // config.hakanssn.graphical.sway.top-bar)
           ];
           startup = [{
             command =
@@ -149,7 +149,7 @@ in {
           default_border pixel
 
           workspace 1
-          exec ${config.asdf.graphical.firefox.package}/bin/firefox
+          exec ${config.hakanssn.graphical.firefox.package}/bin/firefox
         '';
         extraSessionCommands = ''
           export XDG_SESSION_TYPE=wayland

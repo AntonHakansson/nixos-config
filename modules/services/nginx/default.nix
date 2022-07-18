@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.services.nginx = {
+  options.hakanssn.services.nginx = {
     enable = lib.mkOption {
       readOnly = true;
-      default = (builtins.length config.asdf.services.nginx.hosts) > 0;
+      default = (builtins.length config.hakanssn.services.nginx.hosts) > 0;
     };
     hosts = lib.mkOption {
       default = [ ];
@@ -27,7 +27,7 @@
     };
   };
 
-  config = lib.mkIf config.asdf.services.nginx.enable {
+  config = lib.mkIf config.hakanssn.services.nginx.enable {
     networking.firewall.allowedTCPPorts = [ 80 443 ];
     security.acme = {
       certs."hakanssn.com" = {
@@ -36,7 +36,7 @@
       defaults.email = "webmaster@hakanssn.com";
       acceptTerms = true;
     };
-    asdf.core.zfs.systemDataLinks = [ "/var/lib/acme" ];
+    hakanssn.core.zfs.systemDataLinks = [ "/var/lib/acme" ];
     services.nginx = {
       enable = true;
       recommendedTlsSettings = true;
@@ -55,7 +55,7 @@
             '' + (elem.extraProxySettings or "");
           };
         } // (elem.options or { });
-      }) config.asdf.services.nginx.hosts);
+      }) config.hakanssn.services.nginx.hosts);
     };
     users.users = {
       nginx.extraGroups = [ "acme" ];

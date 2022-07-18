@@ -17,7 +17,7 @@
       tls_trust_file = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
       user = "postbot@hakanssn.com";
     };
-    setSendmail = !config.asdf.services.mail.enable;
+    setSendmail = !config.hakanssn.services.mail.enable;
   };
 
   age.secrets."passwords/services/mail/ssmtp-webmaster-pass".file =

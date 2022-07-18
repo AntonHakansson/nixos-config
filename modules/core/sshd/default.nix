@@ -1,8 +1,8 @@
 { config, lib, ... }:
 
 {
-  asdf.core.zfs = {
-    ensureSystemExists = [ "${config.asdf.dataPrefix}/etc/ssh" ];
+  hakanssn.core.zfs = {
+    ensureSystemExists = [ "${config.hakanssn.dataPrefix}/etc/ssh" ];
     ensureHomeExists = [ ".ssh" ];
   };
 
@@ -12,11 +12,11 @@
     hostKeys = [
       {
         bits = 4096;
-        path = "${config.asdf.dataPrefix}/etc/ssh/ssh_host_rsa_key";
+        path = "${config.hakanssn.dataPrefix}/etc/ssh/ssh_host_rsa_key";
         type = "rsa";
       }
       {
-        path = "${config.asdf.dataPrefix}/etc/ssh/ssh_host_ed25519_key";
+        path = "${config.hakanssn.dataPrefix}/etc/ssh/ssh_host_ed25519_key";
         type = "ed25519";
       }
     ];

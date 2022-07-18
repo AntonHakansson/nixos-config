@@ -10,7 +10,7 @@ let
       dotDir = ".config/zsh";
       history = {
         expireDuplicatesFirst = true;
-        path = "${config.asdf.cachePrefix}${home}/.local/share/zsh/history";
+        path = "${config.hakanssn.cachePrefix}${home}/.local/share/zsh/history";
       };
       initExtra = ''
         ${pkgs.any-nix-shell}/bin/any-nix-shell zsh --info-right | source /dev/stdin
@@ -71,8 +71,8 @@ let
   });
 in {
   programs.zsh.enable = true;
-  asdf.core.zfs.systemCacheLinks = [ "/root/.local/share/autojump" ];
-  asdf.core.zfs.homeCacheLinks = [ ".local/share/autojump" ];
+  hakanssn.core.zfs.systemCacheLinks = [ "/root/.local/share/autojump" ];
+  hakanssn.core.zfs.homeCacheLinks = [ ".local/share/autojump" ];
   home-manager.users.hakanssn = { ... }: (base "/home/hakanssn");
   home-manager.users.root = { ... }: (base "/root");
 }

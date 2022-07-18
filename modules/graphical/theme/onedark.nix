@@ -34,7 +34,7 @@ let
     base17 = "#de73ff"; # Bright purple
   };
 in {
-  config = lib.mkIf (config.asdf.graphical.theme.active == "onedark") {
+  config = lib.mkIf (config.hakanssn.graphical.theme.active == "onedark") {
     fonts = {
       fontconfig = {
         defaultFonts = {
@@ -196,7 +196,7 @@ in {
         };
       };
 
-    asdf.graphical.sway.status-configuration.extraConfig = ''
+    hakanssn.graphical.sway.status-configuration.extraConfig = ''
       [theme]
       name = "dracula"
 
@@ -206,7 +206,7 @@ in {
       separator=""
     '';
 
-    asdf.graphical.sway.top-bar = {
+    hakanssn.graphical.sway.top-bar = {
       fonts = {
         names = config.fonts.fontconfig.defaultFonts.sansSerif;
         size = 9.0;

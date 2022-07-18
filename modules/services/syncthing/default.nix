@@ -1,10 +1,10 @@
 { config, lib, ... }:
 
 {
-  options.asdf.services.syncthing.enable = lib.mkEnableOption "syncthing";
+  options.hakanssn.services.syncthing.enable = lib.mkEnableOption "syncthing";
 
-  config = lib.mkIf config.asdf.services.syncthing.enable {
-    asdf.core.zfs.systemDataLinks = [ "/var/lib/syncthing" ];
+  config = lib.mkIf config.hakanssn.services.syncthing.enable {
+    hakanssn.core.zfs.systemDataLinks = [ "/var/lib/syncthing" ];
 
     services.syncthing = {
       enable = true;
@@ -15,7 +15,7 @@
       configDir = "/var/lib/syncthing/.config";
     };
 
-    asdf.services.nginx.hosts = [{
+    hakanssn.services.nginx.hosts = [{
       fqdn = "syncthing.hakanssn.com";
       basicProxy = "http://localhost:8384";
       options.basicAuthFile =

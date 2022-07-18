@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  options.asdf.graphical.theme = {
+  options.hakanssn.graphical.theme = {
     active = lib.mkOption {
       type = lib.types.nullOr (lib.types.enum [ "onedark" "modus-operandi" ]);
       default = "modus-operandi";
@@ -17,7 +17,7 @@
 
   imports = [ ./onedark.nix ./modus-operandi.nix ];
 
-  config = lib.mkIf (config.asdf.graphical.theme.active != null) {
+  config = lib.mkIf (config.hakanssn.graphical.theme.active != null) {
     fonts = {
       fontDir.enable = true;
       fontconfig = { enable = true; };
@@ -31,7 +31,7 @@
     };
     programs.dconf.enable = true;
 
-    asdf.graphical.sway.status-configuration.extraConfig = ''
+    hakanssn.graphical.sway.status-configuration.extraConfig = ''
       [icons]
       name = "awesome6"
 
