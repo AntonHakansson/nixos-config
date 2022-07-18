@@ -123,6 +123,10 @@ in {
               "exec ${terminal} --class sway-which-key -e ${sway-which-key}/bin/sway-which-key";
 
             ## Media keys
+            "${modifier}+bracketleft" =
+              "exec ${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ -5%";
+            "${modifier}+bracketright" =
+              "exec ${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%";
             "XF86AudioRaiseVolume" =
               "exec ${pkgs.pulseaudio}/bin/pactl set-sink-volume @DEFAULT_SINK@ +5%";
             "XF86AudioLowerVolume" =
