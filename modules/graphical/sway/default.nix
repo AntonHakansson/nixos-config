@@ -52,7 +52,6 @@ in {
     security.pam.services.swaylock = { };
     xdg.portal = {
       enable = true;
-      gtkUsePortal = true;
       extraPortals =
         [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
     };
