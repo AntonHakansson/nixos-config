@@ -78,6 +78,7 @@
   services.fstrim.enable = true;
 
   # Nvidia proprietary drivers
+  # system.autoUpgrade.enable = false;
   # hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
   # services.xserver.videoDrivers = [ "nvidia" ];
   # hardware.nvidia.modesetting.enable = true;

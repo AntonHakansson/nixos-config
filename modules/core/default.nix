@@ -30,7 +30,7 @@
     system = {
       stateVersion = config.hakanssn.stateVersion;
       autoUpgrade = {
-        enable = true;
+        enable = lib.mkDefault true;
         flake = "github:AntonHakansson/nixos-config";
         dates = "01/4:00";
         randomizedDelaySec = "10min";
