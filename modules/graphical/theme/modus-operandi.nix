@@ -98,178 +98,179 @@ let
   iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
   iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
 in {
-  config = lib.mkIf (config.hakanssn.graphical.theme.active == "modus-operandi") {
-    fonts = {
-      fontconfig = {
-        defaultFonts = {
-          emoji = [ "Noto Color Emoji" ];
-          monospace = [ "Iosevka" "Font Awesome 6 Free" ];
-          sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
-          serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
-        };
-      };
-      fonts = [ iosevka iosevka-aile iosevka-etoile ];
-    };
-
-    home-manager.users.hakanssn = { pkgs, ... }:
-      let flat-remix-theme = "Flat-Remix-GTK-Blue-Light";
-      in {
-        home.packages = [ pkgs.vanilla-dmz ];
-        dconf.settings."org/gnome/desktop/interface" = {
-          gtk-theme = flat-remix-theme;
-          icon-theme = flat-remix-theme;
-          cursor-theme = "Vanilla-DMZ";
-        };
-        gtk = {
-          enable = true;
-          font = {
-            package = iosevka-aile;
-            name = "Iosevka Aile";
-            size = 10;
-          };
-          gtk2.extraConfig = ''
-            gtk-cursor-theme-name = "Vanilla-DMZ"
-            gtk-cursor-theme-size = 0
-          '';
-          gtk3.extraConfig = {
-            gtk-cursor-theme-name = "Vanilla-DMZ";
-            gtk-cursor-theme-size = 0;
-          };
-          iconTheme = {
-            package = pkgs.flat-remix-icon-theme;
-            name = flat-remix-theme;
-          };
-          theme = {
-            package = pkgs.flat-remix-gtk;
-            name = flat-remix-theme;
-          };
-        };
-        qt = {
-          enable = true;
-          platformTheme = "gtk";
-        };
-
-        wayland.windowManager.sway.config = {
-          fonts = {
-            names = config.fonts.fontconfig.defaultFonts.sansSerif;
-            size = 9.0;
-            style = "Light";
-          };
-          output = {
-            "*" = { bg = "${./modus-operandi-wallpaper.png} fill"; };
-          };
-          colors = {
-            focused = {
-              border = c.cyan;
-              background = c.bg-main;
-              text = c.fg-main;
-              indicator = c.blue;
-              childBorder = c.cyan;
-            };
-            focusedInactive = {
-              border = c.bg-main;
-              background = c.bg-main;
-              text = c.fg-main;
-              indicator = c.blue;
-              childBorder = c.bg-main;
-            };
-            unfocused = {
-              border = c.bg-main;
-              background = c.bg-main;
-              text = c.fg-main;
-              indicator = c.blue;
-              childBorder = c.bg-main;
-            };
-            urgent = {
-              border = c.red;
-              background = c.bg-main;
-              text = c.fg-main;
-              indicator = c.blue;
-              childBorder = c.bg-main;
-            };
-          };
-        };
-
-        programs.neovim = let
-          vim-modus-theme = pkgs.vimUtils.buildVimPlugin {
-            name = "modus-theme-vim";
-            src = pkgs.fetchFromGitHub {
-              owner = "ishan9299";
-              repo = "modus-theme-vim";
-              rev = "42ee50e89c1869e5bda69fa2cde44e4d72663131";
-              sha256 = "lq7hsO4GExtHZ/xvzpNFli9X8uCioqvymM8rDPP38DU=";
-            };
-          };
-        in {
-          plugins = [ vim-modus-theme ];
-          # extraConfig = "colorscheme modus-operandi";
-        };
-
-        programs.kitty = {
-          theme = "Modus Operandi";
-          settings = {
-            font_family = "Iosevka";
-            font_size = 10;
-            disable_ligatures = "cursor";
-          };
-        };
-
-        programs.zathura.options = {
-          default-bg = c.bg-main;
-          default-fg = c.fg-main;
-          statusbar-bg = c.bg-dim;
-          statusbar-fg = c.fg-dim;
-          inputbar-bg = c.bg-alt;
-          inputbar-fg = c.fg-alt;
-          notification-bg = c.bg-active-accent;
-          notification-fg = c.fg-main;
-          notification-error-bg = c.red-fringe-bg;
-          notification-error-fg = c.fg-main;
-          notification-warning-bg = c.yellow-fringe-bg;
-          notification-warning-fg = c.fg-main;
-          recolor-lightcolor = c.fg-main;
-          recolor-darkcolor = c.bg-main;
-        };
-      };
-
-    # Available options: https://github.com/greshake/i3status-rust/blob/master/doc/themes.md#available-theme-overrides
-    hakanssn.graphical.sway.status-configuration.extraConfig = ''
-      [theme]
-      name = "plain"
-
-      [theme.overrides]
-      idle_bg = "${c.bg-main}"
-      idle_fg = "${c.fg-main}"
-      info_bg = "${c.bg-active-accent}"
-      info_fg = "${c.fg-main}"
-      good_bg = "${c.green-fringe-bg}"
-      good_fg = "${c.fg-main}"
-      warning_bg = "${c.yellow-fringe-bg}"
-      warning_fg = "${c.fg-main}"
-      critical_bg = "${c.red-fringe-bg}"
-      critical_fg = "${c.fg-main}"
-      separator_bg = "${c.bg-main}"
-      separator = " "
-    '';
-
-    hakanssn.graphical.sway.top-bar = {
+  config =
+    lib.mkIf (config.hakanssn.graphical.theme.active == "modus-operandi") {
       fonts = {
-        names = config.fonts.fontconfig.defaultFonts.sansSerif;
-        size = 9.0;
-        style = "Light";
+        fontconfig = {
+          defaultFonts = {
+            emoji = [ "Noto Color Emoji" ];
+            monospace = [ "Iosevka" "Font Awesome 6 Free" ];
+            sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
+            serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
+          };
+        };
+        fonts = [ iosevka iosevka-aile iosevka-etoile ];
       };
-      # the active_workspace is the active workspace on non-focused monitor
-      extraConfig = ''
-        colors {
-          background ${c.bg-main}
-          #                   Border          BG                    Text
-          focused_workspace  ${c.bg-active}   ${c.bg-active}        ${c.fg-main}
-          active_workspace   ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
-          inactive_workspace ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
-          urgent_workspace   ${c.bg-active}   ${c.red-fringe-bg}    ${c.bg-main}
-          binding_mode       ${c.bg-main}     ${c.bg-active-accent} ${c.fg-active}
-        }
+
+      home-manager.users.hakanssn = { pkgs, ... }:
+        let flat-remix-theme = "Flat-Remix-GTK-Blue-Light";
+        in {
+          home.packages = [ pkgs.vanilla-dmz ];
+          dconf.settings."org/gnome/desktop/interface" = {
+            gtk-theme = flat-remix-theme;
+            icon-theme = flat-remix-theme;
+            cursor-theme = "Vanilla-DMZ";
+          };
+          gtk = {
+            enable = true;
+            font = {
+              package = iosevka-aile;
+              name = "Iosevka Aile";
+              size = 10;
+            };
+            gtk2.extraConfig = ''
+              gtk-cursor-theme-name = "Vanilla-DMZ"
+              gtk-cursor-theme-size = 0
+            '';
+            gtk3.extraConfig = {
+              gtk-cursor-theme-name = "Vanilla-DMZ";
+              gtk-cursor-theme-size = 0;
+            };
+            iconTheme = {
+              package = pkgs.flat-remix-icon-theme;
+              name = flat-remix-theme;
+            };
+            theme = {
+              package = pkgs.flat-remix-gtk;
+              name = flat-remix-theme;
+            };
+          };
+          qt = {
+            enable = true;
+            platformTheme = "gtk";
+          };
+
+          wayland.windowManager.sway.config = {
+            fonts = {
+              names = config.fonts.fontconfig.defaultFonts.sansSerif;
+              size = 9.0;
+              style = "Light";
+            };
+            output = {
+              "*" = { bg = "${./modus-operandi-wallpaper.png} fill"; };
+            };
+            colors = {
+              focused = {
+                border = c.cyan;
+                background = c.bg-main;
+                text = c.fg-main;
+                indicator = c.blue;
+                childBorder = c.cyan;
+              };
+              focusedInactive = {
+                border = c.bg-main;
+                background = c.bg-main;
+                text = c.fg-main;
+                indicator = c.blue;
+                childBorder = c.bg-main;
+              };
+              unfocused = {
+                border = c.bg-main;
+                background = c.bg-main;
+                text = c.fg-main;
+                indicator = c.blue;
+                childBorder = c.bg-main;
+              };
+              urgent = {
+                border = c.red;
+                background = c.bg-main;
+                text = c.fg-main;
+                indicator = c.blue;
+                childBorder = c.bg-main;
+              };
+            };
+          };
+
+          programs.neovim = let
+            vim-modus-theme = pkgs.vimUtils.buildVimPlugin {
+              name = "modus-theme-vim";
+              src = pkgs.fetchFromGitHub {
+                owner = "ishan9299";
+                repo = "modus-theme-vim";
+                rev = "42ee50e89c1869e5bda69fa2cde44e4d72663131";
+                sha256 = "lq7hsO4GExtHZ/xvzpNFli9X8uCioqvymM8rDPP38DU=";
+              };
+            };
+          in {
+            plugins = [ vim-modus-theme ];
+            # extraConfig = "colorscheme modus-operandi";
+          };
+
+          programs.kitty = {
+            theme = "Modus Operandi";
+            settings = {
+              font_family = "Iosevka";
+              font_size = 10;
+              disable_ligatures = "cursor";
+            };
+          };
+
+          programs.zathura.options = {
+            default-bg = c.bg-main;
+            default-fg = c.fg-main;
+            statusbar-bg = c.bg-dim;
+            statusbar-fg = c.fg-dim;
+            inputbar-bg = c.bg-alt;
+            inputbar-fg = c.fg-alt;
+            notification-bg = c.bg-active-accent;
+            notification-fg = c.fg-main;
+            notification-error-bg = c.red-fringe-bg;
+            notification-error-fg = c.fg-main;
+            notification-warning-bg = c.yellow-fringe-bg;
+            notification-warning-fg = c.fg-main;
+            recolor-lightcolor = c.fg-main;
+            recolor-darkcolor = c.bg-main;
+          };
+        };
+
+      # Available options: https://github.com/greshake/i3status-rust/blob/master/doc/themes.md#available-theme-overrides
+      hakanssn.graphical.sway.status-configuration.extraConfig = ''
+        [theme]
+        name = "plain"
+
+        [theme.overrides]
+        idle_bg = "${c.bg-main}"
+        idle_fg = "${c.fg-main}"
+        info_bg = "${c.bg-active-accent}"
+        info_fg = "${c.fg-main}"
+        good_bg = "${c.green-fringe-bg}"
+        good_fg = "${c.fg-main}"
+        warning_bg = "${c.yellow-fringe-bg}"
+        warning_fg = "${c.fg-main}"
+        critical_bg = "${c.red-fringe-bg}"
+        critical_fg = "${c.fg-main}"
+        separator_bg = "${c.bg-main}"
+        separator = " "
       '';
+
+      hakanssn.graphical.sway.top-bar = {
+        fonts = {
+          names = config.fonts.fontconfig.defaultFonts.sansSerif;
+          size = 9.0;
+          style = "Light";
+        };
+        # the active_workspace is the active workspace on non-focused monitor
+        extraConfig = ''
+          colors {
+            background ${c.bg-main}
+            #                   Border          BG                    Text
+            focused_workspace  ${c.bg-active}   ${c.bg-active}        ${c.fg-main}
+            active_workspace   ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
+            inactive_workspace ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
+            urgent_workspace   ${c.bg-active}   ${c.red-fringe-bg}    ${c.bg-main}
+            binding_mode       ${c.bg-main}     ${c.bg-active-accent} ${c.fg-active}
+          }
+        '';
+      };
     };
-  };
 }
