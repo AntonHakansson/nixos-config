@@ -205,22 +205,13 @@ in {
           # extraConfig = "colorscheme modus-operandi";
         };
 
-        programs.kitty.settings = {
-          font_family = "Iosevka";
-          font_size = 10;
-          disable_ligatures = "cursor";
-
-          background = c.bg-main;
-          foreground = c.fg-main;
-          selection_background = c.bg-region;
-          selection_foreground = c.fg-main;
-          # url_color = c.base04;
-          # active_border_color = c.base03;
-          # inactive_border_color = c.base01;
-          # active_tab_background = c.base00;
-          # active_tab_foreground = c.base05;
-          # inactive_tab_background = c.base01;
-          # inactive_tab_foreground = c.base04;
+        programs.kitty = {
+          theme = "Modus Operandi";
+          settings = {
+            font_family = "Iosevka";
+            font_size = 10;
+            disable_ligatures = "cursor";
+          };
         };
 
         programs.zathura.options = {
