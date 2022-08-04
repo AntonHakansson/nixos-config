@@ -4,7 +4,7 @@
   options.hakanssn.core.emacs = {
     enable = lib.mkEnableOption "emacs";
     doomEmacsRevision =
-      lib.mkOption { default = "bea3cc161c0a803dcf574f32ee555dccf565a5ce"; };
+      lib.mkOption { default = "55544200be1a7334418024715f9878e04ed0e3b9"; };
     package = lib.mkOption {
       readOnly = true;
       default =
