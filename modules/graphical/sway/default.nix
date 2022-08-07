@@ -166,7 +166,7 @@ in {
         extraConfig = ''
           no_focus [title="Microsoft Teams Notification"]
 
-          default_border pixel
+          default_border pixel 1
 
           workspace 1
           exec ${config.hakanssn.graphical.firefox.package}/bin/firefox

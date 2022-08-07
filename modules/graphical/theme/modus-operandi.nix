@@ -125,36 +125,39 @@ in {
               style = "Light";
             };
             output = {
-              "*" = { bg = "${./modus-operandi-wallpaper.png} fill"; };
+              "*" = {
+                bg =
+                  "${./modus-operandi-wallpaper.png} center ${c.bg-inactive}";
+              };
             };
             colors = {
               focused = {
-                border = c.cyan;
-                background = c.bg-main;
+                border = c.fg-dim;
+                background = c.bg-dim;
                 text = c.fg-main;
                 indicator = c.blue;
-                childBorder = c.cyan;
+                childBorder = c.fg-dim;
               };
               focusedInactive = {
-                border = c.bg-main;
+                border = c.bg-inactive;
                 background = c.bg-main;
-                text = c.fg-main;
+                text = c.fg-inactive;
                 indicator = c.blue;
-                childBorder = c.bg-main;
+                childBorder = c.bg-inactive;
               };
               unfocused = {
-                border = c.bg-main;
+                border = c.bg-inactive;
                 background = c.bg-main;
-                text = c.fg-main;
+                text = c.fg-inactive;
                 indicator = c.blue;
-                childBorder = c.bg-main;
+                childBorder = c.bg-inactive;
               };
               urgent = {
-                border = c.red;
-                background = c.bg-main;
+                border = c.bg-inactive;
+                background = c.red-fringe-bg;
                 text = c.fg-main;
                 indicator = c.blue;
-                childBorder = c.bg-main;
+                childBorder = c.bg-inactive;
               };
             };
           };
@@ -207,17 +210,17 @@ in {
         name = "plain"
 
         [theme.overrides]
-        idle_bg = "${c.bg-main}"
-        idle_fg = "${c.fg-main}"
+        idle_bg = "${c.bg-dim}"
+        idle_fg = "${c.fg-dim}"
         info_bg = "${c.bg-active-accent}"
-        info_fg = "${c.fg-main}"
+        info_fg = "${c.fg-active}"
         good_bg = "${c.green-fringe-bg}"
         good_fg = "${c.fg-main}"
         warning_bg = "${c.yellow-fringe-bg}"
         warning_fg = "${c.fg-main}"
         critical_bg = "${c.red-fringe-bg}"
         critical_fg = "${c.fg-main}"
-        separator_bg = "${c.bg-main}"
+        separator_bg = "${c.bg-dim}"
         separator = " "
       '';
 
@@ -230,13 +233,13 @@ in {
         # the active_workspace is the active workspace on non-focused monitor
         extraConfig = ''
           colors {
-            background ${c.bg-main}
-            #                   Border          BG                    Text
-            focused_workspace  ${c.bg-active}   ${c.bg-active}        ${c.fg-main}
-            active_workspace   ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
-            inactive_workspace ${c.bg-inactive} ${c.bg-inactive}      ${c.fg-inactive}
-            urgent_workspace   ${c.bg-active}   ${c.red-fringe-bg}    ${c.bg-main}
-            binding_mode       ${c.bg-main}     ${c.bg-active-accent} ${c.fg-active}
+            background ${c.bg-dim}
+            #                  Border      BG                    Text
+            focused_workspace  ${c.bg-dim} ${c.bg-active}        ${c.fg-active}
+            active_workspace   ${c.bg-dim} ${c.bg-dim}           ${c.fg-dim}
+            inactive_workspace ${c.bg-dim} ${c.bg-dim}           ${c.fg-dim}
+            urgent_workspace   ${c.bg-dim} ${c.red-fringe-bg}    ${c.fg-dim}
+            binding_mode       ${c.bg-dim} ${c.bg-active-accent} ${c.fg-dim}
           }
         '';
       };
