@@ -36,6 +36,22 @@
         "type": "gitlab"
       }
     },
+    "doom-emacs": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1659894208,
+        "narHash": "sha256-qi14qIXFUX+SCKDzHxvg4VBV7+tcex52M1O3wYNyh6k=",
+        "owner": "doomemacs",
+        "repo": "doomemacs",
+        "rev": "0f43c3eed5532e63c3b475f5385ded40278b12fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "doomemacs",
+        "repo": "doomemacs",
+        "type": "github"
+      }
+    },
     "emacs-overlay": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -195,6 +211,7 @@
     "root": {
       "inputs": {
         "agenix": "agenix",
+        "doom-emacs": "doom-emacs",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "impermanence": "impermanence",

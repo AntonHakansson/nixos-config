@@ -1,15 +1,13 @@
-{ config, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 {
   options.hakanssn.core.emacs = {
     enable = lib.mkEnableOption "emacs";
-    doomEmacsRevision =
-      lib.mkOption { default = "55544200be1a7334418024715f9878e04ed0e3b9"; };
+    doomEmacsRevision = lib.mkOption { default = inputs.doom-emacs.rev; };
     package = lib.mkOption {
       readOnly = true;
-      default =
-        ((pkgs.emacsPackagesFor pkgs.emacsPgtkNativeComp).emacsWithPackages
-          (epkgs: with epkgs; [ vterm pdf-tools ]));
+      default = ((pkgs.emacsPackagesFor pkgs.emacsNativeComp).emacsWithPackages
+        (epkgs: with epkgs; [ vterm pdf-tools ]));
     };
   };
 
@@ -31,7 +29,7 @@
         git -C ${EMACSDIR} init
       fi
       if [ $(git -C ${EMACSDIR} rev-parse HEAD) != ${config.hakanssn.core.emacs.doomEmacsRevision} ]; then
-        git -C ${EMACSDIR} fetch https://github.com/hlissner/doom-emacs.git || true
+        git -C ${EMACSDIR} fetch https://github.com/doomemacs/doomemacs.git || true
         git -C ${EMACSDIR} checkout ${config.hakanssn.core.emacs.doomEmacsRevision} || true
         ${EMACSDIR}/bin/doom sync || true
       fi

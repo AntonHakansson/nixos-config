@@ -18,6 +18,7 @@
       "github:nix-community/impermanence"; # bind-mount directories
 
     # Extras
+    doom-emacs = { url = "github:doomemacs/doomemacs"; flake = false; };
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,7 +30,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, agenix, home-manager, impermanence, nur
-    , utils, emacs-overlay, nixos-mailserver }:
+    , utils, doom-emacs, emacs-overlay, nixos-mailserver }:
     let customPackages = callPackage: { };
     in utils.lib.mkFlake {
       inherit self inputs;
