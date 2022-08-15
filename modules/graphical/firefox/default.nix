@@ -76,6 +76,7 @@ in {
             decentraleyes
             i-dont-care-about-cookies
             ublock-origin
+            leechblock-ng
           ];
           profiles.hakanssn = {
             isDefault = true;
