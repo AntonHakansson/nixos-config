@@ -395,10 +395,9 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 *** Behavior
 **** Defaults
 #+begin_src emacs-lisp :noweb-ref org-conf
-(require 'f) ;; f-join function
 (setq org-directory "~/documents/org"
       org-roam-directory (concat org-directory "/roam")
-      +org-capture-journal-file (f-join org-directory "journal.org")
+      +org-capture-journal-file (concat org-directory "/journal.org")
       org-log-done 'time
       org-list-allow-alphabetical t ; have a. A. a) A) list bullets
       org-export-in-background t
@@ -410,7 +409,7 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 #+begin_src emacs-lisp
 (setq +org-capture-todo-file "gtd/inbox.org"
       org-agenda-files
-        (mapcar (lambda (f) (f-join org-directory f))
+        (mapcar (lambda (f) (concat org-directory f))
           '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org"))
       org-capture-templates
         '(("t" "Todo [inbox]" entry
