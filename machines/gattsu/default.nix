@@ -3,9 +3,6 @@
 
   networking.hostId = "96a2d6d5";
 
-  system.autoUpgrade.enable = false;
-  nixpkgs.config.permittedInsecurePackages = [ "python3.10-mistune-0.8.4" ];
-
   hakanssn = {
     stateVersion = "21.11";
     core = {

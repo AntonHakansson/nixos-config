@@ -92,7 +92,7 @@
           graphviz
           gnuplot
           maxima
-          sage
+          # sage
         ];
         sessionPath = [ "${EMACSDIR}/bin" ];
         sessionVariables = {
