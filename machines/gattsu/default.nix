@@ -20,6 +20,7 @@
       enable = true;
       syncthing.enable = true;
       games.enable = true;
+      media.anki.enable = true;
     };
   };
 }

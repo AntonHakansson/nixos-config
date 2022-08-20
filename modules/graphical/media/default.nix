@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./mpv.nix ./documents.nix ];
+  imports = [ ./anki.nix ./mpv.nix ./documents.nix ];
 
   options.hakanssn.graphical.media = {
     documents.enable = lib.mkEnableOption "document readers";

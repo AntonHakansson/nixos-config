@@ -391,6 +391,66 @@ Toggle org elements(link, bold, etc.) on/off when cursor enters/leaves an org el
 (use-package! sage-shell-mode)
 (use-package! ob-sagemath)
 #+end_src
+**** Anki Editor
+Anki is great, however the text input is clunky; and behold! there's an emacs package for that.
+It depends on the [[https://ankiweb.net/shared/info/2055492159][AnkiConnect]] add-on.
+
+#+begin_src emacs-lisp
+(package! anki-editor)
+#+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package anki-editor
+  :after org
+  :bind (:map org-mode-map
+         ("<f9>"  . anki-editor-push-tree))
+  :config
+  (setq anki-editor-create-decks t ;; Allow anki-editor to create a new deck if it doesn't exist
+        anki-editor-org-tags-as-anki-tags t)
+   (defun anki-editor-push-tree ()
+    "Push all notes under a tree."
+    (interactive)
+    (anki-editor-push-notes '(4))
+    (anki-editor-reset-cloze-number))
+   )
+    #+end_src
+
+To quickly create cards let's use a snippet.
+Remember to set:
+#+begin_src org
+,:PROPERTIES:
+,:ANKI_DECK: <deck name>
+,:END:
+#+end_src
+in the parent heading.
+
+#+begin_src snippet :mkdirp t :tangle snippets/org-mode/anki_card
+# -*- mode: snippet -*-
+# name: anki card
+# key: <A
+# --
+`(make-string (+ (org-current-level) 1) ?*)` Card
+:PROPERTIES:
+:ANKI_NOTE_TYPE: Basic
+:END:
+`(make-string (+ (org-current-level) 2) ?*)` Front
+$1
+`(make-string (+ (org-current-level) 2) ?*)` Back
+$0
+#+end_src
+
+#+begin_src snippet :mkdirp t :tangle snippets/org-mode/anki_card_cloze
+# -*- mode: snippet -*-
+# name: anki
+# key: <AC
+# --
+`(make-string (+ (org-current-level) 1) ?*)` $1
+:PROPERTIES:
+:ANKI_NOTE_TYPE: Cloze
+:END:
+`(make-string (+ (org-current-level) 2) ?*)` Text
+$0
+#+end_src
 
 *** Behavior
 **** Defaults
