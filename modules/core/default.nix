@@ -78,6 +78,7 @@
           noPass = true;
         }];
       };
+      polkit.enable = true;
     };
 
     # daemon allowing you to update some devices' firmware
