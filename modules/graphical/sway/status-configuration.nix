@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  mail-status = pkgs.writeShellScript "mail-status" ''
+  mail-status = pkgs.writeShellScript "sway-mail-status" ''
     mails=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
     if [ "$mails" -gt 0 ]
     then
@@ -9,7 +9,25 @@ let
       echo "{ \"state\": \"Idle\", \"text\": \"\" }"
     fi
   '';
+  org-clock-in-status = pkgs.writeShellScript "sway-org-clock-in-status" ''
+    status=$(emacsclient --eval "(if (org-clock-is-active) (substring-no-properties (org-clock-get-clock-string)))" | tr -d '"')
+    if [ "$status" = "nil" ]
+    then
+      echo "{ \"state\": \"Idle\", \"text\": \"\" }"
+    else
+      echo "{ \"state\": \"Info\", \"text\": \"$status\" }"
+    fi
+  '';
 in pkgs.writeText "configuration.toml" (""
+  + (lib.optionalString config.hakanssn.core.emacs.enable ''
+    [[block]]
+    block = "custom"
+    json = true
+    command = "${org-clock-in-status}"
+    interval = 5
+    on_click = "emacsclient -n -c --eval \"(org-clock-goto)\""
+    hide_when_empty = true
+  '')
   + (lib.optionalString config.hakanssn.graphical.laptop ''
     [[block]]
     block = "battery"
