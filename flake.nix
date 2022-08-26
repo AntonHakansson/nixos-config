@@ -5,10 +5,20 @@
     # Core
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
+    flake-utils.url = "github:numtide/flake-utils";
+    utils = {
+      url = "github:gytis-ivaskevicius/flake-utils-plus";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        devshell.follows = "devshell";
+      };
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.follows = "flake-utils";
+      };
     };
     agenix = {
       url = "github:ryantm/agenix";
@@ -16,49 +26,50 @@
     };
     impermanence.url =
       "github:nix-community/impermanence"; # bind-mount directories
+    devshell = {
+      url = "github:numtide/devshell";
+      inputs = {
+        flake-utils.follows = "flake-utils";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
 
     # Extras
-    doom-emacs = { url = "github:doomemacs/doomemacs"; flake = false; };
+    doom-emacs = {
+      url = "github:doomemacs/doomemacs";
+      flake = false;
+    };
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils.follows = "flake-utils";
+      };
     };
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        utils.follows = "flake-utils";
+      };
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, agenix, home-manager, impermanence, nur
-    , utils, doom-emacs, emacs-overlay, nixos-mailserver }:
-    let customPackages = callPackage: { };
-    in utils.lib.mkFlake {
+  outputs = inputs@{ self, nixpkgs, agenix, home-manager, devshell, impermanence
+    , nur, flake-utils, utils, doom-emacs, emacs-overlay, nixos-mailserver }:
+    utils.lib.mkFlake {
       inherit self inputs;
       channels.nixpkgs = {
         input = nixpkgs;
         overlaysBuilder = _: [
-          emacs-overlay.overlay
-          (self: super: customPackages self.callPackage)
+          devshell.overlay
           nur.overlay
+          emacs-overlay.overlay
         ];
       };
       hostDefaults = {
         modules = [
-          ({ lib, pkgs, ... }: {
-            environment.etc = lib.mapAttrs' (key: val: {
-              name = "channels/${key}";
-              value = {
-                source = pkgs.runCommandNoCC "${key}-channel" { } ''
-                  mkdir $out
-                  echo "${
-                    val.rev or (toString val.lastModified)
-                  }" > $out/.version-suffix
-                  echo "import ${val.outPath}/default.nix" > $out/default.nix
-                '';
-              };
-            }) inputs;
-            nix.nixPath = [ "/etc/channels" ];
-          })
+          { nix.generateRegistryFromInputs = true; }
           agenix.nixosModules.age
           home-manager.nixosModule
           impermanence.nixosModule
@@ -74,13 +85,18 @@
       outputsBuilder = channels:
         let pkgs = channels.nixpkgs;
         in {
-          packages = customPackages pkgs.callPackage;
-          devShell = pkgs.mkShell {
-            buildInputs = [
-              pkgs.nixpkgs-fmt
-              agenix.defaultPackage.x86_64-linux
-              pkgs.cachix
-            ];
+          devShells = rec {
+            nixos-config = pkgs.devshell.mkShell {
+              name = "hakanssn NixOS config";
+              packages = [
+                pkgs.nixpkgs-fmt
+                (pkgs.writeShellScriptBin "fetchpatch"
+                  "curl -L https://github.com/NixOS/nixpkgs/pull/$1.patch -o patches/$1.patch")
+                agenix.defaultPackage.x86_64-linux
+                pkgs.cachix
+              ];
+            };
+            default = nixos-config;
           };
         };
     };
