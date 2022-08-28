@@ -99,5 +99,6 @@
             default = nixos-config;
           };
         };
+      templates = import ./templates;
     };
 }
