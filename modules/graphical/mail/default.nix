@@ -3,7 +3,7 @@
 {
   config = let
     passwordScript = pkgs.writeShellScript "get_mail_password"
-      ''PASSWORD_STORE_DIR=/home/hakanssn/repos/pass ${pkgs.pass}/bin/pass show "$@" | ${pkgs.coreutils}/bin/head -n1 | ${pkgs.coreutils}/bin/tr -d "\n"'';
+      ''${pkgs.pass}/bin/pass show "$@" | ${pkgs.coreutils}/bin/head -n1 | ${pkgs.coreutils}/bin/tr -d "\n"'';
     notifyScript = name:
       pkgs.writeShellScript "notify_${name}_mail" ''
         unseen_count=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | ${pkgs.coreutils}/bin/wc -l)

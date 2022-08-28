@@ -37,7 +37,11 @@
       };
     };
     home-manager.users = {
-      hakanssn = { ... }: { home.stateVersion = config.hakanssn.stateVersion; };
+      hakanssn = { ... }: {
+        home.stateVersion = config.hakanssn.stateVersion;
+        systemd.user.sessionVariables =
+          config.home-manager.users.hakanssn.home.sessionVariables;
+      };
       root = { ... }: { home.stateVersion = config.hakanssn.stateVersion; };
     };
 
