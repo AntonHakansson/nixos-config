@@ -65,7 +65,6 @@ in {
           enable = true;
           package = ffPackage;
           extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-            bitwarden
             browserpass
             darkreader
             ff2mpv
