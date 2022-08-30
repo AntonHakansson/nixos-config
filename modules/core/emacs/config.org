@@ -465,39 +465,59 @@ $0
       org-export-with-sub-superscripts '{} ; don't treat lone _ or ^ as sub/superscripts, require _{} or ^{}
       )
 #+end_src
-**** Org-Capture
+**** GTD
 #+begin_src emacs-lisp
 (setq +org-capture-todo-file "gtd/inbox.org"
       org-agenda-files
-        (mapcar (lambda (f) (concat org-directory f))
-          '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org"))
+      (mapcar (lambda (f) (concat org-directory f))
+              '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org"))
       org-capture-templates
-        '(("t" "Todo [inbox]" entry
-            (file+headline +org-capture-todo-file "Tasks")
-            "* TODO %i%?")
+      '(("t" "Todo [inbox]" entry (file +org-capture-todo-file)
+        "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:")
         ("T" "Tickler" entry
-            (file+headline "gtd/tickler.org" "Tickler")
-            "* %i%? \n %U")
+         (file "gtd/tickler.org")
+         "* %i%? \n %U")
         ("n" "Personal notes" entry
-            (file+headline +org-capture-notes-file "Inbox")
-            "* %u %?\n%i\n%a" :prepend t)
+         (file +org-capture-notes-file)
+         "* %u %?\n%i\n%a" :prepend t)
         ("j" "Journal" entry
-            (file+olp+datetree +org-capture-journal-file)
-            "* %U %?\n%i\n%a" :prepend t)
+         (file+olp+datetree +org-capture-journal-file)
+         "* %U %?\n%i\n%a" :prepend t)
         ("p" "Templates for projects")
         ("pt" "Project-local todo" entry
-            (file+headline +org-capture-project-todo-file "Inbox")
-            "* TODO %?\n%i\n%a" :prepend t)
+         (file+headline +org-capture-project-todo-file "Inbox")
+         "* TODO %?\n%i\n%a" :prepend t)
         ("pn" "Project-local notes" entry
-            (file+headline +org-capture-project-notes-file "Inbox")
-            "* %U %?\n%i\n%a" :prepend t)
+         (file+headline +org-capture-project-notes-file "Inbox")
+         "* %U %?\n%i\n%a" :prepend t)
         ("pc" "Project-local changelog" entry
-            (file+headline +org-capture-project-changelog-file "Unreleased")
-            "* %U %?\n%i\n%a" :prepend t)
+         (file+headline +org-capture-project-changelog-file "Unreleased")
+         "* %U %?\n%i\n%a" :prepend t)
         ("o" "Centralized templates for projects")
         ("ot" "Project todo" entry #'+org-capture-central-project-todo-file "* TODO %?\n %i\n %a" :heading "Tasks" :prepend nil)
         ("on" "Project notes" entry #'+org-capture-central-project-notes-file "* %U %?\n %i\n %a" :heading "Notes" :prepend t)
         ("oc" "Project changelog" entry #'+org-capture-central-project-changelog-file "* %U %?\n %i\n %a" :heading "Changelog" :prepend t)))
+#+end_src
+
+Alter the TODO keywords to reflect GTD and log when an item transitions from TODO to NEXT.
+#+begin_src emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
+        (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)")))
+#+end_src
+
+**** GTD Agenda
+#+begin_src emacs-lisp
+(setq org-agenda-custom-commands
+      '(
+        ("g" "Get Things Done (GTD)"
+         ((agenda)
+          (todo "NEXT" ((org-agenda-overriding-header "Next:")))
+          (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
+          (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
+          (tags-todo "projects" ((org-agenda-overriding-header "Projects:")))
+          (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "\nCompleted today\n")))
+          ))))
 #+end_src
 
 **** View Exported file
