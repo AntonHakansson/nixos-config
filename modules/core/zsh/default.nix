@@ -18,15 +18,14 @@ let
       oh-my-zsh = {
         enable = true;
         plugins = [
-          "autojump"
+          "vi-mode"
+          "systemd"
           "common-aliases"
-          "extract"
-          "fzf"
+          "tmux"
+          "autojump"
           "git"
           "history-substring-search"
-          "systemd"
-          "tmux"
-          "vi-mode"
+          "fzf"
         ];
         theme = "robbyrussell";
       };
