@@ -5,7 +5,7 @@
     networking.wireless = {
       enable = true;
       environmentFile = config.age.secrets."passwords/networks.age".path;
-      networks = { "batman-7288-5GHz" = { psk = "@PSK_batman@"; }; };
+      networks = { "batman" = { psk = "@PSK_batman@"; }; };
     };
 
     age.secrets."passwords/networks.age" = {
