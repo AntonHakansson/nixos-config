@@ -99,10 +99,8 @@
     in {
       ensureSystemPathsExist = {
         text = ensureSystemExistsScript;
-        deps = [ "agenixMountSecrets" ];
+        deps = [ "agenixNewGeneration" ];
       };
-      agenixRoot.deps = [ "ensureSystemPathsExist" ];
-
       ensureHomePathsExist = {
         text = ''
           mkdir -p /home/hakanssn/
@@ -110,7 +108,7 @@
         '';
         deps = [ "users" "groups" ];
       };
-      agenix.deps = [ "ensureHomePathsExist" ];
+      agenixInstall.deps = [ "ensureSystemPathsExist" "ensureHomePathsExist" ];
     };
   };
 }
