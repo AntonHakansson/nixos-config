@@ -10,7 +10,6 @@
       url = "github:gytis-ivaskevicius/flake-utils-plus";
       inputs = {
         flake-utils.follows = "flake-utils";
-        devshell.follows = "devshell";
       };
     };
     home-manager = {
