@@ -8,8 +8,8 @@ Credits to [[https://tecosaur.github.io/emacs-config/config.html][Tecosaur's Doo
 * Basic Configuration
 ** Personal Information
 #+begin_src emacs-lisp
-(setq user-full-name "Anton Hakansson"
-      user-mail-address "anton.hakansson98@gmail.com")
+(setq user-full-name "Anton Håkansson"
+      user-mail-address "anton@hakanssn.com")
 #+end_src
 
 ** Better Defaults
