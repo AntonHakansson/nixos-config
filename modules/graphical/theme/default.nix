@@ -14,7 +14,7 @@
       '';
     };
     enableAutoSwitch = lib.mkOption {
-      default = config.system.autoUpgrade;
+      default = config.system.autoUpgrade.enable;
       description = "Switch to 'onedark' after 18:00";
     };
   };
