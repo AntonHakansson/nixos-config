@@ -62,48 +62,17 @@ let
 
     bg-region = "#bcbcbc";
   };
-  iosevka = pkgs.iosevka-bin;
-  iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
-  iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
 in {
-  config =
-    lib.mkIf (config.hakanssn.graphical.theme.active == "modus-operandi") {
-      fonts = {
-        fontconfig = {
-          defaultFonts = {
-            emoji = [ "Noto Color Emoji" ];
-            monospace = [ "Iosevka" "Font Awesome 6 Free" ];
-            sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
-            serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
-          };
-        };
-        fonts = [ iosevka iosevka-aile iosevka-etoile ];
-      };
-
+  config = lib.mkIf (config.hakanssn.graphical.theme.enable
+    && config.hakanssn.graphical.theme.name == "modus-operandi") {
       home-manager.users.hakanssn = { pkgs, ... }:
         let flat-remix-theme = "Flat-Remix-GTK-Blue-Light";
         in {
-          home.packages = [ pkgs.vanilla-dmz ];
           dconf.settings."org/gnome/desktop/interface" = {
             gtk-theme = flat-remix-theme;
             icon-theme = flat-remix-theme;
-            cursor-theme = "Vanilla-DMZ";
           };
           gtk = {
-            enable = true;
-            font = {
-              package = iosevka-aile;
-              name = "Iosevka Aile";
-              size = 10;
-            };
-            gtk2.extraConfig = ''
-              gtk-cursor-theme-name = "Vanilla-DMZ"
-              gtk-cursor-theme-size = 0
-            '';
-            gtk3.extraConfig = {
-              gtk-cursor-theme-name = "Vanilla-DMZ";
-              gtk-cursor-theme-size = 0;
-            };
             iconTheme = {
               package = pkgs.flat-remix-icon-theme;
               name = flat-remix-theme;
@@ -113,17 +82,8 @@ in {
               name = flat-remix-theme;
             };
           };
-          qt = {
-            enable = true;
-            platformTheme = "gtk";
-          };
 
           wayland.windowManager.sway.config = {
-            fonts = {
-              names = config.fonts.fontconfig.defaultFonts.sansSerif;
-              size = 9.0;
-              style = "Light";
-            };
             output = {
               "*" = {
                 bg =
@@ -177,14 +137,7 @@ in {
             # extraConfig = "colorscheme modus-operandi";
           };
 
-          programs.kitty = {
-            theme = "Modus Operandi";
-            settings = {
-              font_family = "Iosevka";
-              font_size = 10;
-              disable_ligatures = "cursor";
-            };
-          };
+          programs.kitty = { theme = "Modus Operandi"; };
 
           programs.zathura.options = {
             default-bg = c.bg-main;
@@ -225,11 +178,6 @@ in {
       '';
 
       hakanssn.graphical.sway.top-bar = {
-        fonts = {
-          names = config.fonts.fontconfig.defaultFonts.sansSerif;
-          size = 9.0;
-          style = "Light";
-        };
         # the active_workspace is the active workspace on non-focused monitor
         extraConfig = ''
           colors {

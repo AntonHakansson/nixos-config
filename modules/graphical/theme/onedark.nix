@@ -33,168 +33,120 @@ let
     base16 = "#4dc4ff"; # Bright Blue
     base17 = "#de73ff"; # Bright purple
   };
-  iosevka = pkgs.iosevka-bin;
-  iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
-  iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
 in {
-  config = lib.mkIf (config.hakanssn.graphical.theme.active == "onedark") {
-    fonts = {
-      fontconfig = {
-        defaultFonts = {
-          emoji = [ "Noto Color Emoji" ];
-          monospace = [ "Iosevka" "Font Awesome 6 Free" ];
-          sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
-          serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
-        };
-      };
-      fonts = [ iosevka iosevka-aile iosevka-etoile ];
-    };
-
-    home-manager.users.hakanssn = { pkgs, ... }:
-      let flat-remix-theme = "Flat-Remix-GTK-Blue-Dark";
-      in {
-        home.packages = [ pkgs.vanilla-dmz ];
-        dconf.settings."org/gnome/desktop/interface" = {
-          gtk-theme = flat-remix-theme;
-          icon-theme = flat-remix-theme;
-          cursor-theme = "Vanilla-DMZ";
-        };
-        gtk = {
-          enable = true;
-          font = {
-            package = iosevka-aile;
-            name = "Iosevka Aile";
-            size = 10;
+  config = lib.mkIf (config.hakanssn.graphical.theme.enable
+    && config.hakanssn.graphical.theme.name == "onedark") {
+      home-manager.users.hakanssn = { pkgs, ... }:
+        let flat-remix-theme = "Flat-Remix-GTK-Blue-Dark";
+        in {
+          dconf.settings."org/gnome/desktop/interface" = {
+            gtk-theme = flat-remix-theme;
+            icon-theme = flat-remix-theme;
           };
-          gtk2.extraConfig = ''
-            gtk-cursor-theme-name = "Vanilla-DMZ"
-            gtk-cursor-theme-size = 0
-          '';
-          gtk3.extraConfig = {
-            gtk-cursor-theme-name = "Vanilla-DMZ";
-            gtk-cursor-theme-size = 0;
-          };
-          iconTheme = {
-            package = pkgs.flat-remix-icon-theme;
-            name = flat-remix-theme;
-          };
-          theme = {
-            package = pkgs.flat-remix-gtk;
-            name = flat-remix-theme;
-          };
-        };
-        qt = {
-          enable = true;
-          platformTheme = "gtk";
-        };
-
-        wayland.windowManager.sway.config = {
-          fonts = {
-            names = config.fonts.fontconfig.defaultFonts.sansSerif;
-            size = 9.0;
-            style = "Normal";
-          };
-          colors = {
-            focused = {
-              border = c.base05;
-              background = c.base0D;
-              text = c.base00;
-              indicator = c.base0D;
-              childBorder = c.base0D;
+          gtk = {
+            enable = true;
+            iconTheme = {
+              package = pkgs.flat-remix-icon-theme;
+              name = flat-remix-theme;
             };
-            focusedInactive = {
-              border = c.base01;
-              background = c.base01;
-              text = c.base05;
-              indicator = c.base03;
-              childBorder = c.base01;
-            };
-            unfocused = {
-              border = c.base01;
-              background = c.base00;
-              text = c.base05;
-              indicator = c.base01;
-              childBorder = c.base01;
-            };
-            urgent = {
-              border = c.base08;
-              background = c.base08;
-              text = c.base00;
-              indicator = c.base08;
-              childBorder = c.base08;
+            theme = {
+              package = pkgs.flat-remix-gtk;
+              name = flat-remix-theme;
             };
           };
-        };
+          qt = {
+            enable = true;
+            platformTheme = "gtk";
+          };
 
-        programs.neovim = {
-          plugins = with pkgs.vimPlugins; [ onedark-nvim ];
-          extraConfig = "colorscheme onedark";
-        };
+          wayland.windowManager.sway.config = {
+            colors = {
+              focused = {
+                border = c.base05;
+                background = c.base0D;
+                text = c.base00;
+                indicator = c.base0D;
+                childBorder = c.base0D;
+              };
+              focusedInactive = {
+                border = c.base01;
+                background = c.base01;
+                text = c.base05;
+                indicator = c.base03;
+                childBorder = c.base01;
+              };
+              unfocused = {
+                border = c.base01;
+                background = c.base00;
+                text = c.base05;
+                indicator = c.base01;
+                childBorder = c.base01;
+              };
+              urgent = {
+                border = c.base08;
+                background = c.base08;
+                text = c.base00;
+                indicator = c.base08;
+                childBorder = c.base08;
+              };
+            };
+          };
 
-        programs.kitty = {
-          theme = "Doom One";
-          settings = {
-            font_family = "Iosevka";
-            font_size = 10;
-            disable_ligatures = "cursor";
+          programs.neovim = {
+            plugins = with pkgs.vimPlugins; [ onedark-nvim ];
+            extraConfig = "colorscheme onedark";
+          };
+
+          programs.kitty = { theme = "Doom One"; };
+
+          programs.zathura.options = {
+            default-bg = c.base00;
+            default-fg = c.base01;
+            statusbar-bg = c.base04;
+            statusbar-fg = c.base02;
+            inputbar-bg = c.base00;
+            inputbar-fg = c.base07;
+            notification-bg = c.base00;
+            notification-fg = c.base07;
+            notification-error-bg = c.base00;
+            notification-error-fg = c.base08;
+            notification-warning-bg = c.base00;
+            notification-warning-fg = c.base09;
+            highlight-color = c.base0A;
+            highlight-active-color = c.base0D;
+            completion-bg = c.base01;
+            completion-fg = c.base0D;
+            completion-highlight-bg = c.base0D;
+            completion-highlight-fg = c.base07;
+            recolor-lightcolor = c.base00;
+            recolor-darkcolor = c.base06;
           };
         };
 
-        programs.zathura.options = {
-          default-bg = c.base00;
-          default-fg = c.base01;
-          statusbar-bg = c.base04;
-          statusbar-fg = c.base02;
-          inputbar-bg = c.base00;
-          inputbar-fg = c.base07;
-          notification-bg = c.base00;
-          notification-fg = c.base07;
-          notification-error-bg = c.base00;
-          notification-error-fg = c.base08;
-          notification-warning-bg = c.base00;
-          notification-warning-fg = c.base09;
-          highlight-color = c.base0A;
-          highlight-active-color = c.base0D;
-          completion-bg = c.base01;
-          completion-fg = c.base0D;
-          completion-highlight-bg = c.base0D;
-          completion-highlight-fg = c.base07;
-          recolor-lightcolor = c.base00;
-          recolor-darkcolor = c.base06;
-        };
-      };
+      hakanssn.graphical.sway.status-configuration.extraConfig = ''
+        [theme]
+        name = "dracula"
 
-    hakanssn.graphical.sway.status-configuration.extraConfig = ''
-      [theme]
-      name = "dracula"
-
-      [theme.overrides]
-      idle_bg="${c.base00}"
-      idle_fg="${c.base05}"
-      separator=""
-    '';
-
-    hakanssn.graphical.sway.top-bar = {
-      fonts = {
-        names = config.fonts.fontconfig.defaultFonts.sansSerif;
-        size = 9.0;
-        style = "Normal";
-      };
-      extraConfig = ''
-        status_padding 0
-        icon_theme Arc
-        colors {
-          background ${c.base00}
-          separator  ${c.base01}
-          statusline ${c.base04}
-          #                   Border      BG          Text
-          focused_workspace   ${c.base05} ${c.base0D} ${c.base00}
-          active_workspace    ${c.base05} ${c.base03} ${c.base00}
-          inactive_workspace  ${c.base03} ${c.base01} ${c.base05}
-          urgent_workspace    ${c.base08} ${c.base08} ${c.base00}
-          binding_mode        ${c.base00} ${c.base0A} ${c.base00}
-        }
+        [theme.overrides]
+        idle_bg="${c.base00}"
+        idle_fg="${c.base05}"
+        separator=" "
       '';
+
+      hakanssn.graphical.sway.top-bar = {
+        extraConfig = ''
+          colors {
+            background ${c.base00}
+            separator  ${c.base01}
+            statusline ${c.base04}
+            #                   Border      BG          Text
+            focused_workspace   ${c.base05} ${c.base0D} ${c.base00}
+            active_workspace    ${c.base05} ${c.base03} ${c.base00}
+            inactive_workspace  ${c.base03} ${c.base01} ${c.base05}
+            urgent_workspace    ${c.base08} ${c.base08} ${c.base00}
+            binding_mode        ${c.base00} ${c.base0A} ${c.base00}
+          }
+        '';
+      };
     };
-  };
 }
