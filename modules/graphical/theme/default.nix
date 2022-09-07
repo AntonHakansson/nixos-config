@@ -13,6 +13,10 @@
         Can be overriden by the THEME environment variable;
       '';
     };
+    enableAutoSwitch = lib.mkOption {
+      default = config.system.autoUpgrade;
+      description = "Switch to 'onedark' after 18:00";
+    };
   };
 
   imports = [ ./onedark.nix ./modus-operandi.nix ];
@@ -39,5 +43,30 @@
       music_next = ""
       music_prev = ""
     '';
+
+  } // lib.mkIf (config.hakanssn.graphical.theme.enableAutoSwitch == true) {
+    home-manager.users.hakanssn = { ... }: {
+      systemd.user = {
+        services.theme-switch = {
+          Unit = { Description = "Service that switches to dark theme"; };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${
+                (pkgs.writeShellScriptBin "theme-switch" ''
+                  doas env THEME="onedark" nixos-rebuild switch --flake github:AntonHakansson/nixos-config --impure
+                '')
+              }/bin/theme-switch";
+          };
+        };
+        timers.theme-switch = {
+          Unit = {
+            Description = "Timer that switcher theme after 18:00";
+            PartOf = [ "theme-switch.service" ];
+          };
+          Timer = { OnCalendar = "*-*-* 18:00:00"; };
+          Install = { WantedBy = [ "default.target" ]; };
+        };
+      };
+    };
   };
 }
