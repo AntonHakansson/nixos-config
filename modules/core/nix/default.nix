@@ -44,12 +44,13 @@ in {
   config = {
     hakanssn.core = {
       zfs = {
-        homeCacheLinks =
-          (lib.optional config.hakanssn.core.nix.enableDirenv ".local/share/direnv")
+        homeCacheLinks = (lib.optional config.hakanssn.core.nix.enableDirenv
+          ".local/share/direnv")
           ++ (lib.optional config.hakanssn.core.nix.enableNixIndex
             ".cache/nix-index");
-        systemCacheLinks = (lib.optional config.hakanssn.core.nix.enableDirenv
-          "/root/.local/share/direnv");
+        systemCacheLinks = [ "/etc/nixos/" ]
+          ++ (lib.optional config.hakanssn.core.nix.enableDirenv
+            "/root/.local/share/direnv");
       };
     };
 

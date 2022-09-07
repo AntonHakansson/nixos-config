@@ -92,6 +92,17 @@ systemctl_options() {
   echo systemctl suspend
 }
 
+theme_options() {
+  echo theme modus-operandi
+  echo theme onedark
+}
+
+theme() {
+  theme=$(echo $@ | cut -d' ' -f 2)
+  echo "Switching to theme '$theme'"
+  doas env THEME="$theme" nixos-rebuild switch --impure
+}
+
 windows_options() {
   @sway@/bin/swaymsg -t get_tree | @jq@/bin/jq -r 'recurse(.nodes[]?)|recurse(.floating_nodes[]?)|select(.layout=="none")|select(.app_id!="launcher")|select(.type=="con"),select(.type=="floating_con")|(if .app_id then .app_id else .window_properties.class end)+": "+.name+" ("+(.id|tostring)+")"' | sed "s/^/windows /"
 }
@@ -101,7 +112,7 @@ windows() {
   @sway@/bin/swaymsg \[con_id="$window"\] focus
 }
 
-CHOSEN=$(cat <(windows_options) <(ssh_options) <(systemctl_options) <(pass_options) <(run_options) <(record_options) <(calc_options) <(emoji_options) | @fzy@/bin/fzy --lines 40 | tail -n1)
+CHOSEN=$(cat <(windows_options) <(ssh_options) <(systemctl_options) <(theme_options) <(pass_options) <(run_options) <(record_options) <(calc_options) <(emoji_options) | @fzy@/bin/fzy --lines 40 | tail -n1)
 
 if [ -n "$CHOSEN" ]
 then

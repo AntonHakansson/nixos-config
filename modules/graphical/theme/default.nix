@@ -11,12 +11,12 @@
         in if envTheme != "" then envTheme else v;
       description = ''
         Name of the theme to enable.
-        Can be overriden by the THEME environment variable;
+        Can be overriden by the THEME environment variable if `--impure` flag is present;
       '';
     };
-    enableAutoSwitch = lib.mkOption {
-      default = config.system.autoUpgrade.enable;
-      description = "Switch to 'onedark' after 18:00";
+    autoSwitchTheme = lib.mkOption {
+      default = true;
+      description = "When autoupgrading, switch to dark theme after 18:00";
     };
   };
 
@@ -117,28 +117,57 @@
       };
     })
 
-    (lib.mkIf (config.hakanssn.graphical.theme.enableAutoSwitch) {
-      home-manager.users.hakanssn = { ... }: {
-        systemd.user = {
-          services.theme-switch = {
-            Unit = { Description = "Service that switches to dark theme"; };
-            Service = {
-              Type = "oneshot";
-              ExecStart = "${
-                  (pkgs.writeShellScriptBin "theme-switch" ''
-                    doas env THEME="onedark" nixos-rebuild switch --flake github:AntonHakansson/nixos-config --impure
-                  '')
-                }/bin/theme-switch";
-            };
-          };
-          timers.theme-switch = {
-            Unit = {
-              Description = "Timer that switches theme after 18:00";
-              PartOf = [ "theme-switch.service" ];
-            };
-            Timer = { OnCalendar = "*-*-* 18:00:00"; };
-            Install = { WantedBy = [ "default.target" ]; };
-          };
+    (lib.mkIf (config.hakanssn.graphical.theme.autoSwitchTheme) {
+      # We replace the default autoUpgrade systemd service with a custom one
+      system.autoUpgrade.enable = false;
+
+      systemd.services.nixos-upgrade-and-set-theme = {
+        description = "NixOS 'onedark' theme";
+
+        restartIfChanged = false;
+        unitConfig.X-StopOnRemoval = false;
+
+        serviceConfig.Type = "oneshot";
+
+        environment = config.nix.envVars // {
+          inherit (config.environment.sessionVariables) NIX_PATH;
+          HOME = "/root";
+        } // config.networking.proxy.envVars;
+
+        path = with pkgs; [
+          coreutils
+          gnutar
+          xz.bin
+          gzip
+          gitMinimal
+          config.nix.package.out
+          config.programs.ssh.package
+        ];
+
+        script = let
+          nixos-rebuild =
+            "${config.system.build.nixos-rebuild}/bin/nixos-rebuild";
+        in ''
+          theme=""
+          currenttime=$(date +%H:%M)
+          if [[ "$currenttime" > "6:00" ]] || [[ "$currenttime" < "18:00" ]]; then
+            theme="modus-operandi"
+          else
+            theme="onedark"
+          fi
+          env THEME="$theme" ${nixos-rebuild} switch --flake github:AntonHakansson/nixos-config --impure
+        '';
+
+        startAt = config.system.autoUpgrade.dates;
+
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
+      };
+
+      systemd.timers.nixos-upgrade-and-set-theme = {
+        timerConfig = {
+          RandomizedDelaySec = config.system.autoUpgrade.randomizedDelaySec;
+          Persistent = true;
         };
       };
     })
