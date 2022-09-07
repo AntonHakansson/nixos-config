@@ -33,18 +33,21 @@ let
     base16 = "#4dc4ff"; # Bright Blue
     base17 = "#de73ff"; # Bright purple
   };
+  iosevka = pkgs.iosevka-bin;
+  iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
+  iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
 in {
   config = lib.mkIf (config.hakanssn.graphical.theme.active == "onedark") {
     fonts = {
       fontconfig = {
         defaultFonts = {
           emoji = [ "Noto Color Emoji" ];
-          monospace = [ "Fira Code" "Font Awesome 6 Free" ];
-          sansSerif = [ "Noto Sans" "Font Awesome 6 Free" ];
-          serif = [ "Noto Serif" "Font Awesome 6 Free" ];
+          monospace = [ "Iosevka" "Font Awesome 6 Free" ];
+          sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
+          serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
         };
       };
-      fonts = with pkgs; [ fira-code fira-code-symbols ];
+      fonts = [ iosevka iosevka-aile iosevka-etoile ];
     };
 
     home-manager.users.hakanssn = { pkgs, ... }:
@@ -59,8 +62,8 @@ in {
         gtk = {
           enable = true;
           font = {
-            package = pkgs.noto-fonts;
-            name = "Noto Sans";
+            package = iosevka-aile;
+            name = "Iosevka Aile";
             size = 10;
           };
           gtk2.extraConfig = ''
@@ -131,8 +134,8 @@ in {
         programs.kitty = {
           theme = "Doom One";
           settings = {
-            font_family = "Fira Code";
-            font_size = 9;
+            font_family = "Iosevka";
+            font_size = 10;
             disable_ligatures = "cursor";
           };
         };
