@@ -475,6 +475,15 @@ Since org-modern’s tag face supplants Org’s tag face, we need to adjust the 
 (after! spell-fu
   (push 'org-modern-tag (alist-get 'org-mode +spell-excluded-faces-alist)))
 #+end_src
+**** Org habit
+#+begin_src emacs-lisp :tangle config.el
+(use-package! org-habit
+  :after org
+  :config
+  (setq org-habit-show-habits t
+        org-habit-following-days 7
+        org-habit-preceding-days 21))
+#+end_src
 
 *** Behavior
 **** Defaults
