@@ -350,7 +350,7 @@ Wrap whole org configuration within an src_elisp{(after! ...)} block.
 :END:
 **** Org Itself
 #+begin_src emacs-lisp
-(unpin! org) ; may be bugs
+;; (unpin! org) ; may be bugs
 #+end_src
 **** Eagerly toggle elements
 ***** Latex Fragments
@@ -450,6 +450,30 @@ $0
 :END:
 `(make-string (+ (org-current-level) 2) ?*)` Text
 $0
+#+end_src
+**** Org Modern
+=org-modern= implements a "modern" style of an Org buffer that looks amazing; let's use it.
+
+#+begin_src emacs-lisp
+(package! org-modern)
+#+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :commands org-modern-mode)
+#+end_src
+
+=org-modern= expects that ~org-indent-mode~ is off.
+#+begin_src emacs-lisp :tangle config.el
+(setq org-startup-indented nil)
+#+end_src
+
+Since org-modern’s tag face supplants Org’s tag face, we need to adjust the spell-check face ignore list
+
+#+begin_src emacs-lisp :tangle config.el
+(after! spell-fu
+  (push 'org-modern-tag (alist-get 'org-mode +spell-excluded-faces-alist)))
 #+end_src
 
 *** Behavior
@@ -773,31 +797,6 @@ Everyone used to use ~#+CAPITAL~ keywords. Then people realized that ~#+lowercas
   )
 #+end_src
 *** Emacs Visuals
-**** Org-modern
-=org-modern= implements a "modern" style of an Org buffer that looks amazing; let's use it.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-modern)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! org-modern
-  :hook (org-mode . org-modern-mode)
-  :commands org-modern-mode)
-#+end_src
-
-=org-modern= expects that ~org-indent-mode~ is off.
-#+begin_src emacs-lisp
-(setq org-startup-indented nil)
-#+end_src
-
-Since org-modern’s tag face supplants Org’s tag face, we need to adjust the spell-check face ignore list
-
-#+begin_src emacs-lisp
-(after! spell-fu
-  (push 'org-modern-tag (alist-get 'org-mode +spell-excluded-faces-alist)))
-#+end_src
-
 **** Font Display
 Mixed pitch is great. As is ~+org-pretty-mode~.
 #+begin_src emacs-lisp
