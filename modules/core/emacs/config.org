@@ -510,6 +510,13 @@ Since org-modern’s tag face supplants Org’s tag face, we need to adjust the 
         ("T" "Tickler" entry
          (file "gtd/tickler.org")
          "* %i%? \n %U")
+        ("W" "Weekly Review" plain
+         (file+olp+datetree "roam/review.org")
+         (file "templates/weekly-review.org")
+         :immediate-finish t
+         :jump-to-captured t
+         :clock-in t
+         )
         ("n" "Personal notes" entry
          (file +org-capture-notes-file)
          "* %u %?\n%i\n%a" :prepend t)
