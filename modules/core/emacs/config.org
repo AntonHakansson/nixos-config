@@ -350,7 +350,7 @@ Wrap whole org configuration within an src_elisp{(after! ...)} block.
 :END:
 **** Org Itself
 #+begin_src emacs-lisp
-;; (unpin! org) ; may be bugs
+(unpin! org) ; may be bugs
 #+end_src
 **** Eagerly toggle elements
 ***** Latex Fragments
