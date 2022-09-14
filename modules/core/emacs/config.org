@@ -1,11 +1,15 @@
 #+title: Emacs Config
 #+startup: show2levels
-#+property: header-args:emacs-lisp :tangle config.el :comments link :results none
+#+property: header-args:emacs-lisp :tangle config.el :comments link :results silent
 #+property: header-args:elisp :exports code
 
 Credits to [[https://tecosaur.github.io/emacs-config/config.html][Tecosaur's Doom Emacs Configuration]] for *a lot* of configuration snippets.
 
 * Basic Configuration
+#+begin_src emacs-lisp :comments no
+;;; -*- lexical-binding: t -*-
+#+end_src
+
 ** Personal Information
 #+begin_src emacs-lisp
 (setq user-full-name "Anton Håkansson"
@@ -335,7 +339,7 @@ Fight the blank page!
 
 ** Org
 :PROPERTIES:
-:header-args:emacs-lisp: :tangle no :noweb-ref org-conf
+:header-args:emacs-lisp: :tangle no :noweb-ref org-conf :results silent
 :END:
 Wrap whole org configuration within an src_elisp{(after! ...)} block.
 #+begin_src emacs-lisp :noweb no-export :tangle config.el :noweb-ref nil
@@ -501,12 +505,9 @@ Since org-modern’s tag face supplants Org’s tag face, we need to adjust the 
 **** GTD
 #+begin_src emacs-lisp
 (setq +org-capture-todo-file "gtd/inbox.org"
-      org-agenda-files
-      (mapcar (lambda (f) (concat org-directory f))
-              '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org"))
       org-capture-templates
       '(("t" "Todo [inbox]" entry (file +org-capture-todo-file)
-        "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:")
+         "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:")
         ("T" "Tickler" entry
          (file "gtd/tickler.org")
          "* %i%? \n %U")
@@ -551,13 +552,115 @@ Alter the TODO keywords to reflect GTD and log when an item transitions from TOD
 (setq org-agenda-custom-commands
       '(
         ("g" "Get Things Done (GTD)"
-         ((agenda)
+         ((agenda "" (;; start from yesterday
+                      (org-agenda-start-day "-1d")
+                      ;; show 8 days
+                      (org-agenda-span 8)))
           (todo "NEXT" ((org-agenda-overriding-header "Next:")))
           (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
           (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
-          (tags-todo "projects" ((org-agenda-overriding-header "Projects:")))
+          (tags-todo "project" ((org-agenda-overriding-header "Projects:")))
           (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "\nCompleted today\n")))
           ))))
+#+end_src
+
+Besides files in ~/gtd~ we also want to list org-roam nodes tagged =project= to our agenda.
+
+#+begin_src emacs-lisp :lexical t
+(defun hak/org-roam-filter-by-tag (tag-name)
+  (lambda (node)
+    (member tag-name (org-roam-node-tags node))))
+
+(defun hak/org-roam-list-notes-by-tag (tag-name)
+  (mapcar #'org-roam-node-file
+          (seq-filter
+           (lambda (node)
+             (member tag-name (org-roam-node-tags node)))
+           (org-roam-node-list))))
+
+(defun hak/org-roam-refresh-agenda-list ()
+  (interactive)
+  ;; Add static files
+  (setq org-agenda-files
+        (mapcar (lambda (f) (concat org-directory f))
+                '("/gtd/inbox.org" "/gtd/gtd.org" "/gtd/someday.org" "/gtd/tickler.org")))
+
+  ;; Add all org-roam projects
+  (setq org-agenda-files (append org-agenda-files (hak/org-roam-list-notes-by-tag "project")))
+
+  ;; Add org-roam-dailies file
+  (require 'org-roam-dailies)
+  (let ((org-roam-dailies-today-file))
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq org-roam-dailies-today-file (buffer-file-name)))
+    (setq org-agenda-files (append org-agenda-files (cons org-roam-dailies-today-file nil))))
+
+  (setq org-refile-targets '((nil :maxlevel . 2)
+                             (org-agenda-files :maxlevel . 2))))
+#+end_src
+
+Update the agenda files:
+#+begin_src emacs-lisp
+(hak/org-roam-refresh-agenda-list)
+#+end_src
+
+**** Org Roam
+***** Projects
+
+Slowly I want to transition to using Org Roam as a Task Management System.
+One central idea is a project(or meta-project) to collect tasks related to it as an isolated org-roam node.
+
+Capture a new task to a project, creating the project node if necessary:
+#+begin_src emacs-lisp :lexical t
+(defun hak/org-roam-capture-to-project ()
+  (interactive)
+  (org-roam-capture- :node (org-roam-node-read
+                            nil
+                            (hak/org-roam-filter-by-tag "project"))
+                     :templates `(("p" "project" plain "** TODO %?"
+                                   :if-new (file+head+olp "%<%Y%m%d%H%M%S>-${slug}.org"
+                                                          ,(concat "#+title: ${title}\n"
+                                                                   "#+date: %U\n"
+                                                                   "#+category: ${title}\n"
+                                                                   "#+filetags: :project:\n\n"
+                                                                   "* Goals\n"
+                                                                   "- \n\n"
+                                                                   "* Tasks\n")
+                                                          ("Tasks")))))
+  (hak/org-roam-refresh-agenda-list))
+
+(map! :leader :desc "Capture to project" :e "n r p" #'hak/org-roam-capture-to-project)
+#+end_src
+
+***** Archive/Refile to dailies
+
+Refile DONE tasks to a daily journal instead of archiving.
+This gives me a better visual view of what I have accomplished for a given day.
+
+#+begin_src emacs-lisp
+(defun hak/org-roam-dailies-refile-todo ()
+  "Mark an org element as done and refile to org-roam daily"
+  (interactive)
+  (org-todo 'done)
+  (let ((org-refile-keep nil) ;; Set this to nil to delete the original!
+        (org-roam-dailies-capture-templates
+         '(("t" "tasks" entry "%?"
+            :if-new (file+head+olp "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n" ("Completed")))))
+        (org-after-refile-insert-hook #'save-buffer)
+        today-file
+        pos)
+    (save-window-excursion
+      (org-roam-dailies--capture (current-time) t)
+      (setq today-file (buffer-file-name))
+      (setq pos (point)))
+
+    ;; Only refile if the target file is different than the current file
+    (unless (equal (file-truename today-file)
+                   (file-truename (buffer-file-name)))
+      (org-refile nil nil (list "Tasks" today-file nil pos)))))
+
+(map! :leader :desc "Refile to dailies" :e "n r t" #'hak/hak/org-roam-dailies-refile-todo)
 #+end_src
 
 **** View Exported file
