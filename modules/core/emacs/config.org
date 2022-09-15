@@ -559,10 +559,20 @@ Alter the TODO keywords to reflect GTD and log when an item transitions from TOD
           (todo "NEXT" ((org-agenda-overriding-header "Next:")))
           (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
           (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
-          (tags-todo "project" ((org-agenda-overriding-header "Projects:")))
+          (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
           (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "\nCompleted today\n")))
           ))))
 #+end_src
+
+**** Org Roam
+
+Load extensions:
+#+begin_src emacs-lisp
+(require 'org-roam-dailies)
+(require 'org-roam-protocol)
+#+end_src
+
+***** Load agenda files
 
 Besides files in ~/gtd~ we also want to list org-roam nodes tagged =project= to our agenda.
 
@@ -589,7 +599,6 @@ Besides files in ~/gtd~ we also want to list org-roam nodes tagged =project= to 
   (setq org-agenda-files (append org-agenda-files (hak/org-roam-list-notes-by-tag "project")))
 
   ;; Add org-roam-dailies file
-  (require 'org-roam-dailies)
   (let ((org-roam-dailies-today-file))
     (save-window-excursion
       (org-roam-dailies--capture (current-time) t)
@@ -605,7 +614,6 @@ Update the agenda files:
 (hak/org-roam-refresh-agenda-list)
 #+end_src
 
-**** Org Roam
 ***** Projects
 
 Slowly I want to transition to using Org Roam as a Task Management System.
@@ -632,7 +640,6 @@ Capture a new task to a project, creating the project node if necessary:
 
 (map! :leader :desc "Capture to project" :e "n r p" #'hak/org-roam-capture-to-project)
 #+end_src
-
 ***** Archive/Refile to dailies
 
 Refile DONE tasks to a daily journal instead of archiving.
@@ -661,6 +668,13 @@ This gives me a better visual view of what I have accomplished for a given day.
       (org-refile nil nil (list "Tasks" today-file nil pos)))))
 
 (map! :leader :desc "Refile to dailies" :e "n r t" #'hak/hak/org-roam-dailies-refile-todo)
+#+end_src
+***** org-protocol
+#+begin_src emacs-lisp
+(setq org-roam-capture-ref-templates
+      `(("r" "ref" plain "%?"
+         :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n\n${body}")
+         :unnarrowed t)))
 #+end_src
 
 **** View Exported file

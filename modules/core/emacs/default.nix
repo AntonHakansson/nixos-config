@@ -113,6 +113,26 @@
         source = "${tangledPrivateDir}/";
         recursive = true;
       };
+
+      # org-capture setup
+      xdg.dataFile."applications/emacs-capture.desktop" = {
+        text = ''
+          [Desktop Entry]
+          Name=Org Capture
+          Exec=${config.hakanssn.core.emacs.package}/bin/emacsclient %u
+          Comment=Capture the web into org
+          Type=Application
+          Terminal=false
+          MimeType=x-scheme-handler/org-protocol;
+        '';
+      };
+      xdg.mimeApps.defaultApplications."x-scheme-handler/org-protocol" = "org-protocol.desktop";
+      programs.firefox.profiles.hakanssn.settings."network.protocol-handler.external.org-protocol" = true;
+      programs.firefox.profiles.hakanssn.bookmarks.org-capture = {
+        name = "org-capture";
+        url =
+          "javascript:location.href ='org-protocol://roam-ref?template=r&ref=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection())";
+      };
     };
     fonts.fonts = with pkgs; [
       emacs-all-the-icons-fonts
