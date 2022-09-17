@@ -98,6 +98,13 @@ theme_options() {
 }
 
 theme() {
+  if [[ ! -f /etc/nixos/flake.nix ]]
+  then
+    echo "Error: create a '/etc/nixos/flake.nix' symlink to your local repo's flake.nix"
+    echo "\t> ln /etc/nixos/flake.nix /home/hakanssn/repo/nixos-config/flake.nix"
+    read
+    exit
+  fi
   theme=$(echo $@ | cut -d' ' -f 2)
   echo "Switching to theme '$theme'"
   doas env THEME="$theme" nixos-rebuild switch --impure
