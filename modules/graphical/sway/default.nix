@@ -34,6 +34,7 @@ let
         xargs -I{} pactl move-sink-input {} "$next_sink"
     '';
   };
+  swaylock-cmd = "${pkgs.swaylock-fancy}/bin/swaylock-fancy";
 in {
   options.hakanssn.graphical.sway = {
     enable = lib.mkEnableOption "swaywm";
@@ -78,6 +79,25 @@ in {
         longitude = "11.9";
       };
 
+      services.swayidle = {
+        enable = true;
+        timeouts = [
+          {
+            timeout = 300;
+            command = "${swaylock-cmd}";
+          }
+          {
+            timeout = 150;
+            command = ''${pkgs.sway}/bin/swaymsg "output * dpms off"'';
+            resumeCommand = ''${pkgs.sway}/bin/swaymsg "output * dpms on"'';
+          }
+        ];
+        events = [{
+          event = "before-sleep";
+          command = "${swaylock-cmd}";
+        }];
+      };
+
       wayland.windowManager.sway = {
         enable = true;
         config = rec {
@@ -92,10 +112,6 @@ in {
                 }) ${pkgs.i3status-rust}/bin/i3status-rs ${status-configuration}";
             } // config.hakanssn.graphical.sway.top-bar)
           ];
-          startup = [{
-            command =
-              "${pkgs.swayidle}/bin/swayidle -w timeout 300 '${pkgs.swaylock}/bin/swaylock -f -c 000000' timeout 150 '${pkgs.sway}/bin/swaymsg \"output * dpms off\"' resume '${pkgs.sway}/bin/swaymsg \"output * dpms on\"' before-sleep '${pkgs.swaylock}/bin/swaylock -f -c 000000'";
-          }];
           window.commands = [
             {
               command = "floating enable";
@@ -123,7 +139,7 @@ in {
             ## Power
             "${modifier}+Shift+r" = "reload";
             "${modifier}+q" = "kill";
-            "${modifier}+c" = "exec ${pkgs.swaylock}/bin/swaylock -f -c 000000";
+            "${modifier}+c" = "exec ${swaylock-cmd}";
 
             ## Window
             "${modifier}+Shift+t" = "sticky toggle"; # on top
