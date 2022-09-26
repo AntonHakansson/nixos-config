@@ -51,6 +51,7 @@
           noto-fonts-extra
         ];
       };
+      programs.dconf.enable = true;
       home-manager.users.hakanssn = { pkgs, ... }: {
         home.packages = [ pkgs.vanilla-dmz ];
         dconf = {
