@@ -8,7 +8,7 @@
     hakanssn.core.zfs.homeCacheLinks = [ "downloads" "repos" ];
 
     home-manager.users.hakanssn = { pkgs, ... }: {
-      home.packages = with pkgs; [ xdg-user-dirs xdg_utils ];
+      home.packages = with pkgs; [ xdg-user-dirs xdg-utils ];
       xdg = {
         enable = true;
         # Some applications overwrite mimeapps.list with an identical file

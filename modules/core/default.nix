@@ -69,7 +69,7 @@
       tealdeer
       tldr
       usbutils
-      utillinux
+      util-linux
       whois
     ];
 
