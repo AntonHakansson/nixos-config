@@ -4,16 +4,27 @@
 
 [[https://github.com/AntonHakansson/dotfiles/actions/workflows/check.yml][https://github.com/AntonHakansson/nixos-config/actions/workflows/cachix.yml/badge.svg]]
 
+* Highlights:
+- NixOS configurations for desktop, laptop, and server contexts
+- *Opt-in persistence* through [[https://github.com/nix-community/impermanence][impermanence]] + blank snapshotting on boot
+- Encrypted *zfs* partition
+- Deploy secrets using *agenix*
+- Flexible *Home Manager* config files
+- *wayland* environments (sway)
+- Declarative themes
+- Github CI/CD and binary cache
+
 * Filesystem quirks
 On boot the root mount(=rpool/local/root=) gets wiped to its =@blank= snapshot.
 To preserve directories, mount them from either the =rpool/safe/data= dataset mounted to =/data= or the =rpool/local/cache= dataset mounted to =/cache=.
-- =/data= is for files that we want to preserve and backup.
-- =/cache= is for files that we want to preserve.
+- =/data= is for files that we want to persist and backup.
+- =/cache= is for files that we want to persist.
 
 Run src_sh{zfsdiff} tool to discover directories that will be erased on next boot.
 
 References:
 - [[https://grahamc.com/blog/erase-your-darlings][Erase your darlings: immutable infrastructure for mutable systems]]
+
 * First time setup
 See [[https://nixos.wiki/wiki/ZFS][ZFS - NixOS Wiki]] for more information and advanced options for configuring zpool.
 

@@ -1,6 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
+  options.hakanssn.graphical.media = {
+    documents.enable = lib.mkEnableOption "document readers";
+  };
+
   config = lib.mkIf config.hakanssn.graphical.media.documents.enable {
     home-manager.users.hakanssn = { ... }: {
       home.packages = with pkgs; [ okular ];

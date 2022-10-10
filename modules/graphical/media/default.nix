@@ -4,8 +4,6 @@
   imports = [ ./anki.nix ./mpv.nix ./documents.nix ];
 
   options.hakanssn.graphical.media = {
-    documents.enable = lib.mkEnableOption "document readers";
-    mpv.enable = lib.mkEnableOption "mpv";
     recording.enable = lib.mkEnableOption "recording";
     spotify.enable = lib.mkEnableOption "spotify client";
   };

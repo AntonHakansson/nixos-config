@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
+  options.hakanssn.graphical.media = { mpv.enable = lib.mkEnableOption "mpv"; };
+
   config = lib.mkIf config.hakanssn.graphical.media.mpv.enable {
     home-manager.users.hakanssn = { ... }: {
       programs.mpv = {
