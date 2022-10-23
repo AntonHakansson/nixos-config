@@ -1,0 +1,6 @@
+# Zig
+zig-out
+zig-cache
+
+# Nix Build
+result

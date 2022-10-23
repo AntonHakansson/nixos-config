@@ -13,5 +13,10 @@ rec {
     description =
       "A Makefile c/c++ template";
   };
+  zig = {
+    path = ./zig;
+    description =
+      "A zig template";
+  };
   default = hakanssn-project;
 }
