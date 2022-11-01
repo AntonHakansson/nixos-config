@@ -73,19 +73,21 @@
         stable
       else
         beta;
+      open = true;
     };
   };
   services.fstrim.enable = true;
 
   # Nvidia proprietary drivers
   # system.autoUpgrade.enable = false;
-  # hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
-  # services.xserver.videoDrivers = [ "nvidia" ];
-  # hardware.nvidia.modesetting.enable = true;
-  # home-manager.users.hakanssn = { pkgs, ... }: {
-  #   wayland.windowManager.sway.extraOptions = [ "--unsupported-gpu" ];
-  # };
-  # environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
+  # hakanssn.graphical.theme.autoSwitchTheme = false;
+  hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.nvidia.modesetting.enable = true;
+  home-manager.users.hakanssn = { pkgs, ... }: {
+    wayland.windowManager.sway.extraOptions = [ "--unsupported-gpu" ];
+  };
+  environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
 
   # Anne Pro 2 keyboard disconnects after inactivity
   # boot with usb quirk HID_QUIRK_ALWAYS_POLL(0x00000400)
