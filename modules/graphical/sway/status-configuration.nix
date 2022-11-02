@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   mail-status = pkgs.writeShellScript "sway-mail-status" ''
-    mails=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | wc -l)
+    mails=$(${pkgs.mblaze}/bin/mlist -N $(${pkgs.mblaze}/bin/mdirs ~/mail) | ${pkgs.coreutils}/bin/wc -l)
     if [ "$mails" -gt 0 ]
     then
       echo "{ \"state\": \"Info\", \"text\": \"\uf0e0 $mails\" }"

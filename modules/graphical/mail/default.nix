@@ -5,7 +5,7 @@ let
     ${pkgs.pass}/bin/pass show "$@" | ${pkgs.coreutils}/bin/head -n1 | ${pkgs.coreutils}/bin/tr -d "\n"'';
   notifyScript = name:
     pkgs.writeShellScript "notify_${name}_mail" ''
-      unseen_count=$(${pkgs.mblaze}/bin/mlist -N ~/mail/*/Inbox | ${pkgs.coreutils}/bin/wc -l)
+      unseen_count=$(${pkgs.mblaze}/bin/mlist -N $(${pkgs.mblaze}/bin/mdirs ~/mail) | ${pkgs.coreutils}/bin/wc -l)
       ${pkgs.libnotify}/bin/notify-send -t 5000 "New ${name} mail arrived ($unseen_count)"
     '';
 in {
