@@ -16,6 +16,7 @@
       git.email = "anton.hakansson98@gmail.com";
     };
     services = {
+      calibre.enable = true;
       nginx.hosts = [{
         fqdn = "hakanssn.com";
         options = { };
