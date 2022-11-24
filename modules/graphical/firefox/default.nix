@@ -23,7 +23,6 @@ let
     '';
   };
   ffPackage = pkgs.firefox.override {
-    forceWayland = true;
     extraNativeMessagingHosts = [ ff2mpv-host ];
     extraPolicies = {
       DisableFirefoxStudies = true;
