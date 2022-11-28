@@ -45,6 +45,10 @@
         flake-utils.follows = "flake-utils";
       };
     };
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
@@ -55,7 +59,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, agenix, home-manager, devshell, impermanence
-    , nur, flake-utils, utils, doom-emacs, emacs-overlay, nixos-mailserver }:
+    , nur, flake-utils, utils, doom-emacs, emacs-overlay, hyprland, nixos-mailserver }:
     utils.lib.mkFlake {
       inherit self inputs;
       channels.nixpkgs = {
@@ -72,6 +76,7 @@
           agenix.nixosModules.age
           home-manager.nixosModule
           impermanence.nixosModule
+          { home-manager.sharedModules = [ hyprland.homeManagerModules.default ]; }
           nixos-mailserver.nixosModule
           ./modules
         ];

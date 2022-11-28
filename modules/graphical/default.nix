@@ -5,6 +5,7 @@
     ./audio
     ./firefox
     ./games
+    ./hyprland
     ./mail
     ./media
     ./pass
@@ -35,6 +36,7 @@
         };
         pass.enable = lib.mkDefault true;
         sway.enable = lib.mkDefault true;
+        hyprland.enable = lib.mkDefault false;
         terminal.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;

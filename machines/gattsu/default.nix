@@ -21,6 +21,9 @@
       syncthing.enable = true;
       games.enable = true;
       media.anki.enable = true;
+
+      sway.enable = false;
+      hyprland.enable = true;
     };
   };
 }

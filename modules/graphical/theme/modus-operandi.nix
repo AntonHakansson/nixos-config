@@ -121,6 +121,15 @@ in {
               };
             };
           };
+          wayland.windowManager.hyprland.extraConfig = let
+            hyprpaper-config = pkgs.writeText "hyprpaper-configuration" ''
+              preload = ${./modus-operandi-wallpaper.png}
+              wallpaper = HDMI-A-1,${./modus-operandi-wallpaper.png}
+            '';
+          in ''
+            # Set Wallpaper
+            exec-once=${pkgs.hyprpaper}/bin/hyprpaper -c ${hyprpaper-config}
+          '';
 
           programs.neovim = let
             vim-modus-theme = pkgs.vimUtils.buildVimPlugin {
