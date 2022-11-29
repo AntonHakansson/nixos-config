@@ -69,10 +69,10 @@ in {
               # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
               gaps_in = 5
-              gaps_out = 20
-              border_size = 1
-              col.active_border = rgba(33ccffee)
-              col.inactive_border = rgba(595959aa)
+              gaps_out = 6
+              border_size = 2
+              col.active_border = rgb(505050)
+              col.inactive_border = rgb(efefef)
 
               layout = master
           }
@@ -80,11 +80,11 @@ in {
           decoration {
               # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
-              # rounding = 10
-              blur = yes
-              blur_size = 3
-              blur_passes = 1
-              blur_new_optimizations = on
+              rounding = 6
+              blur = no
+              # blur_size = 3
+              # blur_passes = 1
+              # blur_new_optimizations = on
 
               drop_shadow = yes
               shadow_range = 4
@@ -126,7 +126,7 @@ in {
                disable_hyprland_logo = true
                disable_splash_rendering = true
                enable_swallow = true
-               swallow_regex = "mpv"
+               swallow_regex = ^(kitty)$
           }
 
           # Example per-device config
@@ -215,6 +215,80 @@ in {
 
           # Window Rules
           windowrule=float,^(launcher)$
+
+          # Status Bar
+          bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
+          # bind = SUPER, b, exec, waybar
+        '';
+
+      };
+      programs.waybar = {
+        enable = true;
+        package = pkgs.waybar.overrideAttrs (oldAttrs: {
+          mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+        });
+        settings = [{
+          position = "top";
+          margin = "6 6 0 6";
+          modules-left = [ "wlr/workspaces" ];
+          modules-center = [ "clock" "clock#time" ];
+          modules-right = [ "network" "pulseaudio" "custom/bluetooth" "battery" "custom/power" ];
+          "clock" = {
+            format = "{:%a, %d %b}";
+            interval = 3600;
+          };
+          "clock#time" = {
+            format = "{:%H:%M}";
+            interval = 60;
+          };
+          "network" = {
+            format = "";
+            tooltip = false;
+          };
+          "pulseaudio" = {
+            format = "{icon}";
+            format-muted = "<span color=\"#4a4a4a\"></span>";
+            format-icons = [ "" "" "" ];
+            on-click = "${pkgs.pavucontrol}/bin/pavucontrol --tab=3";
+            tooltip = false;
+          };
+          "battery" = {
+            format = "{icon} {capacity}%";
+            format-charging = " {capacity}%";
+            format-icons = [ "" "" "" "" "" ];
+            tooltip = false;
+          };
+        }];
+        style = ''
+          #waybar {
+            background: transparent;
+          }
+          #workspaces, #workspaces button, #battery, #bluetooth, #network, #clock, #clock.time, #pulseaudio, #custom-bluetooth, #custom-power {
+            font-family: "Iosevka", "FontAwesome6Free";
+            color: #b0b0b0;
+            background-color: #0a0a0a;
+            border-radius: 0;
+            transition: none;
+          }
+          #clock.time, #workspaces button.active {
+            background-color: #b0b0b0;
+            color: #0a0a0a;
+          }
+          #clock, #network {
+            border-radius: 6px 0 0 6px;
+          }
+          #workspaces, #workspaces button {
+            padding: 0 4px 0 4px;
+            border-radius: 6px;
+          }
+          #workspaces button.active {
+            border-radius: 50%;
+            padding: 0 4px;
+            margin: 4px 0 4px 0;
+          }
+          #network.disconnected {
+            color: #4a4a4a;
+          }
         '';
       };
     };
