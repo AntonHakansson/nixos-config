@@ -75,7 +75,7 @@
           decoration {
               # See https://wiki.hyprland.org/Configuring/Variables/ for more
 
-              rounding = 6
+              rounding = 0
               blur = no
               # blur_size = 3
               # blur_passes = 1
@@ -225,6 +225,7 @@
         settings = [{
           position = "top";
           margin = "6 6 0 6";
+          spacing = 12;
           modules-left = [ "wlr/workspaces" ];
           modules-center = [ "clock" "clock#time" ];
           modules-right = [ "network" "pulseaudio" "custom/bluetooth" "battery" "custom/power" ];
