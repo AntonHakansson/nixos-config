@@ -58,6 +58,7 @@
               }
 
               sensitivity = 0 # -1.0 - 1.0, 0 means no modification.
+              accel_profile = adaptive
           }
 
           general {
@@ -228,7 +229,6 @@
         settings = [{
           position = "top";
           margin = "6 6 0 6";
-          spacing = 12;
           modules-left = [ "wlr/workspaces" ];
           modules-center = [ "clock" "clock#time" ];
           modules-right = [ "network" "pulseaudio" "custom/bluetooth" "battery" "custom/power" ];
