@@ -212,8 +212,8 @@
           windowrule=float,^(launcher)$
 
           # Status Bar
+          exec-once = waybar
           bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
-          # bind = SUPER, b, exec, waybar
         '';
 
       };
