@@ -1,11 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-  launcher = import ../sway/launcher.nix {
-    inherit pkgs;
-    stdenv = pkgs.stdenv;
-  };
-in {
+{
   options.hakanssn.graphical.hyprland = {
     enable = lib.mkEnableOption "hyprlandwm";
     top-bar = lib.mkOption {
@@ -148,7 +143,7 @@ in {
           bind = SUPER SHIFT, E, exec, hyprctl kill
           bind = SUPER, M, exit,
           bind = SUPER, V, togglefloating,
-          bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${launcher}/bin/launcher
+          bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
 
           bind = SUPER,F,fullscreen,
 
