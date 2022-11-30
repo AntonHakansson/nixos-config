@@ -40,7 +40,7 @@ run_options() {
 }
 
 run() {
-  exec $1
+  hyprctl dispatch exec $1
 }
 
 
