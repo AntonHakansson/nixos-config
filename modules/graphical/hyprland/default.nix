@@ -65,7 +65,7 @@
 
               gaps_in = 5
               gaps_out = 6
-              border_size = 2
+              border_size = 0
               col.active_border = rgb(505050)
               col.inactive_border = rgb(efefef)
 
@@ -85,6 +85,9 @@
               shadow_range = 4
               shadow_render_power = 3
               col.shadow = rgba(1a1a1aee)
+
+              dim_inactive = true
+              dim_strength = 0.1
           }
 
           animations {
