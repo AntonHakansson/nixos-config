@@ -21,6 +21,8 @@
             "image/jpeg" = [ "org.kde.okular.desktop" ];
             "application/pdf" = [ "org.kde.okular.desktop" ];
 
+            "image/svg+xml" = [ "org.inkscape.Inkscape.desktop" ];
+
             "text/html" = [ "firefox.desktop" ];
             "x-scheme-handler/about" = [ "firefox.desktop" ];
             "x-scheme-handler/http" = [ "firefox.desktop" ];
