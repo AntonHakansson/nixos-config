@@ -6,7 +6,7 @@
     doomEmacsRevision = lib.mkOption { default = inputs.doom-emacs.rev; };
     package = lib.mkOption {
       readOnly = true;
-      default = ((pkgs.emacsPackagesFor pkgs.emacsNativeComp).emacsWithPackages
+      default = ((pkgs.emacsPackagesFor pkgs.emacsUnstable).emacsWithPackages
         (epkgs: with epkgs; [ vterm pdf-tools all-the-icons ]));
     };
   };
