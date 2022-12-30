@@ -6,8 +6,11 @@
   };
 
   config = lib.mkIf config.hakanssn.graphical.media.documents.enable {
+    hakanssn.core.zfs.homeDataLinks = [ ".config/obsidian" ];
+    hakanssn.core.nix.unfreePackages = [ "obsidian" ];
+
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ okular ];
+      home.packages = with pkgs; [ okular obsidian ];
       programs.zathura = {
         enable = true;
         options = {
