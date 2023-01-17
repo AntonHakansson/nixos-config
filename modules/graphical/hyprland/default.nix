@@ -113,7 +113,7 @@
 
           master {
               # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-              new_is_master = true
+              new_is_master = false
           }
 
           gestures {
@@ -214,12 +214,12 @@
 
           # Window Rules
           windowrule=float,^(launcher)$
+          windowrule=float,^(kitty)$
 
           # Status Bar
           exec-once = waybar
           bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
         '';
-
       };
       programs.waybar = {
         enable = true;
