@@ -62,7 +62,7 @@
           }
 
           general {
-              # See https://wiki.hyprland.org/Configuring/Variables/ for more
+              # See https://wiki.hyprland.org/Configuring/Variables/
 
               gaps_in = 5
               gaps_out = 6
@@ -74,7 +74,7 @@
           }
 
           decoration {
-              # See https://wiki.hyprland.org/Configuring/Variables/ for more
+              # See https://wiki.hyprland.org/Configuring/Variables/
 
               rounding = 0
               blur = no
@@ -92,9 +92,10 @@
           }
 
           animations {
+              # See https://wiki.hyprland.org/Configuring/Animations/
+
               enabled = yes
 
-              # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
 
               # bezier = myBezier, 0.05, 0.9, 0.1, 1.05
 
@@ -106,18 +107,18 @@
           }
 
           dwindle {
-              # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
+              # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/
               pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
               preserve_split = yes # you probably want this
           }
 
           master {
-              # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
+              # See https://wiki.hyprland.org/Configuring/Master-Layout/
               new_is_master = false
           }
 
           gestures {
-              # See https://wiki.hyprland.org/Configuring/Variables/ for more
+              # See https://wiki.hyprland.org/Configuring/Variables/
               workspace_swipe = off
           }
 
@@ -128,20 +129,17 @@
                swallow_regex = ^(kitty)$
           }
 
-          # Example per-device config
-          # See https://wiki.hyprland.org/Configuring/Keywords/#executing for more
-          device:epic mouse V1 {
-              sensitivity = -0.5
-          }
+          # Window Rules
+          ## See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+          windowrule=float,^(launcher)$
+          windowrule=float,^(kitty)$
 
-          # Example windowrule v1
-          # windowrule = float, ^(kitty)$
-          # Example windowrule v2
-          # windowrulev2 = float,class:^(kitty)$,title:^(kitty)$
-          # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+          # Status Bar
+          exec-once = waybar
+          bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
 
-
-          # Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
+          # Example binds
+          ## See https://wiki.hyprland.org/Configuring/Binds/
           bind = SUPER, return, exec, kitty
           bind = SUPER, Q, killactive,
           bind = SUPER SHIFT, E, exec, hyprctl kill
@@ -211,14 +209,6 @@
           # Notifications
           bind = SUPER,       N, exec, ${pkgs.mako}/bin/makoctl dismiss
           bind = SUPER SHIFT, N, exec, ${pkgs.mako}/bin/makoctl invoke;
-
-          # Window Rules
-          windowrule=float,^(launcher)$
-          windowrule=float,^(kitty)$
-
-          # Status Bar
-          exec-once = waybar
-          bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
         '';
       };
       programs.waybar = {
@@ -231,7 +221,13 @@
           margin = "6 6 0 6";
           modules-left = [ "wlr/workspaces" ];
           modules-center = [ "clock" "clock#time" ];
-          modules-right = [ "network" "pulseaudio" "custom/bluetooth" "battery" "custom/power" ];
+          modules-right = [
+            "network"
+            "pulseaudio"
+            "custom/bluetooth"
+            "battery"
+            "custom/power"
+          ];
           "clock" = {
             format = "{:%a, %d %b}";
             interval = 3600;
@@ -259,34 +255,252 @@
           };
         }];
         style = ''
-          #waybar {
-            background: transparent;
+          * {
+              font-family: FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+              font-size: 13px;
           }
-          #workspaces, #workspaces button, #battery, #bluetooth, #network, #clock, #clock.time, #pulseaudio, #custom-bluetooth, #custom-power {
-            font-family: "Iosevka", "FontAwesome6Free";
-            color: #b0b0b0;
-            background-color: #0a0a0a;
-            border-radius: 0;
-            transition: none;
+
+          window#waybar {
+              background: transparent;
+              color: #000000;
           }
-          #clock.time, #workspaces button.active {
-            background-color: #b0b0b0;
-            color: #0a0a0a;
+
+          window#waybar.hidden {
+              opacity: 0.2;
           }
-          #clock, #network {
-            border-radius: 6px 0 0 6px;
+
+          button {
+              border: none;
+              border-radius: 0;
           }
-          #workspaces, #workspaces button {
-            padding: 0 4px 0 4px;
-            border-radius: 6px;
+
+          #workspaces button {
+              background-color: #f0f0f0;
+              padding: 0 5px;
           }
+
+          #workspaces button:hover {
+              background: rgba(0, 0, 0, 0.2);
+          }
+
           #workspaces button.active {
-            border-radius: 50%;
-            padding: 0 4px;
-            margin: 4px 0 4px 0;
+              background-color: #d7d7d7;
           }
+
+          #workspaces button.urgent {
+              background-color: #eb4d4b;
+          }
+
+          #mode {
+              background-color: #64727D;
+          }
+
+          #clock,
+          #battery,
+          #cpu,
+          #memory,
+          #disk,
+          #temperature,
+          #backlight,
+          #network,
+          #pulseaudio,
+          #wireplumber,
+          #custom-media,
+          #tray,
+          #mode,
+          #idle_inhibitor,
+          #scratchpad,
+          #mpd {
+              padding: 0 10px;
+              color: #000000;
+              background-color: #f0f0f0;
+          }
+
+          #window,
+          #workspaces {
+              margin: 0 4px;
+          }
+
+          /* If workspaces is the leftmost module, omit left margin */
+          .modules-left > widget:first-child > #workspaces {
+              margin-left: 0;
+          }
+
+          /* If workspaces is the rightmost module, omit right margin */
+          .modules-right > widget:last-child > #workspaces {
+              margin-right: 0;
+          }
+
+          #clock {
+          }
+          #clock.time {
+            background-color: #d7d7d7;
+          }
+
+          #battery {
+              background-color: #000000;
+          }
+
+          #battery.charging, #battery.plugged {
+              background-color: #26A65B;
+          }
+
+          @keyframes blink {
+              to {
+                  background-color: #000000;
+                  color: #000000;
+              }
+          }
+
+          #battery.critical:not(.charging) {
+              background-color: #f53c3c;
+              color: #000000;
+              animation-name: blink;
+              animation-duration: 0.5s;
+              animation-timing-function: linear;
+              animation-iteration-count: infinite;
+              animation-direction: alternate;
+          }
+
+          label:focus {
+              background-color: #000000;
+          }
+
+          #cpu {
+              background-color: #2ecc71;
+              color: #000000;
+          }
+
+          #memory {
+              background-color: #9b59b6;
+          }
+
+          #disk {
+              background-color: #964B00;
+          }
+
+          #backlight {
+              background-color: #90b1b1;
+          }
+
+          #network {
+              background-color: #2980b9;
+          }
+
           #network.disconnected {
-            color: #4a4a4a;
+              background-color: #f53c3c;
+          }
+
+          #pulseaudio {
+              background-color: #f1c40f;
+              color: #000000;
+          }
+
+          #pulseaudio.muted {
+              background-color: #90b1b1;
+              color: #2a5c45;
+          }
+
+          #wireplumber {
+              background-color: #fff0f5;
+              color: #000000;
+          }
+
+          #wireplumber.muted {
+              background-color: #f53c3c;
+          }
+
+          #custom-media {
+              background-color: #66cc99;
+              color: #2a5c45;
+              min-width: 100px;
+          }
+
+          #custom-media.custom-spotify {
+              background-color: #66cc99;
+          }
+
+          #custom-media.custom-vlc {
+              background-color: #ffa000;
+          }
+
+          #temperature {
+              background-color: #f0932b;
+          }
+
+          #temperature.critical {
+              background-color: #eb4d4b;
+          }
+
+          #tray {
+              background-color: #2980b9;
+          }
+
+          #tray > .passive {
+              -gtk-icon-effect: dim;
+          }
+
+          #tray > .needs-attention {
+              -gtk-icon-effect: highlight;
+              background-color: #eb4d4b;
+          }
+
+          #idle_inhibitor {
+              background-color: #2d3436;
+          }
+
+          #idle_inhibitor.activated {
+              background-color: #ecf0f1;
+              color: #2d3436;
+          }
+
+          #mpd {
+              background-color: #66cc99;
+              color: #2a5c45;
+          }
+
+          #mpd.disconnected {
+              background-color: #f53c3c;
+          }
+
+          #mpd.stopped {
+              background-color: #90b1b1;
+          }
+
+          #mpd.paused {
+              background-color: #51a37a;
+          }
+
+          #language {
+              background: #00b093;
+              color: #740864;
+              padding: 0 5px;
+              margin: 0 5px;
+              min-width: 16px;
+          }
+
+          #keyboard-state {
+              background: #97e1ad;
+              color: #000000;
+              padding: 0 0px;
+              margin: 0 5px;
+              min-width: 16px;
+          }
+
+          #keyboard-state > label {
+              padding: 0 5px;
+          }
+
+          #keyboard-state > label.locked {
+              background: rgba(0, 0, 0, 0.2);
+          }
+
+          #scratchpad {
+              background: rgba(0, 0, 0, 0.2);
+          }
+
+          #scratchpad.empty {
+              background-color: transparent;
           }
         '';
       };
