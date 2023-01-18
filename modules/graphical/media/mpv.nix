@@ -1,12 +1,51 @@
 { config, lib, pkgs, ... }:
 
-{
+let
+  mpv-uosc = pkgs.stdenvNoCC.mkDerivation rec {
+    pname = "mpv-uosc";
+    version = "4.5.0";
+
+    src = pkgs.fetchzip {
+      url =
+        "https://github.com/tomasklaen/uosc/releases/download/${version}/uosc.zip";
+      sha256 = "sha256-crto/Hcp80DvH1gXsDEAL4KIVgsZazCbic1Vry6bfx8=";
+      stripRoot = false;
+    };
+
+    dontBuild = true;
+    dontCheck = true;
+
+    postPatch = ''
+      substituteInPlace ./scripts/uosc.lua \
+        --replace "mp.find_config_file('scripts')" "'$out/share/mpv/scripts'"
+    '';
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/share/mpv
+      ls -la ./fonts ./scripts
+      cp -r ./fonts ./scripts $out/share/mpv
+      runHook postInstall
+    '';
+
+    passthru.scriptName = "uosc.lua";
+
+    meta = with lib; {
+      description = "Feature-rich minimalist proximity-based UI for MPV player";
+      homepage = "https://github.com/tomasklaen/uosc";
+      license = licenses.gpl3;
+    };
+  };
+in {
   options.hakanssn.graphical.media = { mpv.enable = lib.mkEnableOption "mpv"; };
 
   config = lib.mkIf config.hakanssn.graphical.media.mpv.enable {
     home-manager.users.hakanssn = { ... }: {
       programs.mpv = {
         enable = true;
+        scripts = [
+          mpv-uosc
+        ];
         config = {
           # Saves the seekbar position on exit
           save-position-on-quit = "yes";
@@ -26,8 +65,10 @@
           # search for external subs in the listed subdirectories
           sub-file-paths = "ass:srt:sub:subs:subtitles";
 
-          osd-scale = 1;
-          osd-font-size = 55;
+          # OSC/OSD is replaced with uosc plugin
+          osc = "no";
+          osd-bar = "no";
+          border = "no";
         };
         profiles = {
           "extension.gif" = {
@@ -49,6 +90,16 @@
           PGDWN = "playlist-next";
         };
       };
+      xdg.configFile."mpv/fonts.conf".text = ''
+        <?xml version='1.0'?>
+        <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
+        <fontconfig>
+          <!-- icon fonts used by uosc osd -->
+          <dir>${mpv-uosc}/share/mpv/fonts</dir>
+          <!-- include user and system fonts that will otherwise be lost -->
+          <include>${config.environment.etc.fonts.source}/fonts.conf</include>
+         </fontconfig>
+      '';
     };
   };
 }
