@@ -18,7 +18,7 @@
     xdg.portal = {
       enable = true;
       extraPortals =
-        [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
+        with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-hyprland ];
     };
 
     home-manager.users.hakanssn = { pkgs, ... }: {
@@ -31,6 +31,7 @@
       };
       wayland.windowManager.hyprland = {
         enable = true;
+        nvidiaPatches = true;
         extraConfig = ''
           # See https://wiki.hyprland.org/Configuring/Monitors/
           monitor=,preferred,auto,1

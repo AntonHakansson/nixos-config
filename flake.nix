@@ -49,6 +49,10 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    xdph = {
+      url = "github:hyprwm/xdg-desktop-portal-hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
@@ -58,8 +62,22 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, agenix, home-manager, devshell, impermanence
-    , nur, flake-utils, utils, doom-emacs, emacs-overlay, hyprland, nixos-mailserver }:
+  outputs =
+    inputs@{ self
+    , nixpkgs
+    , agenix
+    , home-manager
+    , devshell
+    , impermanence
+    , nur
+    , flake-utils
+    , utils
+    , doom-emacs
+    , emacs-overlay
+    , hyprland
+    , xdph
+    , nixos-mailserver
+    }:
     utils.lib.mkFlake {
       inherit self inputs;
       channels.nixpkgs = {
@@ -68,6 +86,11 @@
           devshell.overlay
           nur.overlay
           emacs-overlay.overlay
+          (_: prev: {
+            xdg-desktop-portal-hyprland = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.default.override {
+              hyprland-share-picker = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.hyprland-share-picker.override { inherit hyprland; };
+            };
+          })
         ];
       };
       hostDefaults = {
