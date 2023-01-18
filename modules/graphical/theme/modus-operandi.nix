@@ -128,7 +128,7 @@ in {
             '';
           in ''
             # Set Wallpaper
-            exec-once=${pkgs.hyprpaper}/bin/hyprpaper -c ${hyprpaper-config}
+            # exec-once=${pkgs.hyprpaper}/bin/hyprpaper -c ${hyprpaper-config}
           '';
 
           programs.neovim = let
