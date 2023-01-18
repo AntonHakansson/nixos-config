@@ -37,14 +37,8 @@
           monitor=,preferred,auto,1
 
           # See https://wiki.hyprland.org/Configuring/Keywords/ for more
-
-          # Execute your favorite apps at launch
-          # exec-once = waybar & hyprpaper & firefox
-
-          # Source a file (multi-file configs)
-          # source = ~/.config/hypr/myColors.conf
-
           # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
+
           input {
               kb_layout = us
               kb_variant = altgr-intl
@@ -73,6 +67,8 @@
 
               layout = master
           }
+          # background color
+          exec-once = "${pkgs.swaybg}/bin/swaybg -c '#ffffff'"
 
           decoration {
               # See https://wiki.hyprland.org/Configuring/Variables/
@@ -139,13 +135,14 @@
           exec-once = waybar
           bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
 
-          # Example binds
+          # Keybindings
           ## See https://wiki.hyprland.org/Configuring/Binds/
           bind = SUPER, return, exec, kitty
           bind = SUPER, Q, killactive,
           bind = SUPER SHIFT, E, exec, hyprctl kill
           bind = SUPER, M, exit,
           bind = SUPER, V, togglefloating,
+          bind = SUPER, T, pin,
           bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
 
           bind = SUPER,F,fullscreen,
