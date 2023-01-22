@@ -8,7 +8,9 @@
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
+    settings = {
+      PasswordAuthentication = false;
+    };
     hostKeys = [
       {
         bits = 4096;
