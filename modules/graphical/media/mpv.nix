@@ -8,7 +8,7 @@ let
     src = pkgs.fetchzip {
       url =
         "https://github.com/tomasklaen/uosc/releases/download/${version}/uosc.zip";
-      sha256 = "sha256-crto/Hcp80DvH1gXsDEAL4KIVgsZazCbic1Vry6bfx8=";
+      sha256 = "sha256-xLT1YgFxMLYyFCxe4mU8slRlCUGMjnJgk6fBNVXT5Dc=";
       stripRoot = false;
     };
 
