@@ -188,6 +188,10 @@
           bind = SUPER SHIFT, 9, movetoworkspace, 9
           bind = SUPER SHIFT, 0, movetoworkspace, 10
 
+          # Scratchpad
+          bind = SUPER, MINUS, togglespecialworkspace,
+          bind = SUPER SHIFT, MINUS, movetoworkspace, special
+
           # Scroll through existing workspaces with super + scroll
           bind = SUPER, mouse_down, workspace, e+1
           bind = SUPER, mouse_up, workspace, e-1
