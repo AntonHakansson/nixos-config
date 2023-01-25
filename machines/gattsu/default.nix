@@ -26,4 +26,8 @@
       hyprland.enable = true;
     };
   };
+
+  virtualisation.libvirtd.enable = true;
+  users.users.hakanssn.extraGroups = [ "libvirtd" ];
+  hakanssn.core.zfs.systemCacheLinks = [ "/var/lib/libvirt/" ];
 }
