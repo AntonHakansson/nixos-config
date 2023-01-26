@@ -66,21 +66,14 @@
         libvdpau-va-gl
       ];
     nvidia = {
-      package = let
-        beta = config.boot.kernelPackages.nvidiaPackages.beta;
-        stable = config.boot.kernelPackages.nvidiaPackages.stable;
-      in if (lib.versionOlder beta.version stable.version) then
-        stable
-      else
-        beta;
+      package = config.boot.kernelPackages.nvidiaPackages.latest;
+      powerManagement.enable = true;
       open = true;
     };
   };
   services.fstrim.enable = true;
 
   # Nvidia proprietary drivers
-  # system.autoUpgrade.enable = false;
-  # hakanssn.graphical.theme.autoSwitchTheme = false;
   hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia.modesetting.enable = true;
