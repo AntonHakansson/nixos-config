@@ -64,6 +64,7 @@
       powerManagement.enable = true;
       open = true;
     };
+    bluetooth.enable = true;
   };
   services.fstrim.enable = true;
 
