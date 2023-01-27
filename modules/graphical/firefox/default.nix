@@ -22,7 +22,7 @@ let
       cp ff2mpv.json $out/lib/mozilla/native-messaging-hosts
     '';
   };
-  ffPackage = pkgs.firefox.override {
+  ffPackage = pkgs.firefox-beta-bin.override {
     extraNativeMessagingHosts = [ ff2mpv-host ];
     extraPolicies = {
       DisableFirefoxStudies = true;
@@ -97,13 +97,12 @@ in {
               "browser.startup.page" = 3;
               # Don't hide tabs/toolbar in fullscreen
               "browser.fullscreen.autohide" = false;
+              # Enable WebGL support
+              "webgl.force-enabled" = true;
 
               "browser.aboutConfig.showWarning" = false;
               "browser.contentblocking.category" = "custom";
               "browser.download.dir" = "/home/hakanssn/downloads";
-              "browser.newtabpage.enabled" = false;
-              "browser.safebrowsing.malware.enabled" = false;
-              "browser.safebrowsing.phishing.enabled" = false;
               "browser.shell.checkDefaultBrowser" = false;
               "browser.startup.homepage" = "about:blank";
               "dom.security.https_only_mode_pbm" = true;
