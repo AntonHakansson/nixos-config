@@ -108,11 +108,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1675501804,
-        "narHash": "sha256-+FWv8aC8wQ+1yuDa5GeLqOWB98tuhu/deTDVKh3yW2Y=",
+        "lastModified": 1675566773,
+        "narHash": "sha256-oKRu03Nd+yHO0fNM3CJaHGjdEF7yZtfAwt3l49kQaVQ=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "0d630ac0f6430797b885a86a6699e8c75093c513",
+        "rev": "48188e420b453dea7467f39a587e3a965c013815",
         "type": "github"
       },
       "original": {
@@ -185,11 +185,11 @@
         "xdph": "xdph"
       },
       "locked": {
-        "lastModified": 1675516376,
-        "narHash": "sha256-tJwd+nHtmmfoFvl4vx0YZmFAu/QUM7SXUi8XNEIBDU4=",
+        "lastModified": 1675524123,
+        "narHash": "sha256-PcC5DqF2+P2kOewPCg9KM1S/+aS2msrs8ofeJWB68GU=",
         "owner": "hyprwm",
         "repo": "Hyprland",
-        "rev": "a431c1b01c08cdc1c2f030bebf052aa4f534d12a",
+        "rev": "760b37f71d200643d3e267472e5cc290d38d1a53",
         "type": "github"
       },
       "original": {
@@ -283,11 +283,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1675362331,
-        "narHash": "sha256-VmcnKPj5gJLxWK7Bxlhg2LoQvhKRss7Ax+uoFjd3qKY=",
+        "lastModified": 1675545634,
+        "narHash": "sha256-TbQeQcM5TA/wIho6xtzG+inUfiGzUXi8ewwttiQWYJE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a100acd7bbf105915b0004427802286c37738fef",
+        "rev": "0591d6b57bfeb55dfeec99a671843337bc2c3323",
         "type": "github"
       },
       "original": {
@@ -314,11 +314,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1675493104,
-        "narHash": "sha256-Sd9bXL8q9uaQHVIC2rWoctB6E5fETo1BydzSyNR6RiI=",
+        "lastModified": 1675575944,
+        "narHash": "sha256-f6pVHr3hHQkIh59/Pi4cFwWCkxKHoDindBnNGW4YHpA=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "854a244d72792711cd05ecbe35bccfd93bf33ab3",
+        "rev": "cc2a91cb6cd9688c6895029b328c4183cb72ecf6",
         "type": "github"
       },
       "original": {
@@ -415,11 +415,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1675451159,
-        "narHash": "sha256-n598dfLVtMITsfI0Qy11HGElC5YLeuaB3G4GeRCs/ls=",
+        "lastModified": 1675545046,
+        "narHash": "sha256-BQ8o1Ws6hGrA7no7K7Q+5bPcwoF0iv5p1tWKaaKWM5o=",
         "owner": "hyprwm",
         "repo": "xdg-desktop-portal-hyprland",
-        "rev": "27118ee3d71bc31a37b1bbfa6531e59932f70682",
+        "rev": "a9b76c7f997daffa0fababdb54e5feb2ee05fdc1",
         "type": "github"
       },
       "original": {
