@@ -40,7 +40,8 @@ let
       };
     };
   };
-in {
+in
+{
   options.hakanssn.graphical.firefox = {
     enable = lib.mkEnableOption "firefox";
     package = lib.mkOption {
@@ -63,21 +64,21 @@ in {
         firefox = {
           enable = true;
           package = ffPackage;
-          extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-            browserpass
-            darkreader
-            ff2mpv
-            vimium
-            swedish-dictionary
-            tree-style-tab
-            bypass-paywalls-clean
-            decentraleyes
-            i-dont-care-about-cookies
-            ublock-origin
-            leechblock-ng
-          ];
           profiles.hakanssn = {
             isDefault = true;
+            extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+              browserpass
+              darkreader
+              ff2mpv
+              vimium
+              swedish-dictionary
+              tree-style-tab
+              bypass-paywalls-clean
+              decentraleyes
+              i-dont-care-about-cookies
+              ublock-origin
+              leechblock-ng
+            ];
             # Hide tabs and navbar
             userChrome = ''
               #TabsToolbar { visibility: collapse !important; }
