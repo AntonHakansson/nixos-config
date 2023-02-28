@@ -83,7 +83,7 @@
       channels.nixpkgs = {
         input = nixpkgs;
         overlaysBuilder = _: [
-          devshell.overlay
+          devshell.overlays.default
           nur.overlay
           emacs-overlay.overlay
           (_: prev: {
