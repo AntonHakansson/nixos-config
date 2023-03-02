@@ -1,29 +1,19 @@
 { config, lib, pkgs, ... }:
 
 let
-  ff2mpv-host = pkgs.stdenv.mkDerivation rec {
-    pname = "ff2mpv";
-    version = "4.0.0";
-    src = pkgs.fetchFromGitHub {
-      owner = "woodruffw";
-      repo = "ff2mpv";
-      rev = "v${version}";
-      sha256 = "sxUp/JlmnYW2sPDpIO2/q40cVJBVDveJvbQMT70yjP4=";
+  ff2mpv-go = pkgs.buildGoModule {
+    pname = "ff2mpv-go";
+    version = "1.0.0";
+    src = fetchGit {
+      url = "https://git.clsr.net/util/ff2mpv-go/";
+      rev = "639496c5829220467dec8f2177ee8d31afa5502b";
     };
-    buildInputs = [ pkgs.python3 ];
-    buildPhase = ''
-      sed -i "s#/home/william/scripts/ff2mpv#$out/bin/ff2mpv.py#" ff2mpv.json
-      # sed -i 's#"mpv"#"${pkgs.mpv}/bin/umpv"#' ff2mpv.py
-    '';
-    installPhase = ''
-      mkdir -p $out/bin
-      cp ff2mpv.py $out/bin
-      mkdir -p $out/lib/mozilla/native-messaging-hosts
-      cp ff2mpv.json $out/lib/mozilla/native-messaging-hosts
+    vendorHash = null;
+    postPatch = ''
+      substituteInPlace ./ff2mpv.go --replace "\"mpv\"" "\"umpv\""
     '';
   };
   ffPackage = pkgs.firefox-beta-bin.override {
-    extraNativeMessagingHosts = [ ff2mpv-host ];
     extraPolicies = {
       DisableFirefoxStudies = true;
       DisablePocket = true;
@@ -73,7 +63,7 @@ in
               vimium
               swedish-dictionary
               tree-style-tab
-              bypass-paywalls-clean
+              # bypass-paywalls-clean
               decentraleyes
               i-dont-care-about-cookies
               ublock-origin
@@ -113,18 +103,19 @@ in
               "privacy.trackingprotection.socialtracking.enabled" = true;
               "security.identityblock.show_extended_validation" = true;
             };
-            bookmarks = {
-              wikipedia.url =
-                "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
-              nixpkgs.url =
-                "https://search.nixos.org/options?channel=unstable&type=packages&query=%s";
-              nur.url = "https://nur.nix-community.org/";
-              nixos-discourse.url = "https://discourse.nixos.org/";
-              home-manager.url =
-                "https://rycee.gitlab.io/home-manager/options.html";
-            };
           };
         };
+      };
+      home.file.".mozilla/native-messaging-hosts/ff2mpv.json" = {
+        source = pkgs.writeText "ff2mpv.json" ''
+          {
+              "name": "ff2mpv",
+              "description": "ff2mpv's external manifest",
+              "path": "${ff2mpv-go}/bin/ff2mpv-go",
+              "type": "stdio",
+              "allowed_extensions": ["ff2mpv@yossarian.net"]
+          }
+        '';
       };
     };
   };
