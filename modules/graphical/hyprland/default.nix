@@ -143,7 +143,7 @@
           bind = SUPER, l, movefocus, r
           bind = SUPER, k, layoutmsg, cycleprev
           bind = SUPER, j, layoutmsg, cyclenext
-          bind = SUPER, Tab, bringactivetotop,
+          bind = SUPER, Tab, cyclenext,
 
           # Move windows with super shift + hjkl
           bind = SUPER SHIFT, h, movewindow, l
