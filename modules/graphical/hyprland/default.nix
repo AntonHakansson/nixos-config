@@ -58,7 +58,6 @@
 
           general {
               # See https://wiki.hyprland.org/Configuring/Variables/
-
               gaps_in = 5
               gaps_out = 6
               border_size = 0
@@ -67,17 +66,14 @@
 
               layout = master
           }
+
           # background color
           exec-once = "${pkgs.swaybg}/bin/swaybg -c '#ffffff'"
 
           decoration {
               # See https://wiki.hyprland.org/Configuring/Variables/
-
               rounding = 0
               blur = no
-              # blur_size = 3
-              # blur_passes = 1
-              # blur_new_optimizations = on
 
               drop_shadow = yes
               shadow_range = 4
@@ -90,28 +86,11 @@
 
           animations {
               # See https://wiki.hyprland.org/Configuring/Animations/
-
               enabled = yes
-
-
-              # bezier = myBezier, 0.05, 0.9, 0.1, 1.05
-
-              # animation = windows, 1, 7, myBezier
-              # animation = windowsOut, 1, 7, default, popin 80%
-              # animation = border, 1, 10, default
-              # animation = fade, 1, 7, default
-              # animation = workspaces, 1, 6, default
-          }
-
-          dwindle {
-              # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/
-              pseudotile = yes # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-              preserve_split = yes # you probably want this
           }
 
           master {
               # See https://wiki.hyprland.org/Configuring/Master-Layout/
-              new_is_master = false
           }
 
           gestures {
@@ -128,8 +107,16 @@
 
           # Window Rules
           ## See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
-          windowrule=float,^(launcher)$
-          windowrule=float,^(kitty)$
+          windowrule = float, ^(launcher)$
+          windowrule = float, ^(kitty)$
+        	windowrule = float, title:^(Volume Control)$
+         	windowrule = size 33% 480, title:^(Volume Control)$
+         	windowrule = move 66% 24, title:^(Volume Control)$
+          windowrule = float, title:^(Picture-in-Picture)$|^(Firefox — Sharing Indicator)$|^(About Mozilla Firefox)$
+          windowrule = move 0 0, title:^(Firefox — Sharing Indicator)$
+
+          windowrule = idleinhibit fullscreen, firefox
+          windowrule = idleinhibit focus, mpv
 
           # Status Bar
           exec-once = waybar
@@ -140,22 +127,18 @@
           bind = SUPER, return, exec, kitty
           bind = SUPER, Q, killactive,
           bind = SUPER SHIFT, E, exec, hyprctl kill
-          bind = SUPER, M, exit,
+          bind = SUPER SHIFT, M, exit,
+          bind = SUPER, F, fullscreen,
           bind = SUPER, V, togglefloating,
           bind = SUPER, T, pin,
           bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
 
-          bind = SUPER,F,fullscreen,
-
-          bind = SUPER,Tab,cyclenext,
-          bind = SUPER,Tab,bringactivetotop,
-
-
-          # Move focus with super + hjkl
+          # Move focus
           bind = SUPER, h, movefocus, l
           bind = SUPER, l, movefocus, r
           bind = SUPER, k, layoutmsg, cycleprev
           bind = SUPER, j, layoutmsg, cyclenext
+          bind = SUPER, Tab, bringactivetotop,
 
           # Move windows with super shift + hjkl
           bind = SUPER SHIFT, h, movewindow, l
