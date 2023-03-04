@@ -109,13 +109,18 @@
           ## See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
           windowrule = float, ^(launcher)$
           windowrule = float, ^(kitty)$
+
         	windowrule = float, title:^(Volume Control)$
          	windowrule = size 33% 480, title:^(Volume Control)$
          	windowrule = move 66% 24, title:^(Volume Control)$
+
           windowrule = float, title:^(Picture-in-Picture)$|^(Firefox — Sharing Indicator)$|^(About Mozilla Firefox)$
           windowrule = move 0 0, title:^(Firefox — Sharing Indicator)$
-
           windowrule = idleinhibit fullscreen, firefox
+
+          windowrule = float, ^(mpv)$
+          windowrule = center, ^(mpv)$
+          windowrule = size 1080 600, ^(mpv)$
           windowrule = idleinhibit focus, mpv
 
           # Status Bar
