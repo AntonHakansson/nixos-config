@@ -23,7 +23,7 @@
 
     home-manager.users.hakanssn = { pkgs, ... }: {
       home.packages = with pkgs; [ wf-recorder wl-clipboard ];
-      programs = {
+      services = {
         mako = {
           enable = true;
           font = "Fira Code Normal 9";
