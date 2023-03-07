@@ -82,22 +82,6 @@
         "type": "github"
       }
     },
-    "doom-emacs": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1677709952,
-        "narHash": "sha256-K9HvVq2tSyaPf9MnI8pYNLQDyFtyRepfk64BI3fn77s=",
-        "owner": "doomemacs",
-        "repo": "doomemacs",
-        "rev": "8f6b045dfdb6d00e5a324c3f9044dce773791502",
-        "type": "github"
-      },
-      "original": {
-        "owner": "doomemacs",
-        "repo": "doomemacs",
-        "type": "github"
-      }
-    },
     "emacs-overlay": {
       "inputs": {
         "flake-utils": [
@@ -314,11 +298,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1678194459,
-        "narHash": "sha256-rW70+nemqv4R6tUB2rfhjgGDP6SdInjgWc5vDR+c9Ps=",
+        "lastModified": 1678200421,
+        "narHash": "sha256-IeXJef9y3jb4SP8cZbOiuMwyicxC4xFVrnjx3UptfeA=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "679e4788110e19c97b89d9621a243069d4394bfa",
+        "rev": "a77465f74999c4c3f71c6d629e08664b45426efe",
         "type": "github"
       },
       "original": {
@@ -331,7 +315,6 @@
       "inputs": {
         "agenix": "agenix",
         "devshell": "devshell",
-        "doom-emacs": "doom-emacs",
         "emacs-overlay": "emacs-overlay",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",

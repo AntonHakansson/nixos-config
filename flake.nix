@@ -34,10 +34,6 @@
     };
 
     # Extras
-    doom-emacs = {
-      url = "github:doomemacs/doomemacs";
-      flake = false;
-    };
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs = {
@@ -72,7 +68,6 @@
     , nur
     , flake-utils
     , utils
-    , doom-emacs
     , emacs-overlay
     , hyprland
     , xdph
