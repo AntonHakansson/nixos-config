@@ -688,7 +688,7 @@
      ("DEPRECATED" font-lock-doc-face bold))))
 
 (use-package rainbow-mode
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-mode))
 
 ;; load environment
 (use-package envrc)
