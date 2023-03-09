@@ -3,7 +3,6 @@
 {
   hakanssn.core.zfs = {
     ensureSystemExists = [ "${config.hakanssn.dataPrefix}/etc/ssh" ];
-    ensureHomeExists = [ ".ssh" ];
   };
 
   services.openssh = {
