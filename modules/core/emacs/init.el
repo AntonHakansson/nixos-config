@@ -480,15 +480,6 @@
 ;; (use-package org-xournalpp)
 (use-package pdf-tools)
 
-(use-package mu4e
-  :custom
-  (setq sendmail-program (executable-find "msmtp")
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail))
-
-
 ;;; :editor
 ;; String inflection
 (use-package string-inflection
@@ -506,7 +497,7 @@
 (use-package format-all)
 
 (use-package abbrev
-  :defer 2
+  :ensure nil
   :init
   (add-hook 'text-mode-hook #'abbrev-mode)
   (add-hook 'prog-mode-hook #'abbrev-mode)
@@ -725,8 +716,9 @@
 ;;; :tools
 ;; :web
 (use-package eww
-  ;; Use & to open externally if eww can't handle the page
+  :ensure nil
   :config
+  ;; Use & to open externally if eww can't handle the page
   (setq browse-url-browser-function #'eww-browse-url)
   (setq browse-url-generic-program "firefox"))
 
@@ -765,6 +757,7 @@
 
 (use-package saveplace
   ;; Yes, please save my place when opening/closing files:
+  :ensure nil
   :config
   (save-place-mode))
 
@@ -783,8 +776,8 @@
   :custom
   (ws-butler-keep-whitespace-before-point nil))
 
-
-(use-package flyspell)
+(use-package flyspell
+  :ensure nil)
 
 (use-package flycheck
   ;; Grammar / prose lint
