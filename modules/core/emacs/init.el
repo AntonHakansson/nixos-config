@@ -699,6 +699,13 @@
 ;; lsp
 (use-package eglot)
 
+(use-package fancy-compilation
+  ;; compilation-mode fancy support for colors, progress bars, and scrolling
+  :commands (fancy-compilation-mode))
+
+(with-eval-after-load 'compile
+  (fancy-compilation-mode))
+
 ;; c/c++
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
