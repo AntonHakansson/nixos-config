@@ -36,6 +36,7 @@
       };
       home = {
         packages = with pkgs; [
+          (pkgs.writeShellScriptBin "emacseditor" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
           (pkgs.writeShellScriptBin "emacs" ''${config.hakanssn.core.emacs.package}/bin/emacsclient -c "$@"'')
           (pkgs.writeShellScriptBin "emacsclient" ''${config.hakanssn.core.emacs.package}/bin/emacsclient "$@"'')
 
