@@ -662,10 +662,10 @@
 ;; (use-package embark-consult)
 
 ;;; IDE
-;; Using the hl-todo package, we are able to highlight keywords
-;; related to the working environment, like: TODO, FIXME and some
-;; more.
 (use-package hl-todo
+  ;; Using the hl-todo package, we are able to highlight keywords
+  ;; related to the working environment, like: TODO, FIXME and some
+  ;; more.
   :hook '(prog-mode)
   :init
   (setq
@@ -688,7 +688,11 @@
   (direnv-mode))
 
 ;; lsp
-(use-package eglot)
+(use-package eglot
+  :hook
+  (c++-mode . eglot-ensure)
+  (c-mode . eglot-ensure)
+  (nix-mode . eglot-ensure))
 
 (use-package fancy-compilation
   ;; compilation-mode fancy support for colors, progress bars, and scrolling
@@ -728,12 +732,14 @@
   (elfeed-db-directory "~/documents/org/.elfeed") ;; Sync rss feeds with Syncthing
   (elfeed-sort-order 'ascending))
 
-(use-package elfeed-goodies
-  :config
-  (setq elfeed-goodies/entry-pane-position 'bottom)
-  (elfeed-goodies/setup))
+;; (use-package elfeed-goodies
+;;   :after elfeed
+;;   :config
+;;   (setq elfeed-goodies/entry-pane-position 'bottom)
+;;   (elfeed-goodies/setup))
 
 (use-package elfeed-org
+  :after elfeed
   :config
   (setq rmh-elfeed-org-files (list (concat org-directory "elfeed.org")))
   (elfeed-org)) ;; hook up elfeed-org to read the configuration when elfeed starts
