@@ -412,9 +412,9 @@
           (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)"))
         org-capture-templates
         '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
-           "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n%a")
+           "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
           ("T" "Tickler" entry
-           (file "gtd/tickler.org")
+           (file "gtd/repeaters.org")
            "* %i%? \n %U")
           ("W" "Weekly Review" plain
            (file+olp+datetree "roam/review.org")
@@ -436,6 +436,12 @@
             (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
             (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "\nCompleted today\n")))
             ))))
+  )
+
+(use-package org-habit
+  :ensure nil
+  :after org
+  :config
   (add-to-list 'org-modules 'org-habit)
   (setq org-habit-show-habits t
         org-habit-following-days 7
