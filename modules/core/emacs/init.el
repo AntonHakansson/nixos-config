@@ -11,12 +11,12 @@
 (defvar hk/data-dir (concat (or (getenv "XDG_DATA_HOME") "~/.local/share") "/emacs/") "Location for data.")
 (defvar hk/cache-dir (concat (or (getenv "XDG_CACHE_DIR") "~/.cache") "/emacs/") "Location for cache.")
 
-;; Dependencies that inject `:keywords' into `use-package' should be
-;; included before all other packages.
-;; For :diminish in (use-package). Hides minor modes from the status line.
-(use-package diminish)
+(use-package diminish
+  ;; Dependencies that inject `:keywords' into `use-package' should be
+  ;; included before all other packages.
+  ;; For :diminish in (use-package). Hides minor modes from the status line.
+  )
 
-;;; Defaults
 (use-package emacs
   :ensure nil ;; Not a real package, but a place to collect global settings
   :init
@@ -46,7 +46,7 @@
 
   ;; Relative line numbers
   (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode 1)
+  ;; (global-display-line-numbers-mode 1)
 
   ;; Default theme
   ;; Load dark theme later at night
@@ -78,14 +78,14 @@
   (global-set-key (kbd "C-t") 'hippie-expand) ;; orig. transpose-chars
   )
 
-;; Better defaults that aren't defaults for some reason.
 (use-package better-defaults
+  ;; Better defaults that aren't defaults for some reason.
   ;; But don't enable ido-mode...
   :config (ido-mode nil)
   )
 
-;; Don't litter
 (use-package no-littering
+  ;; Put emacs files in ~/.cache/emacs/
   :custom
   (user-emacs-directory (expand-file-name "~/.cache/emacs/") "Don't put files into .emacs.d")
   (no-littering-etc-directory hk/data-dir)
@@ -98,8 +98,8 @@
   (setq auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
   )
 
-;;; Packages
 (use-package meow
+  ;; Modal editing
   :config
   ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
@@ -245,8 +245,8 @@
   :config
   (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h)))
 
-;; Collection of Ridiculously Useful eXtensions
 (use-package crux
+  ;; Collection of Ridiculously Useful eXtensions
   :bind
   (("M-o" . 'crux-other-window-or-switch-buffer)))
 
@@ -351,7 +351,6 @@
   :config
   (dirvish-override-dired-mode))
 
-;;; Savehist
 (use-package savehist
   :ensure nil ;; Not a real package, but a place to collect settings
   :custom
@@ -473,15 +472,8 @@
   (org-mode . org-modern-mode)
   (org-agenda-finalize . org-modern-agenda))
 
-;; (use-package org-modern-indent
-;;   :hook
-;;   (org-indent-mode . org-modern-indent-mode))
-
-;; (use-package org-xournalpp)
 (use-package pdf-tools)
 
-;;; :editor
-;; String inflection
 (use-package string-inflection
   :commands
   string-inflection-all-cycle
@@ -493,7 +485,6 @@
   string-inflection-capital-underscore
   string-inflection-upcase)
 
-;; formatting
 (use-package format-all)
 
 (use-package abbrev
@@ -504,8 +495,8 @@
   :custom
   (save-abbrevs 'silently))
 
-;; auto activating snippets
 (use-package aas
+  ;; auto activating snippets
   :init (add-hook 'find-file-hook #'aas-activate-for-major-mode)
   :preface
   (defmacro aas-tempel (&rest template)
@@ -550,8 +541,8 @@
     :cond #'laas-object-on-left-condition
     "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
 
-;; Snippet
 (use-package tempel
+  ;; Snippet
   :bind (("M-+" . #'tempel-complete)
          ("M-*" . #'tempel-insert))
   :custom
@@ -565,15 +556,16 @@
 (use-package magit
   :custom
   (magit-repository-directories '(("~/repos" . 2)))
-  :config
+  :bind
+  (("C-c o m" . 'magit))
   )
 
-;; Show TODOs (and FIXMEs, etc) in Magit status buffer
 (use-package magit-todos
+  ;; Show TODOs (and FIXMEs, etc) in Magit status buffer
   :after magit)
 
-;; Forge allows you to work with Git forges, such as Github and Gitlab, from the comfort of Magit and the rest of Emacs.
 (use-package forge
+  ;; Forge allows you to work with Git forges, such as Github and Gitlab, from the comfort of Magit and the rest of Emacs.
   :after magit)
 
 (use-package git-gutter
@@ -596,27 +588,25 @@
   (which-key-mode)
   (setq which-key-idle-delay 1))
 
-;; Vertical UI
-;; Completion in minibuffer
 (use-package vertico
+  ;; Vertical UI
+  ;; Completion in minibuffer
   :config
   (vertico-mode))
 
-;; Rich annotations in minibuffer
 (use-package marginalia
+  ;; Rich annotations in minibuffer
   :config
   (marginalia-mode))
 
-;; Advanced completion style (better fuzzy matching)
 (use-package orderless
+  ;; Advanced completion style (better fuzzy matching)
   :init
   (setq completion-styles '(orderless basic)
         completion-category-overrides '((file (styles partial-completion)))))
 
-
-;; Completion in buffer (popup ui)
 (use-package corfu
-  ;; Optional customizations
+  ;; Completion in buffer (popup ui)
   :custom
   (corfu-auto t "Enable Auto Completion")
   (corfu-cycle t "Cycle completion options")
@@ -624,20 +614,18 @@
   :config
   (global-corfu-mode))
 
-
-;; Cape for better completion-at-point support and more
 (use-package cape
+  ;; Cape for better completion-at-point support and more
   :config
   ;; Add useful defaults completion sources from cape
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-;; ui
 (use-package mixed-pitch
   :hook (org-mode . mixed-pitch-mode))
 (use-package all-the-icons)
 
-;; Make default `describe-*' screens more helpful
 (use-package helpful
+  ;; Make default `describe-*' screens more helpful
   :bind (([remap describe-command]  . #'helpful-command)
          ([remap describe-function] . #'helpful-callable)
          ([remap describe-key] .  #'helpful-key)
@@ -646,20 +634,6 @@
          ("C-c C-d" . #'helpful-at-point)
          ("C-h F" . #'helpful-function)
          ("C-h K" . #'helpful-keymap)))
-
-;; (use-package embark
-;;   ;; :general
-;;   ;; (:keymaps 'override
-;;   ;;           "C-." #'embark-act         ;; pick some comfortable binding
-;;   ;;           "C-;" #'embark-dwim        ;; good alternative: M-.
-;;   ;;           "C-h B" #'embark-bindings) ;; alternative for `describe-bindings'
-;;   ;; (general-define-key [remap describe-bindings] #'embark-bindings)
-
-;;   :config
-;;   (setq prefix-help-command #'embark-prefix-help-command))
-
-;; ;; Consult users will also want the embark-consult package.
-;; (use-package embark-consult)
 
 ;;; IDE
 (use-package hl-todo
@@ -681,44 +655,33 @@
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode))
 
-;; load environment
 (use-package envrc)
 (use-package direnv
   :config
   (direnv-mode))
 
-;; lsp
 (use-package eglot
   :hook
   (c++-mode . eglot-ensure)
   (c-mode . eglot-ensure)
   (nix-mode . eglot-ensure))
 
-(use-package fancy-compilation
-  ;; compilation-mode fancy support for colors, progress bars, and scrolling
-  :commands (fancy-compilation-mode))
-
-(with-eval-after-load 'compile
-  (fancy-compilation-mode))
-
-;; c/c++
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
                '((c++-mode c-mode) "clangd" "--clang-tidy" "--completion-style=detailed")))
 
-;; Nix
 (use-package nix-mode
   :mode "\\.nix\\'"
   :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("rnix-lsp"))))
 
-;; Web (html/css/javascript)
-(use-package emmet-mode)
+(use-package emmet-mode
+  ;; Web (html/css/javascript)
+  )
 
 (use-package zig-mode)
 
 ;;; :tools
-;; :web
 (use-package eww
   :ensure nil
   :config
@@ -726,19 +689,14 @@
   (setq browse-url-browser-function #'eww-browse-url)
   (setq browse-url-generic-program "firefox"))
 
-;; :rss
 (use-package elfeed
+  ;; rss reader
   :custom
   (elfeed-db-directory "~/documents/org/.elfeed") ;; Sync rss feeds with Syncthing
   (elfeed-sort-order 'ascending))
 
-;; (use-package elfeed-goodies
-;;   :after elfeed
-;;   :config
-;;   (setq elfeed-goodies/entry-pane-position 'bottom)
-;;   (elfeed-goodies/setup))
-
 (use-package elfeed-org
+  ;; Load rss feeds from org file
   :after elfeed
   :config
   (setq rmh-elfeed-org-files (list (concat org-directory "elfeed.org")))
@@ -748,18 +706,6 @@
   :after elfeed
   :config
   (elfeed-tube-setup))
-
-
-(use-package exec-path-from-shell
-  ;; This ensures Emacs has the same PATH as the rest of my system.  It is
-  ;; necessary for macs (not that I ever use that), or if Emacs is started
-  ;; via a systemd service, as systemd user services don't inherit the
-  ;; environment of that user
-  :if (or (eq system-type 'darwin)
-          (and (daemonp)
-               (eq system-type 'gnu/linux)))
-  :config
-  (exec-path-from-shell-initialize))
 
 (use-package saveplace
   ;; Yes, please save my place when opening/closing files:
@@ -786,16 +732,7 @@
   :ensure nil)
 
 (use-package flycheck
-  ;; Grammar / prose lint
   :config
-  ;; (flycheck-define-checker vale-global
-  ;;   "A checker for prose with vale using a global configuration."
-  ;;   :command ("vale" "--config=/home/hakanssn/repos/emacs-config/.vale.ini" "--output" "line" source)
-  ;;   :standard-input nil
-  ;;   :error-patterns
-  ;;   ((error line-start (file-name) ":" line ":" column ":" (id (one-or-more (not (any ":")))) ":" (message) line-end))
-  ;;   :modes (markdown-mode org-mode text-mode))
-  ;; (add-to-list 'flycheck-checkers 'vale-global 'append)
   (global-flycheck-mode))
 
 ;; (load-file (concat hk/config-dir "whitebox.el"))
@@ -804,5 +741,5 @@
 ;;; init.el ends here
 
 ;; Local Variables:
-;; outline-regexp: ".*\(use-package.*"
+;; outline-regexp: "\(use-package.*"
 ;; End:
