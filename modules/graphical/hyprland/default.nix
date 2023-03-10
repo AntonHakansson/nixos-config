@@ -87,6 +87,7 @@
           animations {
               # See https://wiki.hyprland.org/Configuring/Animations/
               enabled = yes
+              animation=workspaces, 0, 8, default
           }
 
           master {
