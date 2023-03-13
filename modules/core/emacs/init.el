@@ -188,6 +188,7 @@
    '("SPC" . execute-extended-command)
    '("t t" . toggle-truncate-lines)
    '("t l" . global-display-line-numbers-mode)
+   '("t k" . kill-this-buffer)
    '("s" . "M-s")
    '("d" . dirvish)
 
