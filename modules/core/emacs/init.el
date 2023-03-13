@@ -52,7 +52,7 @@
   ;; Load dark theme later at night
   (if (> (decoded-time-hour (decode-time (current-time))) 18)
       (load-theme 'modus-vivendi)
-    (load-theme 'modus-operandi))
+    (load-theme 'modus-operandi-tinted))
 
   ;; Turn on recentf mode
   (add-hook 'after-init-hook #'recentf-mode)
