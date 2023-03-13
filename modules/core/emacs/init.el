@@ -740,7 +740,8 @@
 
 (use-package flycheck
   :config
-  (global-flycheck-mode))
+  ;; (global-flycheck-mode)
+  )
 
 ;; (load-file (concat hk/config-dir "whitebox.el"))
 
