@@ -119,6 +119,8 @@
           windowrule = move 0 0, title:^(Firefox — Sharing Indicator)$
           windowrule = idleinhibit fullscreen, firefox
 
+          windowrule = float, ^(emacs)$
+
           windowrule = float, ^(mpv)$
           windowrule = center, ^(mpv)$
           windowrule = size 1080 600, ^(mpv)$
@@ -138,6 +140,7 @@
           bind = SUPER, V, togglefloating,
           bind = SUPER, T, pin,
           bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
+          bind = SUPER, E, exec, emacs -n
 
           # Move focus
           bind = SUPER, h, movefocus, l
