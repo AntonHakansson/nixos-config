@@ -719,6 +719,13 @@
 
 (use-package elfeed-tube
   :after elfeed
+  :preface
+  (defun hk/mpv-play-url-at-point ()
+    "Open the URL at point in mpv."
+    (interactive)
+    (let ((url (thing-at-point-url-at-point)))
+      (when url
+        (async-shell-command (concat "umpv " url) nil nil))))
   :config
   (elfeed-tube-setup))
 
