@@ -89,7 +89,7 @@
   :custom
   (user-emacs-directory (expand-file-name "~/.cache/emacs/") "Don't put files into .emacs.d")
   (no-littering-etc-directory hk/data-dir)
-	(no-littering-var-directory hk/cache-dir)
+  (no-littering-var-directory hk/cache-dir)
   :config
   ;; Don't create lockfiles
   (setq create-lockfiles nil)
@@ -241,15 +241,14 @@
   (meow-global-mode 1))
 
 (use-package avy
-  :bind
-  (("M-n" . 'avy-goto-word-1))
   :config
   (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h)))
 
 (use-package crux
   ;; Collection of Ridiculously Useful eXtensions
   :bind
-  (("M-o" . 'crux-other-window-or-switch-buffer)))
+  (("M-o" . 'crux-other-window-or-switch-buffer)
+   ("C-a" . 'crux-move-beginning-of-line)))
 
 (use-package smartparens
   :config
@@ -359,6 +358,12 @@
   :init
   (savehist-mode))
 
+(use-package writeroom-mode
+  ;; distraction-free writing mode
+  :config
+  (meow-leader-define-key '("t z" . writeroom-mode))
+  )
+
 (use-package org
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
@@ -376,6 +381,30 @@
   :bind
   (("C-c a"   . org-agenda)
    ("C-c C-c" . org-capture))
+  :custom
+  (org-babel-load-languages '((awk . t)
+                              (calc . t)
+                              (clojure . t)
+                              (css . t)
+                              (dot . t)
+                              (emacs-lisp . t)
+                              (forth . t)
+                              (fortran . t)
+                              (haskell . t)
+                              (js . t)
+                              (latex . t)
+                              (lisp . t)
+                              (makefile . t)
+                              (org . t)
+                              (perl . t)
+                              (plantuml . t)
+                              (python . t)
+                              (ruby . t)
+                              (sass . t)
+                              (scheme . t)
+                              (shell . t)
+                              (sql . t)
+                              (sqlite . t)))
   :config
   (setq org-directory "~/documents/org/"
         org-agenda-files '("~/documents/org/gtd/")
@@ -384,29 +413,7 @@
         org-startup-indented t
         org-log-done 'time
         org-fold-catch-invisible-edits 'smart
-        org-babel-load-languages '((awk . t)
-                                   (calc . t)
-                                   (clojure . t)
-                                   (css . t)
-                                   (dot . t)
-                                   (emacs-lisp . t)
-                                   (forth . t)
-                                   (fortran . t)
-                                   (haskell . t)
-                                   (js . t)
-                                   (latex . t)
-                                   (lisp . t)
-                                   (makefile . t)
-                                   (org . t)
-                                   (perl . t)
-                                   (plantuml . t)
-                                   (python . t)
-                                   (ruby . t)
-                                   (sass . t)
-                                   (scheme . t)
-                                   (shell . t)
-                                   (sql . t)
-                                   (sqlite . t))
+        org-confirm-babel-evaluate nil
         ;; Task Management
         org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
@@ -425,8 +432,7 @@
            :clock-in t
            ))
         org-agenda-custom-commands
-        '(
-          ("g" "Get Things Done (GTD)"
+        '(("g" "Get Things Done (GTD)"
            ((agenda "" (;; start from yesterday
                         (org-agenda-start-day "-1d")
                         ;; show 8 days
@@ -435,7 +441,7 @@
             (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
             (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
             (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
-            (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "\nCompleted today\n")))
+            (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
             ))))
   )
 
@@ -554,9 +560,9 @@
          ("M-*" . #'tempel-insert))
   :custom
   (tempel-trigger-prefix ";") ;; Require trigger prefix before template name when completing.
-  (tempel-path (concat hk/config-dir "templates"))
+  (tempel-path "~/documents/org/tempel")
 
-  :init
+  :config
   (add-to-list 'completion-at-point-functions #'tempel-complete))
 
 ;;; Git
@@ -616,7 +622,7 @@
   ;; Completion in buffer (popup ui)
   :custom
   (corfu-auto t "Enable Auto Completion")
-  (corfu-cycle t "Cycle completion options")
+  ;; (corfu-cycle t "Cycle completion options")
   (corfu-auto-prefix 2 "Trigger completion early")
   :config
   (global-corfu-mode))
@@ -679,11 +685,13 @@
 
 (use-package nix-mode
   :mode "\\.nix\\'"
+  :after eglot
   :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("rnix-lsp"))))
 
 (use-package emmet-mode
   ;; Web (html/css/javascript)
+  :mode ("\\.html\\'")
   )
 
 (use-package zig-mode)
