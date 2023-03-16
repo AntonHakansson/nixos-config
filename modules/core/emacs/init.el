@@ -415,6 +415,8 @@
                               (shell . t)
                               (sql . t)
                               (sqlite . t)))
+  (org-use-speed-commands
+   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ;  when point is on any star at the beginning of the headline
   :config
   (setq org-directory "~/documents/org/"
         org-agenda-files '("~/documents/org/gtd/")
@@ -756,9 +758,14 @@
   ;; someone else's project, for example).  This mode will call
   ;; `whitespace-cleanup' before buffers are saved (but smartly)!
   :hook
-  ((prog-mode ledger-mode gitconfig-mode) . ws-butler-mode)
+  ((text-mode prog-mode) . ws-butler-mode)
   :custom
   (ws-butler-keep-whitespace-before-point nil))
+
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1)
+  (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
 
 (use-package flyspell
   :ensure nil)
