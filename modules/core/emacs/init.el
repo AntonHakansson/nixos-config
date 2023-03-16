@@ -360,6 +360,8 @@
 
 (use-package writeroom-mode
   ;; distraction-free writing mode
+  :custom
+  (writeroom-width 100)
   :config
   (meow-leader-define-key '("t z" . writeroom-mode))
   )
