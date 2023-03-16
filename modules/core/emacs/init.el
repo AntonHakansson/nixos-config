@@ -76,6 +76,14 @@
 
   ;; Keybinds
   (global-set-key (kbd "C-t") 'hippie-expand) ;; orig. transpose-chars
+
+  ;; C-w terminal behavior
+  (defun backward-kill-word-or-region (&optional arg)
+    (interactive "p")
+    (if (region-active-p)
+        (call-interactively #'kill-region)
+      (backward-kill-word arg)))
+  (global-set-key (kbd "C-w")  'backward-kill-word-or-region)
   )
 
 (use-package better-defaults
