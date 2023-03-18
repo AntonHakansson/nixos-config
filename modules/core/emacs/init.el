@@ -252,6 +252,23 @@
   :config
   (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h)))
 
+(use-package hydra)
+(use-package dumb-jump
+  :after hydra
+  :bind
+  (("C-c j" . dumb-jump-hydra/body))
+  :init
+  (defhydra dumb-jump-hydra (:color blue :columns 3)
+    "Dumb Jump"
+    ("j" dumb-jump-go "Go")
+    ("o" dumb-jump-go-other-window "Other window")
+    ("e" dumb-jump-go-prefer-external "Go external")
+    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+    ("i" dumb-jump-go-prompt "Prompt")
+    ("l" dumb-jump-quick-look "Quick look")
+    ("b" dumb-jump-back "Back"))
+  )
+
 (use-package crux
   ;; Collection of Ridiculously Useful eXtensions
   :bind
