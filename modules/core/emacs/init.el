@@ -718,10 +718,21 @@
   :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("rnix-lsp"))))
 
-(use-package emmet-mode
+(use-package web-mode
   ;; Web (html/css/javascript)
-  :mode ("\\.html\\'")
-  )
+  :mode (("\\.html?\\'" . web-mode))
+  :custom
+  (web-mode-attr-indent-offset 2)
+  (web-mode-block-padding 2)
+  (web-mode-css-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-comment-style 2)
+  (web-mode-enable-current-element-highlight t)
+  (web-mode-markup-indent-offset 2))
+
+(use-package emmet-mode
+  ;; Expand html templates
+  :hook ((web-mode . emmet-mode)))
 
 (use-package zig-mode)
 
