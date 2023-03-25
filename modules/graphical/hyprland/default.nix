@@ -132,7 +132,7 @@
 
           # Keybindings
           ## See https://wiki.hyprland.org/Configuring/Binds/
-          bind = SUPER, return, exec, kitty
+          bind = SUPER, return, exec, kitty --single-instance
           bind = SUPER, Q, killactive,
           bind = SUPER SHIFT, E, exec, hyprctl kill
           bind = SUPER SHIFT, M, exit,
