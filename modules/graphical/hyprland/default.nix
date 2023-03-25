@@ -39,7 +39,7 @@
             # See https://wiki.hyprland.org/Configuring/Keywords/ for more
             # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
 
-          input {
+            input {
                 kb_layout = us
                 kb_variant = altgr-intl
                 kb_model =
