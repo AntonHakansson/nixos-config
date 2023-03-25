@@ -713,7 +713,7 @@
                '((c++-mode c-mode) "clangd" "--clang-tidy" "--completion-style=detailed")))
 
 (use-package nix-mode
-  :mode "\\.nix\\'"
+  :mode ("\\.nix\\'")
   :after eglot
   :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("rnix-lsp"))))
@@ -781,7 +781,6 @@
 
 (use-package editorconfig
   :config
-  (editorconfig-mode 1)
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
 
 (use-package flyspell
