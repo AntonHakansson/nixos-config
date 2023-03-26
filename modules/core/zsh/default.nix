@@ -51,9 +51,7 @@ let
 
         # nix
         nepl = "nix repl '<nixpkgs>'";
-        ns = "nix search --no-update-lock-file";
-        srch = "ns nixos";
-        orch = "ns override";
+        ns = "nix search nixpkgs";
         mn = ''
           manix "" | grep '^# ' | sed 's/^# \(.*\) (.*/\1/;s/ (.*//;s/^# //' | sk --preview="manix '{}'" | xargs manix
         '';
