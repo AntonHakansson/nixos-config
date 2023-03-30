@@ -765,7 +765,7 @@
     (interactive)
     (let ((url (thing-at-point-url-at-point)))
       (when url
-        (async-shell-command (concat "umpv " url) nil nil))))
+        (async-shell-command (concat "umpv \"" url "\"") nil nil))))
   :config
   (elfeed-tube-setup))
 
