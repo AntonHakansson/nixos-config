@@ -34,6 +34,9 @@
         socketActivation.enable = true;
         package = config.hakanssn.core.emacs.package;
       };
+      programs.zsh.shellAliases = {
+        e = "emacsclient -w";
+      };
       home = {
         packages = with pkgs; [
           (pkgs.writeShellScriptBin "emacseditor" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
