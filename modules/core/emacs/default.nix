@@ -35,7 +35,7 @@
         package = config.hakanssn.core.emacs.package;
       };
       programs.zsh.shellAliases = {
-        e = "emacsclient -w";
+        e = "emacsclient -nw";
       };
       home = {
         packages = with pkgs; [
