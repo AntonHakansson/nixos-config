@@ -713,8 +713,7 @@
                '((c++-mode c-mode) "clangd" "--clang-tidy" "--completion-style=detailed")))
 
 (use-package nix-mode
-  :mode ("\\.nix\\'")
-  :after eglot
+  :mode (("\\.nix\\'" . nix-mode))
   :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("rnix-lsp"))))
 
