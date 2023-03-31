@@ -483,6 +483,29 @@
         org-habit-following-days 7
         org-habit-preceding-days 21))
 
+(use-package org-ai
+  :commands (org-ai-mode)
+  :init
+  (defun hk/chatgpt ()
+    (interactive)
+    (switch-to-buffer (get-buffer-create "*scratch-org-ai*"))
+    (unless (eq major-mode 'org-mode)
+      (org-mode)
+      (toggle-truncate-lines)
+      (insert "#+begin_ai\n")
+      (insert "[SYS]: You are a helpful assistant that gives precise and concise answers.\n\n")
+      (insert "[ME]: ")
+      (push-mark)
+      (insert "\n#+end_ai\n")
+      (exchange-point-and-mark)
+      ))
+  :custom
+  (org-ai-openai-api-token (substring (shell-command-to-string "pass show tools/openai_api_token") 0 -1))
+  :bind
+  (("C-c i" . hk/chatgpt))
+  :init
+  (add-hook 'org-mode-hook #'org-ai-mode))
+
 (use-package org-roam
   :custom
   (org-roam-directory (concat org-directory "roam/"))
