@@ -694,7 +694,8 @@
      ("DEPRECATED" font-lock-doc-face bold))))
 
 (use-package rainbow-mode
-  :hook (prog-mode . rainbow-mode))
+  :hook (prog-mode . rainbow-mode)
+  :diminish)
 
 (use-package envrc)
 (use-package direnv
@@ -785,6 +786,7 @@
   ;; `whitespace-cleanup' before buffers are saved (but smartly)!
   :hook
   ((text-mode prog-mode) . ws-butler-mode)
+  :diminish
   :custom
   (ws-butler-keep-whitespace-before-point nil))
 
