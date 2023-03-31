@@ -612,23 +612,22 @@
 
 (use-package git-gutter
   :hook prog-mode
+  :diminish
+  :bind
+  (("C-c g n" . #'git-gutter:next-hunk)
+   ("C-c g p" . #'git-gutter:previous-hunk)
+   ("C-c g d" . #'git-gutter:popup-hunk)
+   ("C-c g s" . #'git-gutter:stage-hunk)
+   ("C-c g k" . #'git-gutter:revert-hunk))
   :config
-  (meow-leader-define-key
-   '("g d" . '(git-gutter:popup-hunk :which-key "Hunk Diff"))
-   '("g j" . '(git-gutter:next-hunk :which-key "Next Hunk"))
-   '("g s" . '(git-gutter:stage-hunk :which-key "Stage Hunk"))
-   '("g u" . '(git-gutter:revert-hunk :which-key "Unstage Hunk"))
-   '("g k" . '(git-gutter:previous-hunk :which-key "Prev Hunk")))
-  (git-gutter-mode))
-
-(use-package git-gutter-fringe
-  :after git-gutter)
+  (global-git-gutter-mode +1))
 
 ;;; :completion
 (use-package which-key
   :config
   (which-key-mode)
-  (setq which-key-idle-delay 1))
+  (setq which-key-idle-delay 1)
+  :diminish)
 
 (use-package vertico
   ;; Vertical UI
