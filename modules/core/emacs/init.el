@@ -634,7 +634,6 @@
   :after magit)
 
 (use-package git-gutter
-  :hook prog-mode
   :diminish
   :bind
   (("C-c g n" . #'git-gutter:next-hunk)
@@ -642,6 +641,11 @@
    ("C-c g d" . #'git-gutter:popup-hunk)
    ("C-c g s" . #'git-gutter:stage-hunk)
    ("C-c g k" . #'git-gutter:revert-hunk))
+  :custom
+  ;; Only show color to indicate hunks
+  (git-gutter:added-sign " ")
+  (git-gutter:deleted-sign " ")
+  (git-gutter:modified-sign " ")
   :config
   (global-git-gutter-mode +1))
 
