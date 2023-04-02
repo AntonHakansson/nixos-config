@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }:
 
 {
+  imports = [ ./flameshot.nix ];
+
   options.hakanssn.graphical.hyprland = {
     enable = lib.mkEnableOption "hyprlandwm";
     top-bar = lib.mkOption {
@@ -20,6 +22,8 @@
       extraPortals =
         with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-hyprland ];
     };
+
+    environment.variables = { XDG_SESSION_TYPE = "wayland"; };
 
     home-manager.users.hakanssn = { pkgs, ... }: {
       home.packages = with pkgs; [ wf-recorder wl-clipboard ];
@@ -141,6 +145,8 @@
             bind = SUPER, T, pin,
             bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
             bind = SUPER, E, exec, emacs -n
+            bind = SUPER, P, exec, env XDG_CURRENT_DESKTOP=sway flameshot gui
+            exec-once = env XDG_CURRENT_DESKTOP=sway flameshot
 
             # Move focus
             bind = SUPER, h, movefocus, l
