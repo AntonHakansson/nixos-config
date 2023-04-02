@@ -383,12 +383,19 @@
   :init
   (savehist-mode))
 
-(use-package writeroom-mode
-  ;; distraction-free writing mode
-  :custom
-  (writeroom-width 100)
+(use-package olivetti
+  ;; Center text for nicer writing and reading
+  :defer 3
+  :bind (("C-c t z" . olivetti-mode)
+         :map olivetti-mode-map
+         ("s-]" . olivetti-expand)
+         ("s-[" . olivetti-shrink))
+  :hook (org-mode   . olivetti-mode)
+  :hook (eww-mode   . olivetti-mode)
+  :hook (Info-mode  . olivetti-mode)
   :config
-  (meow-leader-define-key '("t z" . writeroom-mode))
+  (setq-default olivetti-body-width 120
+                fill-column 90)
   )
 
 (use-package org
