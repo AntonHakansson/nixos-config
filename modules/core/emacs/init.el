@@ -76,6 +76,8 @@
 
   ;; Keybinds
   (global-set-key (kbd "C-t") 'hippie-expand) ;; orig. transpose-chars
+  (global-set-key (kbd "M-p") 'backward-paragraph)
+  (global-set-key (kbd "M-n") 'forward-paragraph)
 
   ;; C-w terminal behavior
   (defun backward-kill-word-or-region (&optional arg)
@@ -818,6 +820,9 @@
 ;;; :tools
 (use-package eww
   :ensure nil
+  :bind
+  (("M-n" . nil)
+   ("M-p" . nil))
   :config
   ;; Use & to open externally if eww can't handle the page
   (setq browse-url-browser-function #'eww-browse-url)
