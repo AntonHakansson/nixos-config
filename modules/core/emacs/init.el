@@ -386,13 +386,12 @@
 (use-package olivetti
   ;; Center text for nicer writing and reading
   :defer 3
-  :bind (("C-c t z" . olivetti-mode)
-         :map olivetti-mode-map
-         ("s-]" . olivetti-expand)
-         ("s-[" . olivetti-shrink))
+  :bind (("C-c t z" . olivetti-mode))
   :hook (org-mode   . olivetti-mode)
   :hook (eww-mode   . olivetti-mode)
   :hook (Info-mode  . olivetti-mode)
+  :hook (elfeed-search-mode  . olivetti-mode)
+  :hook (elfeed-show-mode    . olivetti-mode)
   :config
   (setq-default olivetti-body-width 120
                 fill-column 90)
