@@ -850,8 +850,21 @@
     (let ((url (thing-at-point-url-at-point)))
       (when url
         (async-shell-command (concat "umpv \"" url "\"") nil nil))))
+  :bind
+  (:map elfeed-show-mode-map
+        ("F" . elfeed-tube-fetch)
+        ([remap save-buffer] . elfeed-tube-save)
+        :map elfeed-search-mode-map
+        ("F" . elfeed-tube-fetch)
+        ([remap save-buffer] . elfeed-tube-save))
   :config
   (elfeed-tube-setup))
+
+(use-package elfeed-tube-mpv
+  :bind
+  (:map elfeed-show-mode-map
+        ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+        ("C-c C-w" . elfeed-tube-mpv-where)))
 
 (use-package saveplace
   ;; Yes, please save my place when opening/closing files:
