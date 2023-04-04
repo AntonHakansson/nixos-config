@@ -34,4 +34,7 @@
   # Disable auto-upgrade
   hakanssn.graphical.theme.autoSwitchTheme = false;
   system.autoUpgrade.enable = false;
+
+  # Enable OpenTabletDriver
+  hardware.opentabletdriver.enable = true;
 }
