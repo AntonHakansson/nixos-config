@@ -876,6 +876,10 @@
         ("C-c C-f" . elfeed-tube-mpv-follow-mode)
         ("C-c C-w" . elfeed-tube-mpv-where)))
 
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode))
+
 (use-package saveplace
   ;; Yes, please save my place when opening/closing files:
   :ensure nil
