@@ -41,9 +41,6 @@
 
   (setq-default indent-tabs-mode nil) ; Use spaces instead of tabs
 
-  (electric-pair-mode 1) ; Auto-insert matching bracket
-  (setq show-paren-when-point-inside-paren t)
-
   (setq-default delete-by-moving-to-trash t)
 
   (fset 'yes-or-no-p 'y-or-n-p) ; Shorter confirmation
@@ -292,14 +289,19 @@
 
   (setq meow-cursor-type-paren 'hollow)
 
-  (defun hk/sp-wrap-string () (interactive) (sp-wrap-with-pair "\""))
+  (defun hk/sp-wrap-string (&optional arg) (interactive "P") (sp-wrap-with-pair "\""))
   (defun hk/sp-back-transpose () (interactive) (sp-transpose-sexp -1))
 
   (meow-define-keys 'paren
     '("<escape>" . meow-normal-mode)
-    '("e" . sp-backward-sexp)
+    '("q" . meow-normal-mode)
+    '("g" . meow-normal-mode)
+    '("u" . meow-undo)
     '("n" . sp-forward-sexp)
     '("N" . sp-down-sexp)
+    '("p" . sp-backward-sexp)
+    '("P" . sp-up-sexp)
+    '("e" . sp-backward-sexp)
     '("E" . sp-up-sexp)
     '("o s" . sp-wrap-square)
     '("o r" . sp-wrap-round)
@@ -308,20 +310,18 @@
     '("O" . sp-unwrap-sexp)
     '("i" . sp-slurp-hybrid-sexp)
     '("m" . sp-forward-barf-sexp)
-    ;; '("k" . sp-backward-barf-sexp)
-    ;; '("j" . sp-backward-slurp-sexp)
-    ;; '("s" . sp-raise-sexp)
-    ;; '("k" . sp-absorb-sexp)
-    ;; '("," . sp-split-sexp)
+    '("," . sp-split-sexp)
     '("a" . sp-beginning-of-sexp)
     '("f" . sp-end-of-sexp)
     '("G" . sp-goto-top)
     '("t" . sp-transpose-sexp)
-    '("T" . hk/sp-back-transpose)
-    '("u" . meow-undo))
+    '("T" . hk/sp-back-transpose))
 
   (meow-normal-define-key
-   '("P" . meow-paren-mode)))
+   '("P" . meow-paren-mode))
+
+  (smartparens-global-mode +1)
+  (show-smartparens-global-mode +1))
 
 (use-package consult
   :bind
