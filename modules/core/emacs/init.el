@@ -98,12 +98,6 @@
   (global-set-key (kbd "C-w")  'backward-kill-word-or-region)
   )
 
-(use-package better-defaults
-  ;; Better defaults that aren't defaults for some reason.
-  ;; But don't enable ido-mode...
-  :config (ido-mode nil)
-  )
-
 (use-package no-littering
   ;; Put emacs files in ~/.cache/emacs/
   :custom
