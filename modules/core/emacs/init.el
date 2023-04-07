@@ -23,6 +23,16 @@
   (setq user-mail-address "anton@hakanssn.com"
         user-full-name "Anton Hakansson")
 
+  ;; Hide menu bars and scroll for clean ui
+  (unless (memq window-system '(mac ns))
+    (menu-bar-mode -1))
+  (when (fboundp 'tool-bar-mode)
+    (tool-bar-mode -1))
+  (when (fboundp 'scroll-bar-mode)
+    (scroll-bar-mode -1))
+  (when (fboundp 'horizontal-scroll-bar-mode)
+    (horizontal-scroll-bar-mode -1))
+
   ;; Auto revert buffers
   (customize-set-variable 'global-auto-revert-non-file-buffers t) ; Revert Dired and other buffers
   (global-auto-revert-mode 1) ; Revert buffers when the underlying file has changed
