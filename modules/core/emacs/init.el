@@ -465,6 +465,8 @@
           ("T" "Tickler" entry
            (file "gtd/repeaters.org")
            "* %i%? \n %U")
+          ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
+           "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
           ("W" "Weekly Review" plain
            (file+olp+datetree "roam/review.org")
            (file "templates/weekly-review.org")
