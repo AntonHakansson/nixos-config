@@ -792,7 +792,12 @@
   :hook
   (c++-mode . eglot-ensure)
   (c-mode . eglot-ensure)
-  (nix-mode . eglot-ensure))
+  (nix-mode . eglot-ensure)
+  :bind
+  (("C-c C" . eglot)
+   ("C-c A" . eglot-code-actions)
+   ("C-c R" . eglot-rename)
+   ("C-c F" . eglot-format)))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
