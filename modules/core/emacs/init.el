@@ -216,12 +216,11 @@
    '("w d" . delete-window)
 
    ;; Project
-   '("p a"	.	project-remember-projects-under)
-   '("p r"	.	project-forget-projects-under)
+   '("P"    . "C-x p")
    '("p p"	.	project-switch-project)
    '("p b"	.	consult-project-buffer)
-   '("p B"	.	project-swith-buffer)
-   '("p d"	.	consult-project-function)
+   '("p c"	.	project-compile)
+   '("p b"	.	project-swith-buffer)
    '("p f"	.	project-find-file)
    '("p q"	.	project-query-replace-regexp)
    '("p s"	.	consult-ripgrep)
@@ -597,6 +596,13 @@
   :hook
   (org-mode . org-modern-mode)
   (org-agenda-finalize . org-modern-agenda))
+
+(use-package denote
+  :custom
+  (denote-directory (concat org-directory "denote/"))
+  (denote-known-keywords '("emacs" "philosophy" "pol" "C/C++"))
+  :bind
+  (("C-c C-n" . denote)))
 
 (use-package pdf-tools)
 
