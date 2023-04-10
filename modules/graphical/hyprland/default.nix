@@ -144,7 +144,7 @@
             bind = SUPER, V, togglefloating,
             bind = SUPER, T, pin,
             bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
-            bind = SUPER, E, exec, emacs -n
+            bind = SUPER, E, exec, emacsclient -c
             bind = SUPER, P, exec, env XDG_CURRENT_DESKTOP=sway flameshot gui
             exec-once = env XDG_CURRENT_DESKTOP=sway flameshot
 
@@ -232,7 +232,7 @@
             format = "{:%a %d %b    %H:%M}";
             interval = 60;
             tooltip-format = "{:%Y-%m-%d}";
-            on-click = "emacs -n -e \"(progn (org-agenda :arg \\\"g\\\") (delete-other-windows))\"";
+            on-click = "emacsclient -cn -e \"(progn (org-agenda :arg \\\"g\\\") (delete-other-windows))\"";
           };
           "custom/media" = {
             "format" = "{icon} {}";

@@ -36,11 +36,12 @@
       };
       programs.zsh.shellAliases = {
         e = "emacsclient -nw";
+        ee = "emacsclient -c";
       };
       home = {
         packages = with pkgs; [
           (pkgs.writeShellScriptBin "emacseditor" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
-          (pkgs.writeShellScriptBin "emacs" ''${config.hakanssn.core.emacs.package}/bin/emacsclient -c "$@"'')
+          (pkgs.writeShellScriptBin "emacs" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
           (pkgs.writeShellScriptBin "emacsclient" ''${config.hakanssn.core.emacs.package}/bin/emacsclient "$@"'')
 
           ## Core dependencies
@@ -75,7 +76,7 @@
           })
         ];
         sessionVariables = {
-          EDITOR = "emacs";
+          EDITOR = "emacsclient -nw";
         };
       };
       xdg.configFile = {
