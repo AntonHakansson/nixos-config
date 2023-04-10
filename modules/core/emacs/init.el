@@ -53,7 +53,6 @@
 
   ;; Relative line numbers
   (setq display-line-numbers-type 'relative)
-  ;; (global-display-line-numbers-mode 1)
 
   ;; Default theme
   ;; Load dark theme later at night
@@ -839,8 +838,9 @@
 (use-package eww
   :ensure nil
   :bind
-  (("M-n" . nil)
-   ("M-p" . nil))
+  (:map eww-mode-map
+        ("M-n" . nil)
+        ("M-p" . nil))
   :config
   ;; Use & to open externally if eww can't handle the page
   (setq browse-url-browser-function #'eww-browse-url)
