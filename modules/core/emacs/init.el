@@ -278,6 +278,7 @@
    ("C-a" . 'crux-move-beginning-of-line)))
 
 (use-package smartparens
+  :diminish
   :config
   (setq meow-paren-keymap (make-keymap))
 
@@ -884,6 +885,7 @@
         ("C-c C-w" . elfeed-tube-mpv-where)))
 
 (use-package undo-tree
+  :diminish
   :config
   (global-undo-tree-mode))
 
