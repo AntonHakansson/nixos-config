@@ -110,6 +110,9 @@
 
 (use-package meow
   ;; Modal editing
+  :custom
+  (meow-use-clipboard 't)
+  (meow-use-enhanced-selection-effect 't "i don't know what this does - let's try it out")
   :config
   ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
@@ -177,6 +180,7 @@
    '("p" . meow-yank)
    '("q" . meow-quit)
    '("r" . meow-replace)
+   '("R" . embrace-commander)
    '("s" . meow-insert)
    '("S" . meow-open-above)
    '("u" . meow-undo)
@@ -245,9 +249,21 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument))
 
+  ; Register HTML tag as a meow object/thing
+  (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
+  (add-to-list 'meow-char-thing-table '(?a . angle))
+
   (meow-setup-indicator)
   (meow-setup-line-number)
   (meow-global-mode 1))
+
+(use-package embrace
+  ;; Add/Change/Delete pairs based on expand-region.
+  ;; evil-surround replacement
+  :config
+  (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
+  (add-hook 'org-mode-hook 'embrace-org-mode-hook)
+  )
 
 (use-package avy
   :config
