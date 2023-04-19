@@ -6,11 +6,10 @@
   };
 
   config = lib.mkIf config.hakanssn.graphical.media.documents.enable {
-    hakanssn.core.zfs.homeCacheLinks = [ ".config/obsidian" ".local/share/sioyek" ];
-    hakanssn.core.nix.unfreePackages = [ "obsidian" ];
+    hakanssn.core.zfs.homeCacheLinks = [ ".local/share/sioyek" ];
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ okular obsidian ];
+      home.packages = with pkgs; [ okular ];
       programs.sioyek = {
         enable = true;
       };
