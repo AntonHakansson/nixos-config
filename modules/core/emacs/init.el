@@ -394,8 +394,32 @@
    ("C-r" . 'consult-history)))
 
 (use-package dirvish
+  :custom
+  (dirvish-quick-access-entries
+   '(("h" "~/"                          "Home")
+     ("d" "~/downloads/"                "Downloads")
+     ("m" "/mnt/"                       "Drives")
+     ("t" "~/.local/share/Trash/files/" "TrashCan")
+     ("b" "~/documents/books/"          "Books")
+     ("o" "~/documents/org/"            "Org Notes")))
   :config
-  (dirvish-override-dired-mode))
+  ;; (dirvish-peek-mode) ; Preview files in minibuffer
+  ;; (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
+  (setq dirvish-mode-line-format
+        '(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-attributes
+        '(all-the-icons file-time file-size collapse subtree-state vc-state git-msg))
+  (setq delete-by-moving-to-trash t)
+  (setq dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  (dirvish-override-dired-mode)
+  :bind
+  (:map dirvish-mode-map
+        ("a"   . 'dirvish-quick-access)
+        ("TAB" . 'dirvish-subtree-toggle)))
+
+(require 'dirvish-quick-access)
+(require 'dirvish-extras)
 
 (use-package savehist
   :ensure nil ;; Not a real package, but a place to collect settings
@@ -415,8 +439,7 @@
   :hook (elfeed-show-mode    . olivetti-mode)
   :config
   (setq-default olivetti-body-width 120
-                fill-column 90)
-  )
+                fill-column 90))
 
 (use-package org
   :init
