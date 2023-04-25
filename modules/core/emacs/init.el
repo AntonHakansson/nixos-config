@@ -400,6 +400,7 @@
      ("d" "~/downloads/"                "Downloads")
      ("m" "/mnt/"                       "Drives")
      ("t" "~/.local/share/Trash/files/" "TrashCan")
+     ("r" "~/repos/"                    "Repos")
      ("b" "~/documents/books/"          "Books")
      ("o" "~/documents/org/"            "Org Notes")))
   :config
