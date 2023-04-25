@@ -54,11 +54,17 @@
   ;; Relative line numbers
   (setq display-line-numbers-type 'relative)
 
-  ;; Default theme
-  ;; Load dark theme later at night
-  (if (> (decoded-time-hour (decode-time (current-time))) 18)
-      (load-theme 'modus-vivendi)
-    (load-theme 'modus-operandi-tinted))
+  ;; Theme
+  (setq modus-themes-mixed-fonts t)
+  (setq modus-themes-headings
+      '((1 . (variable-pitch 1.3))
+        (2 . (1.1))
+        (agenda-date . (1.1))
+        (agenda-structure . (variable-pitch light 1.3))
+        (t . (1.1))))
+  (setq modus-operandi-tinted-palette-overrides
+        '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
+  (load-theme 'modus-operandi-tinted)
 
   ;; Turn on recentf mode
   (add-hook 'after-init-hook #'recentf-mode)

@@ -72,7 +72,7 @@
             }
 
             # background color
-            exec-once = ${pkgs.swaybg}/bin/swaybg -c "##ede7db"
+            exec-once = ${pkgs.swaybg}/bin/swaybg -c "##f4e6cd"
 
             decoration {
                 # See https://wiki.hyprland.org/Configuring/Variables/
