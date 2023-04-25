@@ -837,10 +837,9 @@
   :hook (prog-mode . rainbow-mode)
   :diminish)
 
-(use-package envrc)
-(use-package direnv
+(use-package envrc
   :config
-  (direnv-mode))
+  (envrc-global-mode))
 
 (use-package eglot
   :hook
