@@ -276,12 +276,13 @@
   (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h)))
 
 (use-package hydra)
+
 (use-package dumb-jump
-  :after hydra
   :bind
-  (("C-c j" . dumb-jump-hydra/body))
-  :init
-  (defhydra dumb-jump-hydra (:color blue :columns 3)
+  (("C-c j" . hk/dumb-jump-hydra/body))
+  :commands dumb-jumb-go
+  :config
+  (defhydra hk/dumb-jump-hydra (:color blue :columns 3)
     "Dumb Jump"
     ("j" dumb-jump-go "Go")
     ("o" dumb-jump-go-other-window "Other window")
@@ -290,6 +291,7 @@
     ("i" dumb-jump-go-prompt "Prompt")
     ("l" dumb-jump-quick-look "Quick look")
     ("b" dumb-jump-back "Back"))
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   )
 
 (use-package crux
