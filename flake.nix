@@ -16,7 +16,6 @@
       url = "github:nix-community/home-manager";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        utils.follows = "flake-utils";
       };
     };
     agenix = {
@@ -28,7 +27,6 @@
     devshell = {
       url = "github:numtide/devshell";
       inputs = {
-        flake-utils.follows = "flake-utils";
         nixpkgs.follows = "nixpkgs";
       };
     };
