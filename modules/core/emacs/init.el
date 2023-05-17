@@ -892,7 +892,6 @@
 (use-package elfeed
   ;; rss reader
   :custom
-  (elfeed-db-directory "~/documents/org/.elfeed") ;; Sync rss feeds with Syncthing
   (elfeed-sort-order 'ascending))
 
 (use-package elfeed-org
