@@ -815,22 +815,6 @@
          ("C-h K" . #'helpful-keymap)))
 
 ;;; IDE
-(use-package hl-todo
-  ;; Using the hl-todo package, we are able to highlight keywords
-  ;; related to the working environment, like: TODO, FIXME and some
-  ;; more.
-  :hook '(prog-mode)
-  :init
-  (setq
-   hl-todo-highlight-punctuation ":"
-   hl-todo-keyword-faces
-   `(("TODO"       org-todo bold)
-     ("FIXME"      error bold)
-     ("HACK"       font-lock-constant-face bold)
-     ("REVIEW"     font-lock-keyword-face bold)
-     ("NOTE"       success bold)
-     ("DEPRECATED" font-lock-doc-face bold))))
-
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
   :diminish)
