@@ -842,7 +842,7 @@
 (use-package nix-mode
   :mode (("\\.nix\\'" . nix-mode))
   :config
-  (add-to-list 'eglot-server-programs '(nix-mode . ("rnix-lsp"))))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil"))))
 
 (use-package web-mode
   ;; Web (html/css/javascript)

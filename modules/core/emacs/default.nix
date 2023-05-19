@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   options.hakanssn.core.emacs = {
@@ -74,6 +74,8 @@
               scheme-medium xifthen ifmtarg framed paralist titlesec wrapfig
               amsmath svg capt-of trimspaces catchfile transparent;
           })
+          # :lang nix
+          nil
         ];
         sessionVariables = {
           EDITOR = "emacsclient -nw";
