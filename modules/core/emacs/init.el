@@ -466,6 +466,7 @@
   :custom
   (org-babel-load-languages '((awk . t)
                               (calc . t)
+                              (C . t)
                               (clojure . t)
                               (css . t)
                               (dot . t)
