@@ -407,6 +407,8 @@
      ("r" "~/repos/"                    "Repos")
      ("b" "~/documents/books/"          "Books")
      ("o" "~/documents/org/"            "Org Notes")))
+  ;; Pick the target for copy/move operations based on another opened Dired window
+  (dired-dwim-target t)
   :config
   ;; (dirvish-peek-mode) ; Preview files in minibuffer
   ;; (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
@@ -421,7 +423,9 @@
   :bind
   (:map dirvish-mode-map
         ("a"   . 'dirvish-quick-access)
-        ("TAB" . 'dirvish-subtree-toggle)))
+        ("TAB" . 'dirvish-subtree-toggle)
+        ("T" . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
+  )
 
 (require 'dirvish-quick-access)
 (require 'dirvish-extras)
