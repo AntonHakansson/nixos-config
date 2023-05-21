@@ -23,7 +23,6 @@
       url = "github:nix-community/emacs-overlay";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
       };
     };
     hyprland = {
@@ -38,7 +37,6 @@
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        utils.follows = "flake-utils";
       };
     };
   };
@@ -48,11 +46,8 @@
     , nixpkgs
     , agenix
     , home-manager
-    , devshell
     , impermanence
     , nur
-    , flake-utils
-    , utils
     , emacs-overlay
     , hyprland
     , xdph
