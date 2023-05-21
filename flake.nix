@@ -1,17 +1,10 @@
 {
-  description = "Nixos configuration";
+  description = "hakanssn Nixos configuration";
 
   inputs = {
     # Core
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    flake-utils.url = "github:numtide/flake-utils";
-    utils = {
-      url = "github:gytis-ivaskevicius/flake-utils-plus";
-      inputs = {
-        flake-utils.follows = "flake-utils";
-      };
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs = {
@@ -24,12 +17,6 @@
     };
     impermanence.url =
       "github:nix-community/impermanence"; # bind-mount directories
-    devshell = {
-      url = "github:numtide/devshell";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
 
     # Extras
     emacs-overlay = {
@@ -71,54 +58,66 @@
     , xdph
     , nixos-mailserver
     }:
-    utils.lib.mkFlake {
-      inherit self inputs;
-      channels.nixpkgs = {
-        input = nixpkgs;
-        overlaysBuilder = _: [
-          devshell.overlays.default
-          nur.overlay
-          emacs-overlay.overlay
-          (_: prev: {
-            xdg-desktop-portal-hyprland = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.default.override {
-              hyprland-share-picker = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.hyprland-share-picker.override { inherit hyprland; };
-            };
-          })
-        ];
-      };
-      hostDefaults = {
-        modules = [
-          { nix.generateRegistryFromInputs = true; }
-          agenix.nixosModules.age
-          home-manager.nixosModule
-          impermanence.nixosModule
-          { home-manager.sharedModules = [ hyprland.homeManagerModules.default ]; }
-          nixos-mailserver.nixosModule
-          ./modules
-        ];
-      };
-      hosts = {
-        falconia.modules = [ ./machines/falconia ];
-        gattsu.modules = [ ./machines/gattsu ];
-        rickert.modules = [ ./machines/rickert ];
-      };
-      outputsBuilder = channels:
-        let pkgs = channels.nixpkgs;
-        in {
-          devShells = rec {
-            nixos-config = pkgs.devshell.mkShell {
-              name = "hakanssn NixOS config";
-              packages = [
-                pkgs.nixpkgs-fmt
-                (pkgs.writeShellScriptBin "fetchpatch"
-                  "curl -L https://github.com/NixOS/nixpkgs/pull/$1.patch -o patches/$1.patch")
-                inputs.agenix.packages.${pkgs.system}.default
-                pkgs.cachix
+    let
+      inherit (self) outputs;
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "aarch64-linux"
+        "i686-linux"
+        "x86_64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+      sharedModules =
+        [
+          ({ inputs, outputs, lib, config, pkgs, ... }: {
+            nixpkgs = {
+              overlays = [
+                nur.overlay
+                emacs-overlay.overlay
+                (_: prev: {
+                  xdg-desktop-portal-hyprland = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.default.override {
+                    hyprland-share-picker = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.hyprland-share-picker.override { inherit hyprland; };
+                  };
+                })
               ];
             };
-            default = nixos-config;
-          };
+          })
+          agenix.nixosModules.age
+          impermanence.nixosModule
+          nixos-mailserver.nixosModule
+
+          home-manager.nixosModule
+          { home-manager.sharedModules = [ hyprland.homeManagerModules.default ]; }
+
+          ./modules
+        ];
+    in
+    rec {
+      devShells = forAllSystems
+        (system:
+          let pkgs = nixpkgs.legacyPackages.${system};
+          in
+          {
+            default = pkgs.mkShell {
+              # Enable experimental features without having to specify the argument
+              NIX_CONFIG = "experimental-features = nix-command flakes";
+              nativeBuildInputs = [ pkgs.nix pkgs.home-manager pkgs.git pkgs.age ];
+            };
+          });
+      nixosConfigurations = {
+        falconia = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = sharedModules ++ [ ./machines/falconia/default.nix ];
         };
+        gattsu = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = sharedModules ++ [ ./machines/gattsu/default.nix ];
+        };
+        rickert = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = sharedModules ++ [ ./machines/rickert/default.nix ];
+        };
+      };
       templates = import ./templates;
     };
 }
