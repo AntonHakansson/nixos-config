@@ -30,7 +30,7 @@ in
   home-manager.users.hakanssn = { ... }: {
     programs.ssh.enable = true;
     home.packages =
-      lib.mkIf config.hakanssn.graphical.enable [ ssh_wrapper pkgs.sshfs ];
+      lib.mkIf config.hakanssn.graphical.enable [ pkgs.sshfs ];
   };
 
   # home-manager.users.root = { ... }: (base "/root" "root");
