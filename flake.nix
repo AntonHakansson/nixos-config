@@ -64,6 +64,7 @@
       ];
       sharedModules =
         [
+          ({ ... }: { nix.extraOptions = "experimental-features = nix-command flakes"; })
           ({ inputs, outputs, lib, config, pkgs, ... }: {
             nixpkgs = {
               overlays = [
