@@ -4,6 +4,7 @@
   inputs = {
     # Core
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-22.11";
     nur.url = "github:nix-community/NUR";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -42,7 +43,7 @@
   };
 
   outputs =
-    inputs@{ self
+    { self
     , nixpkgs
     , agenix
     , home-manager
@@ -52,7 +53,8 @@
     , hyprland
     , xdph
     , nixos-mailserver
-    }:
+    , ...
+    }@inputs:
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [
@@ -88,7 +90,9 @@
           ./modules
         ];
     in
-    rec {
+    {
+      packages = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system}; in import ./pkgs { inherit pkgs; });
       devShells = forAllSystems
         (system:
           let pkgs = nixpkgs.legacyPackages.${system};
@@ -100,6 +104,10 @@
               nativeBuildInputs = [ pkgs.nix pkgs.home-manager pkgs.git pkgs.age ];
             };
           });
+      formatter = forAllSystems (system:
+        let pkgs = nixpkgs.legacyPackages.${system};
+        in pkgs.nixpkgs-fmt);
+      overlays = import ./overlays { inherit inputs; };
       nixosConfigurations = {
         falconia = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
