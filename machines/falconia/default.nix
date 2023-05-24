@@ -1,6 +1,7 @@
 { ... }: {
   imports = [ ./hardware.nix ];
 
+  networking.hostName = "falconia";
   networking.hostId = "06ad334e";
 
   hakanssn = {

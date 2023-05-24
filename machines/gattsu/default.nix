@@ -1,6 +1,7 @@
 { ... }: {
   imports = [ ./hardware.nix ];
 
+  networking.hostName = "gattsu";
   networking.hostId = "96a2d6d5";
 
   hakanssn = {
