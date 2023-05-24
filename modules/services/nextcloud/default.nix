@@ -14,6 +14,10 @@
       }
     ];
 
+    nixpkgs.config.permittedInsecurePackages = [
+      "openssl-1.1.1t"
+    ];
+
     services = {
       nextcloud = {
         enable = true;
