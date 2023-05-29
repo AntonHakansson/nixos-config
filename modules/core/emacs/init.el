@@ -98,6 +98,9 @@
         (call-interactively #'kill-region)
       (backward-kill-word arg)))
   (global-set-key (kbd "C-w")  'backward-kill-word-or-region)
+
+  ;; Write bookmark file when bookmark list is modified
+  (setq bookmark-save-flag 1)
   )
 
 (use-package no-littering
