@@ -395,7 +395,13 @@
    :map minibuffer-local-map
    ("M-s" . 'consult-history)                 ;; orig. next-matching-history-element
    ("M-r" . 'consult-history)                 ;; orig. previous-matching-history-element
-   ("C-r" . 'consult-history)))
+   ("C-r" . 'consult-history))
+  :init
+  (require 'consult-imenu)
+  (require 'consult-org)
+  (require 'consult-flymake)
+  (require 'consult-compile)
+  (require 'consult-kmacro))
 
 (use-package dirvish
   :custom
