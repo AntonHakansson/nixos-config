@@ -801,8 +801,7 @@
 (use-package corfu
   ;; Completion in buffer (popup ui)
   :custom
-  (corfu-auto t "Enable Auto Completion")
-  ;; (corfu-cycle t "Cycle completion options")
+  ;; (corfu-auto t "Enable Auto Completion")
   (corfu-auto-prefix 2 "Trigger completion early")
   :config
   (global-corfu-mode))
