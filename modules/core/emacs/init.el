@@ -685,39 +685,9 @@
   :custom
   (save-abbrevs 'silently))
 
-(use-package aas
-  ;; auto activating snippets
-  :init (add-hook 'find-file-hook #'aas-activate-for-major-mode)
-  :preface
-  (defmacro aas-tempel (&rest template)
-    `(lambda () (tempel-insert ',template)))
-  :config
-  (aas-global-mode)
-  (aas-set-snippets 'global
-    ";--" "—"
-    ";>>" "⟶"
-    ";<<" "⟵"
-    ";gh" "https://github.com/"
-    ";gm" "https://github.com/AntonHakansson"
-    ";isodate" (lambda () (interactive) (insert (format-time-string "%a, %d %b %Y %T %z")))
-    ";date" (lambda () (interactive) (insert (format-time-string "%a %b %d %Y")))
-    ";sdate" (lambda () (interactive) (insert (format-time-string "%d %b %Y")))
-    ";d/" (lambda () (interactive) (insert (format-time-string "%D")))
-    ";d-" (lambda () (interactive) (insert (format-time-string "%F")))
-    ";time" (lambda () (interactive) (insert (format-time-string "%T")))
-    ";filename" (lambda () (interactive) (insert (file-name-nondirectory (buffer-file-name)))))
-  (aas-set-snippets 'org-mode
-    ";el" "#+begin_src emacs-lisp\n\n#+end_src"
-    ";py" "#+begin_src python\n\n#+end_src"
-    ";co" "#+begin_src\n\n#+end_src"
-    ";m" (lambda () (interactive) (insert "\\(  \\)") (backward-char 3)))
-  (aas-set-snippets 'c-mode
-    ";p" (lambda () (interactive) (insert "printf(\"log: %d\\n\", );") (backward-char 2))
-    ";T" "// TODO(hk): "
-    ";N" "// NOTE(hk): "))
-
 (use-package laas
   :hook (LaTeX-mode . laas-mode)
+  :hook (org-mode . laas-mode)
   :config
   (aas-set-snippets 'laas-mode
     ";m" (lambda () (interactive) (insert "\\(  \\)") (backward-char 3))
