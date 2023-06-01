@@ -17,7 +17,7 @@
       readOnly = true;
       default = pkgs.emacsWithPackagesFromUsePackage {
         config = config.hakanssn.core.emacs.fullConfig;
-        package = pkgs.emacsPgtk;
+        package = pkgs.emacs-pgtk;
         alwaysEnsure = true;
         extraEmacsPackages = epkgs: (lib.optional config.hakanssn.graphical.mail.enable pkgs.mu);
       };
