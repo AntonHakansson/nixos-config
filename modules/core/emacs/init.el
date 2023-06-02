@@ -473,6 +473,13 @@
             (replace-match (downcase (match-string 0)) t)
             (setq count (1+ count))))
         (message "Replaced %d occurances" count))))
+  (defun hk/insert-org-from-html-clipboard ()
+      ;; credits to u/jsled
+      (interactive)
+    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
+           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
+           (command "wl-paste | pandoc -f html -t org"))
+      (shell-command command dst-buffer)))
   :bind
   (("C-c a"   . org-agenda)
    ("C-c C-c" . org-capture))
