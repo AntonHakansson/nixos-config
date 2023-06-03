@@ -459,6 +459,7 @@
   (setq-default olivetti-body-width 120
                 fill-column 90))
 
+(use-package htmlize)
 (use-package org
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
