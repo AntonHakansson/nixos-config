@@ -691,9 +691,7 @@
   :bind (("M-+" . #'tempel-complete)
          ("M-*" . #'tempel-insert))
   :custom
-  (tempel-trigger-prefix ";") ;; Require trigger prefix before template name when completing.
   (tempel-path "~/documents/org/tempel")
-
   :config
   (add-to-list 'completion-at-point-functions #'tempel-complete))
 
