@@ -843,7 +843,8 @@
   ;; rss reader
   :custom
   (elfeed-sort-order 'ascending)
-  (elfeed-search-filter "@6-months-ago +unread +mustread"))
+  :config
+  (setq-default elfeed-search-filter "@6-months-ago +unread +mustread"))
 
 (use-package elfeed-org
   ;; Load rss feeds from org file
