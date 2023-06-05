@@ -475,8 +475,9 @@
             (setq count (1+ count))))
         (message "Replaced %d occurances" count))))
   (defun hk/insert-org-from-html-clipboard ()
-      ;; credits to u/jsled
-      (interactive)
+    "Insert html from clipboard and convert into org-mode using pandoc."
+    ;; credits to u/jsled
+    (interactive)
     (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
            (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
            (command "wl-paste | pandoc -f html -t org"))
