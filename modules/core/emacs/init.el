@@ -459,6 +459,13 @@
   (setq-default olivetti-body-width 120
                 fill-column 90))
 
+(use-package fancy-compilation
+  ;; Support color, progress bars in compilation-mode buffer
+  :commands (fancy-compilation-mode)
+  :custom (fancy-compilation-override-colors nil))
+(with-eval-after-load 'compile
+  (fancy-compilation-mode))
+
 (use-package htmlize)
 (use-package org
   :init
