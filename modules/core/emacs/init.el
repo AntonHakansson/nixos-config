@@ -615,8 +615,6 @@
 (use-package org-roam
   :custom
   (org-roam-directory (concat org-directory "roam/"))
-  :bind
-  (("C-c o n" . 'org-roam-node-find))
   :config
   (org-roam-db-autosync-mode))
 
@@ -646,7 +644,8 @@
   (denote-directory (concat org-directory "denote/"))
   (denote-known-keywords '("emacs" "philosophy" "pol" "C/C++"))
   :bind
-  (("C-c C-n" . denote)))
+  (("C-c C-n" . denote)
+   ("C-c o n" . denote-open-or-create)))
 
 (use-package pdf-tools)
 
