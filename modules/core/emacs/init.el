@@ -489,6 +489,14 @@
            (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
            (command "wl-paste | pandoc -f html -t org"))
       (shell-command command dst-buffer)))
+  (defun hk/insert-org-from-leetcode ()
+    "Insert org-mode formatted leetcode problem from url."
+    (interactive)
+    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
+           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
+           (leetcode-url (read-from-minibuffer "Leetcode URL: "))
+           (command (concat org-directory "leet-to-org.py " leetcode-url)))
+      (shell-command command dst-buffer)))
   :bind
   (("C-c a"   . org-agenda)
    ("C-c C-c" . org-capture))
