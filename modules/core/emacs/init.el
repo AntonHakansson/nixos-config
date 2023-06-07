@@ -840,6 +840,11 @@
   (setq browse-url-browser-function #'eww-browse-url)
   (setq browse-url-generic-program "firefox"))
 
+(use-package devdocs
+  :bind (("C-c D" . 'devdocs-lookup))
+  :custom
+  (devdocs-data-dir (concat hk/cache-dir "devdocs/")))
+
 (use-package elfeed
   ;; rss reader
   :custom
