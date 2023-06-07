@@ -57,7 +57,8 @@ let
       '';
     };
   };
-in {
+in
+{
   home-manager.users.hakanssn = { ... }: base "/home/hakanssn";
   home-manager.users.root = { ... }: base "/root";
 }

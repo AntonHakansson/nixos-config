@@ -62,9 +62,12 @@ let
 
     bg-region = "#bcbcbc";
   };
-in {
-  config = lib.mkIf (config.hakanssn.graphical.theme.enable
-    && config.hakanssn.graphical.theme.name == "modus-operandi") {
+in
+{
+  config = lib.mkIf
+    (config.hakanssn.graphical.theme.enable
+      && config.hakanssn.graphical.theme.name == "modus-operandi")
+    {
       home-manager.users.hakanssn = { pkgs, ... }:
         let flat-remix-theme = "Flat-Remix-GTK-Blue-Light";
         in {
@@ -121,30 +124,34 @@ in {
               };
             };
           };
-          wayland.windowManager.hyprland.extraConfig = let
-            hyprpaper-config = pkgs.writeText "hyprpaper-configuration" ''
-              preload = ${./modus-operandi-wallpaper.png}
-              wallpaper = HDMI-A-1,${./modus-operandi-wallpaper.png}
+          wayland.windowManager.hyprland.extraConfig =
+            let
+              hyprpaper-config = pkgs.writeText "hyprpaper-configuration" ''
+                preload = ${./modus-operandi-wallpaper.png}
+                wallpaper = HDMI-A-1,${./modus-operandi-wallpaper.png}
+              '';
+            in
+            ''
+              # Set Wallpaper
+              # exec-once=${pkgs.hyprpaper}/bin/hyprpaper -c ${hyprpaper-config}
             '';
-          in ''
-            # Set Wallpaper
-            # exec-once=${pkgs.hyprpaper}/bin/hyprpaper -c ${hyprpaper-config}
-          '';
 
-          programs.neovim = let
-            vim-modus-theme = pkgs.vimUtils.buildVimPlugin {
-              name = "modus-theme-vim";
-              src = pkgs.fetchFromGitHub {
-                owner = "ishan9299";
-                repo = "modus-theme-vim";
-                rev = "42ee50e89c1869e5bda69fa2cde44e4d72663131";
-                sha256 = "lq7hsO4GExtHZ/xvzpNFli9X8uCioqvymM8rDPP38DU=";
+          programs.neovim =
+            let
+              vim-modus-theme = pkgs.vimUtils.buildVimPlugin {
+                name = "modus-theme-vim";
+                src = pkgs.fetchFromGitHub {
+                  owner = "ishan9299";
+                  repo = "modus-theme-vim";
+                  rev = "42ee50e89c1869e5bda69fa2cde44e4d72663131";
+                  sha256 = "lq7hsO4GExtHZ/xvzpNFli9X8uCioqvymM8rDPP38DU=";
+                };
               };
+            in
+            {
+              plugins = [ vim-modus-theme ];
+              # extraConfig = "colorscheme modus-operandi";
             };
-          in {
-            plugins = [ vim-modus-theme ];
-            # extraConfig = "colorscheme modus-operandi";
-          };
 
           programs.kitty = { theme = "Modus Operandi Tinted"; };
 

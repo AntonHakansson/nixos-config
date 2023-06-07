@@ -30,7 +30,8 @@ let
       };
     };
   };
-in {
+in
+{
   options.hakanssn.core.nix = {
     enableDirenv = lib.mkOption { default = true; };
     unfreePackages = lib.mkOption {
@@ -46,11 +47,11 @@ in {
       zfs = {
         homeCacheLinks = (lib.optional config.hakanssn.core.nix.enableDirenv
           ".local/share/direnv")
-          ++ (lib.optional config.hakanssn.core.nix.enableNixIndex
-            ".cache/nix-index");
+        ++ (lib.optional config.hakanssn.core.nix.enableNixIndex
+          ".cache/nix-index");
         systemCacheLinks = [ "/etc/nixos/" ]
           ++ (lib.optional config.hakanssn.core.nix.enableDirenv
-            "/root/.local/share/direnv");
+          "/root/.local/share/direnv");
       };
     };
 
@@ -86,8 +87,8 @@ in {
 
     home-manager.users.hakanssn = { ... }:
       lib.recursiveUpdate
-      (lib.optionalAttrs config.hakanssn.core.nix.enableDirenv baseDirenv)
-      (lib.optionalAttrs config.hakanssn.core.nix.enableNixIndex baseNixIndex);
+        (lib.optionalAttrs config.hakanssn.core.nix.enableDirenv baseDirenv)
+        (lib.optionalAttrs config.hakanssn.core.nix.enableNixIndex baseNixIndex);
     home-manager.users.root = { ... }:
       lib.optionalAttrs config.hakanssn.core.nix.enableDirenv baseDirenv;
   };

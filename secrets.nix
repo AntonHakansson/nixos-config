@@ -9,7 +9,8 @@ let
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINKS0sE3JxoiD1RQNnOWT1giYGI4NFKk0491GMh73mwt"
   ];
   users = hakanssn;
-in {
+in
+{
   "secrets/passwords/users/hakanssn.age".publicKeys = hosts ++ users;
   "secrets/passwords/users/root.age".publicKeys = hosts ++ users;
 

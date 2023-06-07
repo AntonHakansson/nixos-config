@@ -20,7 +20,8 @@
           inherit system;
           overlays = [ devshell.overlay ];
         };
-      in {
+      in
+      {
         packages = flake-utils.lib.flattenTree rec {
           project = pkgs.hello;
           default = project;

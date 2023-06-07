@@ -35,7 +35,8 @@ let
     '';
   };
   swaylock-cmd = "${pkgs.swaylock-fancy}/bin/swaylock-fancy";
-in {
+in
+{
   options.hakanssn.graphical.sway = {
     enable = lib.mkEnableOption "swaywm";
     top-bar = lib.mkOption {

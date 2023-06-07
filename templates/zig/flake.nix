@@ -12,7 +12,8 @@
           inherit system;
           overlays = [ self.overlays.default ];
         });
-    in {
+    in
+    {
       overlays = rec {
         default = final: prev: { foo-bar = prev.callPackage ./. { }; };
       };

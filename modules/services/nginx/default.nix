@@ -43,19 +43,21 @@
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
-      virtualHosts = builtins.listToAttrs (map (elem: {
-        name = elem.fqdn;
-        value = {
-          forceSSL = true;
-          enableACME = true; # let's encrypt
-          locations."/" = lib.mkIf (builtins.hasAttr "basicProxy" elem) {
-            proxyPass = elem.basicProxy;
-            extraConfig = ''
-              proxy_set_header X-Forwarded-Ssl on;
-            '' + (elem.extraProxySettings or "");
-          };
-        } // (elem.options or { });
-      }) config.hakanssn.services.nginx.hosts);
+      virtualHosts = builtins.listToAttrs (map
+        (elem: {
+          name = elem.fqdn;
+          value = {
+            forceSSL = true;
+            enableACME = true; # let's encrypt
+            locations."/" = lib.mkIf (builtins.hasAttr "basicProxy" elem) {
+              proxyPass = elem.basicProxy;
+              extraConfig = ''
+                proxy_set_header X-Forwarded-Ssl on;
+              '' + (elem.extraProxySettings or "");
+            };
+          } // (elem.options or { });
+        })
+        config.hakanssn.services.nginx.hosts);
     };
     users.users = {
       nginx.extraGroups = [ "acme" ];

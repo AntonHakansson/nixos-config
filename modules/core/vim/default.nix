@@ -73,7 +73,8 @@ let
       MANPAGER = "nvim +Man!";
     };
   };
-in {
+in
+{
   config = {
     home-manager.users.root = { ... }: (base "root");
     home-manager.users.hakanssn = { ... }: (base "hakanssn");

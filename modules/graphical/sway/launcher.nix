@@ -34,7 +34,8 @@ let
     wlClipboard = pkgs.wl-clipboard;
     xdgUserDirs = pkgs.xdg-user-dirs;
   };
-in pkgs.runCommand "launcher" { } ''
+in
+pkgs.runCommand "launcher" { } ''
   mkdir -p $out/bin
   cp ${script} $out/bin/launcher
   chmod +x $out/bin/launcher

@@ -88,27 +88,30 @@
       '')
     ];
 
-    system.activationScripts = let
-      ensureSystemExistsScript = lib.concatStringsSep "\n"
-        (map (path: ''mkdir -p "${path}"'')
-          config.hakanssn.core.zfs.ensureSystemExists);
-      ensureHomeExistsScript = lib.concatStringsSep "\n" (map (path:
-        ''
-          mkdir -p "/home/hakanssn/${path}"; chown hakanssn:users /home/hakanssn/${path};'')
-        config.hakanssn.core.zfs.ensureHomeExists);
-    in {
-      ensureSystemPathsExist = {
-        text = ensureSystemExistsScript;
-        deps = [ "agenixNewGeneration" ];
+    system.activationScripts =
+      let
+        ensureSystemExistsScript = lib.concatStringsSep "\n"
+          (map (path: ''mkdir -p "${path}"'')
+            config.hakanssn.core.zfs.ensureSystemExists);
+        ensureHomeExistsScript = lib.concatStringsSep "\n" (map
+          (path:
+            ''
+              mkdir -p "/home/hakanssn/${path}"; chown hakanssn:users /home/hakanssn/${path};'')
+          config.hakanssn.core.zfs.ensureHomeExists);
+      in
+      {
+        ensureSystemPathsExist = {
+          text = ensureSystemExistsScript;
+          deps = [ "agenixNewGeneration" ];
+        };
+        ensureHomePathsExist = {
+          text = ''
+            mkdir -p /home/hakanssn/
+            ${ensureHomeExistsScript}
+          '';
+          deps = [ "users" "groups" ];
+        };
+        agenixInstall.deps = [ "ensureSystemPathsExist" "ensureHomePathsExist" ];
       };
-      ensureHomePathsExist = {
-        text = ''
-          mkdir -p /home/hakanssn/
-          ${ensureHomeExistsScript}
-        '';
-        deps = [ "users" "groups" ];
-      };
-      agenixInstall.deps = [ "ensureSystemPathsExist" "ensureHomePathsExist" ];
-    };
   };
 }

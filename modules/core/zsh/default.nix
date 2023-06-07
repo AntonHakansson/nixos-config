@@ -66,7 +66,8 @@ let
       };
     };
   });
-in {
+in
+{
   programs.zsh.enable = true;
   hakanssn.core.zfs.systemCacheLinks = [ "/root/.local/share/autojump" ];
   hakanssn.core.zfs.homeCacheLinks = [ ".local/share/autojump" ];

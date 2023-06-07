@@ -33,9 +33,12 @@ let
     base16 = "#4dc4ff"; # Bright Blue
     base17 = "#de73ff"; # Bright purple
   };
-in {
-  config = lib.mkIf (config.hakanssn.graphical.theme.enable
-    && config.hakanssn.graphical.theme.name == "onedark") {
+in
+{
+  config = lib.mkIf
+    (config.hakanssn.graphical.theme.enable
+      && config.hakanssn.graphical.theme.name == "onedark")
+    {
       home-manager.users.hakanssn = { pkgs, ... }:
         let flat-remix-theme = "Flat-Remix-GTK-Blue-Dark";
         in {

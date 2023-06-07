@@ -24,99 +24,102 @@
 
   config = lib.mkIf (config.hakanssn.graphical.theme.enable) (lib.mkMerge [
     # Common Config
-    (let
-      iosevka = pkgs.iosevka-bin;
-      iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
-      iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
-    in {
-      fonts = {
-        fontDir.enable = true;
-        fontconfig = {
-          enable = true;
-          defaultFonts = {
-            emoji = [ "Noto Color Emoji" ];
-            monospace = [ "Iosevka" "Font Awesome 6 Free" ];
-            sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
-            serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
+    (
+      let
+        iosevka = pkgs.iosevka-bin;
+        iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
+        iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
+      in
+      {
+        fonts = {
+          fontDir.enable = true;
+          fontconfig = {
+            enable = true;
+            defaultFonts = {
+              emoji = [ "Noto Color Emoji" ];
+              monospace = [ "Iosevka" "Font Awesome 6 Free" ];
+              sansSerif = [ "Iosevka Aile" "Font Awesome 6 Free" ];
+              serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
+            };
           };
+          fonts = with pkgs; [
+            iosevka
+            iosevka-aile
+            iosevka-etoile
+            font-awesome
+            noto-fonts
+            noto-fonts-cjk
+            noto-fonts-emoji
+            noto-fonts-extra
+          ];
         };
-        fonts = with pkgs; [
-          iosevka
-          iosevka-aile
-          iosevka-etoile
-          font-awesome
-          noto-fonts
-          noto-fonts-cjk
-          noto-fonts-emoji
-          noto-fonts-extra
-        ];
-      };
-      programs.dconf.enable = true;
-      home-manager.users.hakanssn = { pkgs, ... }: {
-        home.packages = [ pkgs.vanilla-dmz ];
-        dconf = {
-          enable = true;
-          settings."org/gnome/desktop/interface" = {
-            cursor-theme = "Vanilla-DMZ";
+        programs.dconf.enable = true;
+        home-manager.users.hakanssn = { pkgs, ... }: {
+          home.packages = [ pkgs.vanilla-dmz ];
+          dconf = {
+            enable = true;
+            settings."org/gnome/desktop/interface" = {
+              cursor-theme = "Vanilla-DMZ";
+            };
+          };
+
+          gtk = {
+            enable = true;
+            font = {
+              package = iosevka-aile;
+              name = "Iosevka Aile";
+              size = 10;
+            };
+            gtk2.extraConfig = ''
+              gtk-cursor-theme-name = "Vanilla-DMZ"
+              gtk-cursor-theme-size = 0
+            '';
+            gtk3.extraConfig = {
+              gtk-cursor-theme-name = "Vanilla-DMZ";
+              gtk-cursor-theme-size = 0;
+            };
+          };
+
+          qt = {
+            enable = true;
+            platformTheme = "gtk";
+          };
+
+          wayland.windowManager.sway.config = {
+            fonts = {
+              names = config.fonts.fontconfig.defaultFonts.sansSerif;
+              size = 9.0;
+              style = "Light";
+            };
+          };
+
+          programs.kitty = {
+            settings = {
+              font_family = "Iosevka";
+              font_size = 10;
+              disable_ligatures = "cursor";
+            };
           };
         };
 
-        gtk = {
-          enable = true;
-          font = {
-            package = iosevka-aile;
-            name = "Iosevka Aile";
-            size = 10;
-          };
-          gtk2.extraConfig = ''
-            gtk-cursor-theme-name = "Vanilla-DMZ"
-            gtk-cursor-theme-size = 0
-          '';
-          gtk3.extraConfig = {
-            gtk-cursor-theme-name = "Vanilla-DMZ";
-            gtk-cursor-theme-size = 0;
-          };
-        };
+        hakanssn.graphical.sway.status-configuration.extraConfig = ''
+          [icons]
+          name = "awesome6"
 
-        qt = {
-          enable = true;
-          platformTheme = "gtk";
-        };
+          [icons.overrides]
+          music_next = ""
+          music_prev = ""
+        '';
 
-        wayland.windowManager.sway.config = {
+        hakanssn.graphical.sway.top-bar = {
           fonts = {
             names = config.fonts.fontconfig.defaultFonts.sansSerif;
             size = 9.0;
             style = "Light";
           };
         };
-
-        programs.kitty = {
-          settings = {
-            font_family = "Iosevka";
-            font_size = 10;
-            disable_ligatures = "cursor";
-          };
-        };
-      };
-
-      hakanssn.graphical.sway.status-configuration.extraConfig = ''
-        [icons]
-        name = "awesome6"
-
-        [icons.overrides]
-        music_next = ""
-        music_prev = ""
-      '';
-
-      hakanssn.graphical.sway.top-bar = {
-        fonts = {
-          names = config.fonts.fontconfig.defaultFonts.sansSerif;
-          size = 9.0;
-          style = "Light";
-        };
-      };
-    })
+      }
+    )
 
     (lib.mkIf (config.hakanssn.graphical.theme.autoSwitchTheme) {
       # We replace the default autoUpgrade systemd service with a custom one
@@ -145,19 +148,21 @@
           config.programs.ssh.package
         ];
 
-        script = let
-          nixos-rebuild =
-            "${config.system.build.nixos-rebuild}/bin/nixos-rebuild";
-        in ''
-          theme=""
-          currenttime=$(date +%H:%M)
-          if [[ "$currenttime" > "6:00" ]] || [[ "$currenttime" < "18:00" ]]; then
-            theme="modus-operandi"
-          else
-            theme="onedark"
-          fi
-          env THEME="$theme" ${nixos-rebuild} switch --flake github:AntonHakansson/nixos-config --impure
-        '';
+        script =
+          let
+            nixos-rebuild =
+              "${config.system.build.nixos-rebuild}/bin/nixos-rebuild";
+          in
+          ''
+            theme=""
+            currenttime=$(date +%H:%M)
+            if [[ "$currenttime" > "6:00" ]] || [[ "$currenttime" < "18:00" ]]; then
+              theme="modus-operandi"
+            else
+              theme="onedark"
+            fi
+            env THEME="$theme" ${nixos-rebuild} switch --flake github:AntonHakansson/nixos-config --impure
+          '';
 
         startAt = config.system.autoUpgrade.dates;
 

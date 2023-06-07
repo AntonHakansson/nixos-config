@@ -8,7 +8,8 @@ let
       unseen_count=$(${pkgs.mblaze}/bin/mlist -N $(${pkgs.mblaze}/bin/mdirs ~/mail) | ${pkgs.coreutils}/bin/wc -l)
       ${pkgs.libnotify}/bin/notify-send -t 5000 "New ${name} mail arrived ($unseen_count)"
     '';
-in {
+in
+{
   options.hakanssn.graphical.mail.enable = lib.mkEnableOption "mail";
 
   config = lib.mkIf config.hakanssn.graphical.mail.enable {
