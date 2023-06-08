@@ -69,10 +69,6 @@
   ;; Turn on recentf mode
   (add-hook 'after-init-hook #'recentf-mode)
 
-  ;; Enable indentation+completion using the TAB key
-  ;; completion-at-point is often bound to M-TAB
-  (setq tab-always-indent 'complete)
-
   ;; Scrolling
   (push '(vertical-scroll-bars) default-frame-alist) ;; Remove vertical scroll bar
   (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
@@ -764,14 +760,20 @@
   ;; Advanced completion style (better fuzzy matching)
   :init
   (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
+
+;; https://www.reddit.com/r/emacs/comments/11u3tvj/emacs_lags_when_making_the_auto_completion_popup/
+(setq-default pgtk-wait-for-event-timeout 0)
 
 (use-package corfu
   ;; Completion in buffer (popup ui)
   :custom
-  ;; (corfu-auto t "Enable Auto Completion")
-  (corfu-auto-prefix 2 "Trigger completion early")
+  (corfu-auto t "Enable Auto Completion")
+  (corfu-auto-delay 0 "Disable completion suggestion delay")
+  (corfu-auto-prefix 1 "Trigger completion early")
   :config
+  (require 'corfu-info)
   (global-corfu-mode))
 
 (use-package cape
