@@ -521,6 +521,7 @@
                               (shell . t)
                               (sql . t)
                               (sqlite . t)))
+  (calendar-date-style 'european)
   (org-use-speed-commands
    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ;  when point is on any star at the beginning of the headline
   :config
@@ -702,9 +703,7 @@
   :bind (("M-+" . #'tempel-complete)
          ("M-*" . #'tempel-insert))
   :custom
-  (tempel-path "~/documents/org/tempel")
-  :config
-  (add-to-list 'completion-at-point-functions #'tempel-complete))
+  (tempel-path "~/documents/org/tempel"))
 
 ;;; Git
 (use-package magit
@@ -780,10 +779,12 @@
   ;; Cape for better completion-at-point support and more
   :config
   ;; Add useful defaults completion sources from cape
-  (add-to-list 'completion-at-point-functions #'cape-file))
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
 (use-package mixed-pitch
   :hook (org-mode . mixed-pitch-mode))
+
 (use-package all-the-icons)
 
 (use-package helpful
@@ -812,10 +813,12 @@
   (c-mode . eglot-ensure)
   (nix-mode . eglot-ensure)
   :bind
-  (("C-c C" . eglot)
-   ("C-c A" . eglot-code-actions)
-   ("C-c R" . eglot-rename)
-   ("C-c F" . eglot-format)))
+  (:map eglot-mode-map
+        ("C-c C" . eglot)
+        ("C-c A" . eglot-code-actions)
+        ("C-c R" . eglot-rename)
+        ("M-r"   . eglot-rename)
+        ("C-c F" . eglot-format)))
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
