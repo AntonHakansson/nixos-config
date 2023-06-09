@@ -44,6 +44,7 @@
   (setq-default delete-by-moving-to-trash t)
 
   (fset 'yes-or-no-p 'y-or-n-p) ; Shorter confirmation
+  (setq isearch-lazy-count t)
 
   ;; Prefer utf-8 whenever possible
   (prefer-coding-system 'utf-8)
