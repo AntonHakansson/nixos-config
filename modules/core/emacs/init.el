@@ -772,8 +772,16 @@
   (corfu-auto t "Enable Auto Completion")
   (corfu-auto-delay 0 "Disable completion suggestion delay")
   (corfu-auto-prefix 1 "Trigger completion early")
+  :bind
+  (:map corfu-map
+        ("<escape>" . (lambda ()
+                        (interactive)
+                        (corfu-quit)
+                        (meow-normal-mode))))
   :config
   (require 'corfu-info)
+  (require 'corfu-indexed)
+  (corfu-indexed-mode)
   (global-corfu-mode))
 
 (use-package cape
