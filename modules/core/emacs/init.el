@@ -912,6 +912,15 @@
         ("C-c C-f" . elfeed-tube-mpv-follow-mode)
         ("C-c C-w" . elfeed-tube-mpv-where)))
 
+(use-package mu4e
+  :custom
+  (mu4e-change-filenames-when-moving t "Avoid sync issues with mbsync")
+  (mu4e-maildir "~/mail/" "Root of the maildir hierarchy")
+  (mu4e-attachment-dir "~/downloads/" "Save attachments to downloads folder")
+  (mu4e-compose-dont-reply-to-self t "Don't reply to myself on reply to all")
+  :config
+  (setq mail-user-agent 'mu4e-user-agent))
+
 (use-package undo-tree
   :diminish
   :custom
