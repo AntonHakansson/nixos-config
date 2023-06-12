@@ -108,7 +108,8 @@
   (no-littering-var-directory hk/cache-dir)
   :config
   ;; Don't create lockfiles
-  (setq create-lockfiles nil)
+  (setq create-lockfiles nil) ;; #readme.txt#
+  (setq make-backup-files nil) ;; readme.txt~
   (setq custom-file (concat no-littering-etc-directory "custom.el"))
   ;; Also make sure auto-save files are saved out-of-tree
   (setq auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
@@ -923,9 +924,8 @@
 
 (use-package undo-tree
   :diminish
-  :custom
-  (undo-tree-auto-save-history nil)
   :config
+  (setq undo-tree-auto-save-history nil)
   (global-undo-tree-mode))
 
 (use-package saveplace
