@@ -526,6 +526,7 @@
   (calendar-date-style 'european)
   (org-use-speed-commands
    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ;  when point is on any star at the beginning of the headline
+  (org-babel-results-keyword "results" "Make babel results blocks lowercase")
   :config
   (setq org-directory "~/documents/org/"
         org-agenda-files '("~/documents/org/gtd/")
