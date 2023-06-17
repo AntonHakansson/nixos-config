@@ -865,11 +865,21 @@
   :bind
   (:map eww-mode-map
         ("M-n" . nil)
-        ("M-p" . nil))
+        ("M-p" . nil)
+        ("I" . #'hk/eww-toggle-images))
   :config
   ;; Use & to open externally if eww can't handle the page
   (setq browse-url-browser-function #'eww-browse-url)
-  (setq browse-url-generic-program "firefox"))
+  (setq browse-url-generic-program "firefox")
+
+  (defun hk/eww-toggle-images ()
+    "Toggle whether images are loaded and reload the current page fro cache."
+    (interactive)
+    (setq-local shr-inhibit-images (not shr-inhibit-images))
+    (eww-reload t)
+    (message "Images are now %s"
+             (if shr-inhibit-images "off" "on")))
+  (setq-default shr-inhibit-images t))
 
 (use-package devdocs
   :bind (("C-c D" . 'devdocs-lookup))
