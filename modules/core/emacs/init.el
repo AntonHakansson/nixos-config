@@ -465,6 +465,7 @@
   (fancy-compilation-mode))
 
 (use-package htmlize)
+(use-package gnuplot)
 (use-package org
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
@@ -508,6 +509,7 @@
                               (emacs-lisp . t)
                               (forth . t)
                               (fortran . t)
+                              (gnuplot . t)
                               (haskell . t)
                               (js . t)
                               (latex . t)
