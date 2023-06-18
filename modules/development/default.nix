@@ -1,5 +1,5 @@
 { config, lib, ... }: {
-  imports = [ ./docker ./git ];
+  imports = [ ./docker ./git ./cc ];
 
   options.hakanssn.development.enable = lib.mkEnableOption "development tools";
 
@@ -7,6 +7,7 @@
     hakanssn.development = {
       git.enable = lib.mkDefault true;
       docker.enable = lib.mkDefault true;
+      cc.enable = lib.mkDefault true;
     };
   };
 }
