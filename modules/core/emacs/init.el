@@ -466,6 +466,8 @@
 
 (use-package htmlize)
 (use-package gnuplot)
+(require 'gnuplot-context) ; org mode error: run-hooks: Symbol’s function definition is void: gnuplot-context-sensitive-mode
+
 (use-package org
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
