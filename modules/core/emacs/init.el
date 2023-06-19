@@ -569,6 +569,7 @@
             (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
             (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
             ))))
+  (define-key org-src-mode-map "\C-c\C-v" 'org-src-do-key-sequence-at-code-block)
   )
 
 (use-package org-habit
