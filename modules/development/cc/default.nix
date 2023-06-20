@@ -3,7 +3,7 @@
 
   config = lib.mkIf config.hakanssn.development.enable {
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ gdb clang-tools gf aflplusplus tinycc ];
+      home.packages = with pkgs; [ gdb clang-tools clang gf aflplusplus tinycc ];
     };
   };
 }
