@@ -38,7 +38,7 @@
         nvidiaPatches = true;
         extraConfig = ''
             # See https://wiki.hyprland.org/Configuring/Monitors/
-            monitor=,preferred,auto,1
+            monitor=HDMI-A-1,preferred,auto,1
 
             # See https://wiki.hyprland.org/Configuring/Keywords/ for more
             # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
@@ -62,8 +62,8 @@
 
             general {
                 # See https://wiki.hyprland.org/Configuring/Variables/
-                gaps_in = 5
-                gaps_out = 6
+                gaps_in = 0
+                gaps_out = 0
                 border_size = 0
                 col.active_border = rgb(505050)
                 col.inactive_border = rgb(efefef)
@@ -96,6 +96,7 @@
 
             master {
                 # See https://wiki.hyprland.org/Configuring/Master-Layout/
+                orientation = top
             }
 
             gestures {
