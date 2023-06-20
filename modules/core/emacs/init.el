@@ -83,6 +83,9 @@
     (c-set-offset 'substatement-open 0))
   (add-hook 'c-mode-hook 'hk/c-mode-hook)
 
+  ;; Mark ring
+  (setq-default set-mark-command-repeat-pop t) ;; after =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
+
   ;; Keybinds
   (global-set-key (kbd "C-t") 'hippie-expand) ;; orig. transpose-chars
   (global-set-key (kbd "M-p") 'backward-paragraph)
