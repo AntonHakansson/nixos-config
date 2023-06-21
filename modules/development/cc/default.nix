@@ -3,7 +3,21 @@
 
   config = lib.mkIf config.hakanssn.development.enable {
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ gdb clang-tools clang gf aflplusplus tinycc ];
+      home.packages = with pkgs; [ gdb clang-tools gf aflplusplus tinycc ];
+      xdg.configFile."gdb/gdbinit".text = ''
+        set host-charset UTF-8
+        set target-charset UTF-8
+        set target-wide-charset UTF-8
+
+        set confirm off
+        set print pretty on
+        set disassembly-flavor intel
+
+        set history save on
+        set history filename ~/.cache/.gdb_history
+
+        set auto-load local-gdbinit
+      '';
     };
   };
 }
