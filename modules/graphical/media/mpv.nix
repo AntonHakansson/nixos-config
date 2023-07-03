@@ -3,12 +3,12 @@
 let
   mpv-uosc = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "mpv-uosc";
-    version = "4.5.0";
+    version = "4.7.0";
 
     src = pkgs.fetchzip {
       url =
         "https://github.com/tomasklaen/uosc/releases/download/${version}/uosc.zip";
-      sha256 = "sha256-xLT1YgFxMLYyFCxe4mU8slRlCUGMjnJgk6fBNVXT5Dc=";
+      sha256 = "sha256-oIkqfo45ECDW+Cd3EA/OltwiiUXRfw/GN9HiIZnLe74==";
       stripRoot = false;
     };
 
@@ -48,6 +48,9 @@ in
           mpv-uosc
         ];
         config = {
+          vo = "gpu-next";
+          profile = "gpu-hq";
+
           # Saves the seekbar position on exit
           save-position-on-quit = "yes";
 
