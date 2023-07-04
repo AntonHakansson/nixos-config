@@ -96,7 +96,7 @@
 
             master {
                 # See https://wiki.hyprland.org/Configuring/Master-Layout/
-                orientation = top
+                orientation = center
             }
 
             gestures {
