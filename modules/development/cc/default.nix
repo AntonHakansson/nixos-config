@@ -18,6 +18,11 @@
 
         set auto-load local-gdbinit
       '';
+      home.sessionVariables = {
+        # debbugger-oriented flags: break on error instead of uselessly exiting
+        UBSAN_OPTIONS = "abort_on_error=1:halt_on_error=1";
+        ASAN_OPTIONS  = "abort_on_error=1:halt_on_error=1";
+      };
     };
   };
 }
