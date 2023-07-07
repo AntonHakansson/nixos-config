@@ -3,7 +3,7 @@
 
   config = lib.mkIf config.hakanssn.development.enable {
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ gdb clang-tools gf aflplusplus tinycc ];
+      home.packages = with pkgs; [ man-pages man-pages-posix gdb clang-tools gf aflplusplus tinycc ];
       xdg.configFile."gdb/gdbinit".text = ''
         set host-charset UTF-8
         set target-charset UTF-8
