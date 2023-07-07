@@ -881,13 +881,13 @@
   (setq browse-url-generic-program "firefox")
 
   (defun hk/eww-toggle-images ()
-    "Toggle whether images are loaded and reload the current page fro cache."
+    "Toggle whether images are loaded and reload the current page."
     (interactive)
     (setq-local shr-inhibit-images (not shr-inhibit-images))
     (eww-reload t)
     (message "Images are now %s"
              (if shr-inhibit-images "off" "on")))
-  (setq-default shr-inhibit-images t))
+  )
 
 (use-package devdocs
   :bind (("C-c D" . 'devdocs-lookup))
