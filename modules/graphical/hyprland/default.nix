@@ -210,7 +210,13 @@
             # Notifications
             bind = SUPER,       N, exec, ${pkgs.mako}/bin/makoctl dismiss
             bind = SUPER SHIFT, N, exec, ${pkgs.mako}/bin/makoctl invoke;
-        '';
+
+        ''
+        + (lib.optionalString config.hardware.opentabletdriver.enable ''
+            # OpenTabletDriver
+            bind = SUPER, C,     exec, otd applypreset artist
+            bind = SUPER ALT, C, exec, otd applypreset absolute
+          '');
       };
       programs.waybar = {
         enable = true;
