@@ -38,4 +38,5 @@
 
   # Enable OpenTabletDriver
   hardware.opentabletdriver.enable = true;
+  hakanssn.core.zfs.homeCacheLinks = [ ".config/OpenTabletDriver/" ];
 }
