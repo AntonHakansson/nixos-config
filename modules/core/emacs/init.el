@@ -455,6 +455,7 @@
   :hook (eww-mode   . olivetti-mode)
   :hook (Info-mode  . olivetti-mode)
   :hook (elfeed-search-mode  . olivetti-mode)
+  :hook (elfeed-search-mode  . toggle-truncate-lines)
   :hook (elfeed-show-mode    . olivetti-mode)
   :config
   (setq-default olivetti-body-width 120
