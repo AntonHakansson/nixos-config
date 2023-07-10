@@ -465,7 +465,7 @@
   :bind (("C-'"   . popper-toggle-latest)
          ("M-'"   . popper-cycle)         ;; Orig. abbrev-prefix-mark
          ("C-M-'" . popper-toggle-type))
-  :init
+  :config
   (setq popper-reference-buffers
         '(
           ;; help modes
@@ -488,9 +488,9 @@
           "Output\\*$"
           "\\*Async Shell Command\\*"))
   (setq popper-group-function 'popper-group-by-project)
-  (popper-mode +1)
+  (popper-mode)
   (require 'popper-echo)
-  (popper-echo-mode +1))
+  (popper-echo-mode))
 
 (use-package fancy-compilation
   ;; Support color, progress bars in compilation-mode buffer
