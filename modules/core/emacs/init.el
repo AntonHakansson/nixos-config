@@ -573,6 +573,7 @@
         org-return-follows-link t
         org-deadline-warning-days 30
         org-startup-indented t
+        org-agenda-window-setup 'current-window
         org-log-done 'time
         org-fold-catch-invisible-edits 'smart
         org-confirm-babel-evaluate nil
