@@ -698,7 +698,7 @@
 (use-package denote
   :custom
   (denote-directory (concat org-directory "denote/"))
-  (denote-known-keywords '("emacs" "philosophy" "pol" "C/C++"))
+  (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
   :bind
   (("C-c C-n" . denote)
    ("C-c o n" . denote-open-or-create)))
