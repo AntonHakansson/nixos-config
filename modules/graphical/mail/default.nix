@@ -90,6 +90,31 @@ in
             };
             mu.enable = true;
           };
+          gmail = {
+            address = "anton.hakansson98@gmail.com";
+            userName = "anton.hakansson98@gmail.com";
+            realName = "Anton Håkansson";
+            passwordCommand = "${passwordScript} mail/mbsync_gmail";
+            imap.host = "imap.gmail.com";
+            smtp.host = "smtp.gmail.com";
+            mbsync = {
+              enable = true;
+              create = "both";
+              expunge = "both";
+              patterns = [ "*" "![Gmail]*" "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail" "[Gmail]/Trash" "[Gmail]/Archive" "[Gmail]/Drafts" ];
+              extraConfig = {
+                channel = {
+                  Sync = "All";
+                };
+                account = {
+                  Timeout = 120;
+                  PipelineDepth = 1;
+                };
+              };
+            };
+            mu.enable = true;
+            msmtp.enable = true;
+          };
         };
       };
       programs = {
