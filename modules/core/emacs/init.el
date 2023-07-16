@@ -678,8 +678,6 @@
 (use-package org-download)
 
 (use-package org-appear
-  :hook
-  (org-mode . org-appear-mode)
   :custom
   (org-appear-autosubmarkers t)
   (org-appear-autoentities t)
