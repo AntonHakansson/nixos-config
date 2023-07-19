@@ -190,7 +190,7 @@
    '("p" . meow-yank)
    '("q" . meow-quit)
    '("r" . meow-replace)
-   '("R" . embrace-commander)
+   '("R" . meow-swap-grab)
    '("s" . meow-insert)
    '("S" . meow-open-above)
    '("u" . meow-undo)
@@ -270,10 +270,10 @@
 (use-package embrace
   ;; Add/Change/Delete pairs based on expand-region.
   ;; evil-surround replacement
+  :bind (("M-)" . 'embrace-commander)) ;; orig. move-past-close-and-reindent
   :config
   (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
-  (add-hook 'org-mode-hook 'embrace-org-mode-hook)
-  )
+  (add-hook 'org-mode-hook 'embrace-org-mode-hook))
 
 (use-package avy
   :config
