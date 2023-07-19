@@ -101,7 +101,7 @@
             default = pkgs.mkShell {
               # Enable experimental features without having to specify the argument
               NIX_CONFIG = "experimental-features = nix-command flakes";
-              nativeBuildInputs = [ pkgs.nix pkgs.home-manager pkgs.git pkgs.age ];
+              nativeBuildInputs = [ pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default];
             };
           });
       formatter = forAllSystems (system:

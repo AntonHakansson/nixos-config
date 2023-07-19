@@ -57,28 +57,27 @@
         autoScrub.enable = true;
         trim.enable = true;
       };
-      # znapzend = {
-      #   enable = config.hakanssn.core.zfs.backups != [ ];
-      #   pure = true;
-      #   autoCreation = true;
-      #   zetup = builtins.listToAttrs (map (elem: {
-      #     name = elem.path;
-      #     value = {
-      #       enable = true;
-      #       # <retention> => <interval>
-      #       #   <retention>: how long to keep the backup
-      #       #   <interval>: create new backup each interval
-      #       plan =
-      #         "1day=>1hour,1week=>1day,4week=>1week,1year=>1month,10year=>6month";
-      #       timestampFormat = "%Y-%m-%d--%H%M%SZ";
-      #       destinations."${elem.location}" = {
-      #         # plan = "1day=>1hour,1week=>1day,4week=>1week,1year=>1month,10year=>6month";
-      #         host = "${elem.location}";
-      #         dataset = elem.remotePath;
-      #       };
-      #     };
-      #   }) config.hakanssn.core.zfs.backups);
-      # };
+      znapzend = {
+        enable = config.hakanssn.core.zfs.backups != [ ];
+        pure = true;
+        autoCreation = true;
+        zetup = builtins.listToAttrs (map (elem: {
+          name = elem.path;
+          value = {
+            enable = true;
+            # <retention> => <interval>
+            #   <retention>: how long to keep the backup
+            #   <interval>: create new backup each interval
+            plan = "1day=>1hour,1week=>1day,4week=>1week,1year=>1month,10year=>6month";
+            timestampFormat = "%Y-%m-%d--%H%M%SZ";
+            destinations."${elem.location}" = {
+              plan = "1day=>1hour,1week=>1day,4week=>1week,1year=>1month,10year=>6month";
+              host = "${elem.location}";
+              dataset = elem.remotePath;
+            };
+          };
+        }) config.hakanssn.core.zfs.backups);
+      };
     };
 
     # Discover directories that will be removed on next boot

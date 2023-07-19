@@ -10,6 +10,12 @@
       zfs = {
         encrypted = true;
         rootDataset = "rpool/local/root";
+        backups  = [
+          {
+            path = "rpool/safe/data";
+            remotePath = "rpool/recv/gattsu/safe/data";
+            location = "localhost";
+          }];
       };
       emacs.enable = true;
     };
