@@ -567,6 +567,10 @@
   (org-use-speed-commands
    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ;  when point is on any star at the beginning of the headline
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
+  (org-log-into-drawer 't "instert state changes into a drawer LOGBOOK")
+  (org-refile-targets '((nil :maxlevel . 9)
+                        (org-agenda-files :maxlevel . 3)))
+  (org-refile-use-outline-path 't "Show full outline of target")
   :config
   (setq org-directory "~/documents/org/"
         org-agenda-files '("~/documents/org/gtd/")
