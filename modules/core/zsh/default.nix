@@ -18,7 +18,6 @@ let
       oh-my-zsh = {
         enable = true;
         plugins = [
-          "vi-mode"
           "systemd"
           "common-aliases"
           "tmux"
