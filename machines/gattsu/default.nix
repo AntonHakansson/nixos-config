@@ -1,4 +1,4 @@
-{ ... }: {
+{ pkgs, ... }: {
   imports = [ ./hardware.nix ];
 
   networking.hostName = "gattsu";
@@ -28,15 +28,16 @@
       syncthing.enable = true;
       games.enable = true;
       media.anki.enable = true;
-
       sway.enable = false;
       hyprland.enable = true;
     };
   };
 
-  # virtualisation.libvirtd.enable = true;
-  # users.users.hakanssn.extraGroups = [ "libvirtd" ];
-  # hakanssn.core.zfs.systemCacheLinks = [ "/var/lib/libvirt/" ];
+  # Virtual machines
+  virtualisation.libvirtd.enable = true;
+  environment.systemPackages = [ pkgs.virt-manager ];
+  users.users.hakanssn.extraGroups = [ "libvirtd" ];
+  hakanssn.core.zfs.systemCacheLinks = [ "/var/lib/libvirt/" ];
 
   # Disable auto-upgrade
   hakanssn.graphical.theme.autoSwitchTheme = false;
