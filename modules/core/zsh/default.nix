@@ -2,7 +2,10 @@
 
 let
   base = (home: {
-    home.packages = [ pkgs.autojump ];
+    home.packages = [
+      pkgs.autojump # jump to recent directory. ex "j nix"
+      pkgs.comma    # nix run shortcut. ex ", cowsay neato"
+    ];
     programs.zsh = {
       enable = true;
       enableAutosuggestions = true;
