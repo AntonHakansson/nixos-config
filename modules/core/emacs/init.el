@@ -706,6 +706,10 @@
 
 (use-package pdf-tools)
 
+(use-package string-edit-at-point
+  ;; edit strings normally and get it escaped automatically
+  )
+
 (use-package string-inflection
   :commands
   string-inflection-all-cycle
