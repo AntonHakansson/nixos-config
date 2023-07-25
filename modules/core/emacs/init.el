@@ -419,6 +419,8 @@
      ("o" "~/documents/org/"            "Org Notes")))
   (dired-dwim-target t "copy/move operations based on other Dired window")
   (delete-by-moving-to-trash t)
+  (dired-mouse-drag-files t "enable drag-and-drop")
+  (mouse-drag-and-drop-region-cross-program t)
   (dired-listing-switches
         "-l --almost-all --human-readable --group-directories-first --no-group")
   :config
