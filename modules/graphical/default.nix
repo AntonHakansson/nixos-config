@@ -31,10 +31,10 @@
         media = {
           documents.enable = lib.mkDefault true;
           mpv.enable = lib.mkDefault true;
-          recording.enable = lib.mkDefault true;
+          recording.enable = lib.mkDefault false;
         };
         pass.enable = lib.mkDefault true;
-        sway.enable = lib.mkDefault true;
+        sway.enable = lib.mkDefault false;
         hyprland.enable = lib.mkDefault false;
         terminal.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
@@ -43,7 +43,7 @@
     };
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ ranger yt-dlp ];
+      home.packages = with pkgs; [ yt-dlp ];
     };
   };
 }
