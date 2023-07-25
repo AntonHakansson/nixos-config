@@ -417,18 +417,16 @@
      ("r" "~/repos/"                    "Repos")
      ("b" "~/documents/books/"          "Books")
      ("o" "~/documents/org/"            "Org Notes")))
-  ;; Pick the target for copy/move operations based on another opened Dired window
-  (dired-dwim-target t)
+  (dired-dwim-target t "copy/move operations based on other Dired window")
+  (delete-by-moving-to-trash t)
+  (dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
   :config
-  ;; (dirvish-peek-mode) ; Preview files in minibuffer
-  ;; (dirvish-side-follow-mode) ; similar to `treemacs-follow-mode'
   (setq dirvish-mode-line-format
         '(:left (sort symlink) :right (omit yank index)))
   (setq dirvish-attributes
         '(all-the-icons file-time file-size collapse subtree-state vc-state git-msg))
-  (setq delete-by-moving-to-trash t)
-  (setq dired-listing-switches
-        "-l --almost-all --human-readable --group-directories-first --no-group")
+  (setq dirvish-preview-dispatchers (delete 'pdf dirvish-preview-dispatchers)) ; Remove pdf preview. It is too slow.
   (dirvish-override-dired-mode)
   :bind
   (:map dirvish-mode-map
