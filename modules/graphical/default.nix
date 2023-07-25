@@ -32,7 +32,6 @@
           documents.enable = lib.mkDefault true;
           mpv.enable = lib.mkDefault true;
           recording.enable = lib.mkDefault true;
-          spotify.enable = lib.mkDefault true;
         };
         pass.enable = lib.mkDefault true;
         sway.enable = lib.mkDefault true;

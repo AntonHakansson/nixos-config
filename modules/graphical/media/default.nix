@@ -5,7 +5,6 @@
 
   options.hakanssn.graphical.media = {
     recording.enable = lib.mkEnableOption "recording";
-    spotify.enable = lib.mkEnableOption "spotify client";
   };
 
   config = {
@@ -13,12 +12,7 @@
 
     home-manager.users.hakanssn = { ... }: {
       home.packages = with pkgs;
-        (lib.optionals config.hakanssn.graphical.media.spotify.enable [
-          (ncspot.override {
-            withALSA = false;
-            withPulseAudio = true;
-          })
-        ]) ++ (lib.optionals config.hakanssn.graphical.media.recording.enable
+        (lib.optionals config.hakanssn.graphical.media.recording.enable
           [ obs-studio ]);
     };
   };
