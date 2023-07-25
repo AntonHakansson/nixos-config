@@ -979,12 +979,6 @@
   :config
   (setq mail-user-agent 'mu4e-user-agent))
 
-(use-package undo-tree
-  :diminish
-  :config
-  (setq undo-tree-auto-save-history nil)
-  (global-undo-tree-mode))
-
 (use-package saveplace
   ;; Yes, please save my place when opening/closing files:
   :ensure nil
