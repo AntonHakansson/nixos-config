@@ -101,6 +101,9 @@
 
   ;; Write bookmark file when bookmark list is modified
   (setq bookmark-save-flag 1)
+
+  ;; Hide fringe
+  (set-fringe-mode 0)
   )
 
 (use-package no-littering
