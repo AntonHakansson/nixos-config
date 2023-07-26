@@ -9,6 +9,7 @@
     ./mail
     ./media
     ./pass
+    ./plasma
     ./sway
     ./syncthing
     ./terminal
@@ -36,6 +37,7 @@
         pass.enable = lib.mkDefault true;
         sway.enable = lib.mkDefault false;
         hyprland.enable = lib.mkDefault false;
+        plasma.enable = lib.mkDefault false;
         terminal.enable = lib.mkDefault true;
         theme.enable = lib.mkDefault true;
         xdg.enable = lib.mkDefault true;
