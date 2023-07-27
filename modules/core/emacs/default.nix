@@ -106,7 +106,7 @@
           "javascript:location.href ='org-protocol://roam-ref?template=r&ref=' + encodeURIComponent(location.href) + '&title=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(window.getSelection())";
       };
     };
-    fonts.fonts = with pkgs; [
+    fonts.packages = with pkgs; [
       emacs-all-the-icons-fonts
       iosevka-bin
       (iosevka-bin.override { variant = "aile"; })

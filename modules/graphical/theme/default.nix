@@ -42,7 +42,7 @@
               serif = [ "Iosevka Etoile" "Font Awesome 6 Free" ];
             };
           };
-          fonts = with pkgs; [
+          packages = with pkgs; [
             iosevka
             iosevka-aile
             iosevka-etoile
