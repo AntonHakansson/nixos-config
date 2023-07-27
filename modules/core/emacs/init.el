@@ -65,7 +65,7 @@
         (t . (1.1))))
   (setq modus-operandi-tinted-palette-overrides
         '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
-  (load-theme 'modus-operandi-tinted)
+  (load-theme 'modus-operandi)
 
   ;; Turn on recentf mode
   (add-hook 'after-init-hook #'recentf-mode)
