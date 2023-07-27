@@ -28,7 +28,7 @@
       syncthing.enable = true;
       games.enable = true;
       media.anki.enable = true;
-      plasma.enable = true;
+      river.enable = true;
     };
   };
 

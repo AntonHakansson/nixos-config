@@ -10,6 +10,7 @@
     ./media
     ./pass
     ./plasma
+    ./river
     ./sway
     ./syncthing
     ./terminal
