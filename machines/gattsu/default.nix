@@ -33,10 +33,10 @@
   };
 
   # Virtual machines
-  virtualisation.libvirtd.enable = true;
-  environment.systemPackages = [ pkgs.virt-manager ];
-  users.users.hakanssn.extraGroups = [ "libvirtd" ];
-  hakanssn.core.zfs.systemCacheLinks = [ "/var/lib/libvirt/" ];
+  # virtualisation.libvirtd.enable = true;
+  # environment.systemPackages = [ pkgs.virt-manager ];
+  # users.users.hakanssn.extraGroups = [ "libvirtd" ];
+  # hakanssn.core.zfs.systemCacheLinks = [ "/var/lib/libvirt/" ];
 
   # Disable auto-upgrade
   hakanssn.graphical.theme.autoSwitchTheme = false;
