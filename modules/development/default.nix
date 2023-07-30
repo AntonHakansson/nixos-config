@@ -6,7 +6,7 @@
   config = lib.mkIf config.hakanssn.development.enable {
     hakanssn.development = {
       git.enable = lib.mkDefault true;
-      docker.enable = lib.mkDefault true;
+      docker.enable = lib.mkDefault false;
       cc.enable = lib.mkDefault true;
     };
   };
