@@ -60,7 +60,8 @@ let
 
     pkill river-tag-overl; ${pkgs.river-tag-overlay}/bin/river-tag-overlay --timeout 300 &
 
-    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XCURSOR_SIZE QT_QPA_PLATFORM_THEME QT_STYLE_OVERRIDE QT_PLUGIN_PATH QTWEBKIT_PLUGIN_PATH
+    ${pkgs.dbus}/bin/dbus-update-activation-environment --systemd \
+      DISPLAY WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XCURSOR_SIZE QT_QPA_PLATFORM_THEME QT_STYLE_OVERRIDE QT_PLUGIN_PATH QTWEBKIT_PLUGIN_PATH
   '';
   river-wrapper = pkgs.writeShellScriptBin "river" ''
     export XDG_SESSION_TYPE=wayland
