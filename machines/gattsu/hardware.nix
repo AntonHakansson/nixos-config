@@ -12,9 +12,16 @@
       availableKernelModules =
         [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
       kernelModules = [ ];
-    };
-    kernelModules = [ "kvm-amd" ];
-    extraModulePackages = [ ];
+    };    kernelModules = [ "kvm-amd" ];
+    kernelParams = [
+      "quiet"
+      "mitigations=off"
+
+      # Anne Pro 2 keyboard disconnects after inactivity
+      # boot with usb quirk HID_QUIRK_ALWAYS_POLL(0x00000400)
+      # ref: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
+      "usbhid.quirks=0x04D9:0xA292:0x00000400"
+    ];
   };
 
   fileSystems."/" = {
@@ -83,8 +90,4 @@
   };
   environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
 
-  # Anne Pro 2 keyboard disconnects after inactivity
-  # boot with usb quirk HID_QUIRK_ALWAYS_POLL(0x00000400)
-  # ref: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
-  boot.kernelParams = [ "usbhid.quirks=0x04D9:0xA292:0x00000400" ];
 }
