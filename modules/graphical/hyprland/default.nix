@@ -30,7 +30,6 @@
       services = {
         mako = {
           enable = true;
-          font = "Fira Code Normal 9";
         };
       };
       wayland.windowManager.hyprland = {
@@ -214,8 +213,8 @@
         ''
         + (lib.optionalString config.hardware.opentabletdriver.enable ''
             # OpenTabletDriver
-            bind = SUPER, C,     exec, otd applypreset artist
-            bind = SUPER ALT, C, exec, otd applypreset absolute
+            bind = SUPER, C,     exec, otd applypreset nav
+            bind = SUPER ALT, C, exec, otd applypreset artist
           '');
       };
       programs.waybar = {

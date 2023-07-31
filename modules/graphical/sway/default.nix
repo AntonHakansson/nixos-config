@@ -62,7 +62,6 @@ in
       programs = {
         mako = {
           enable = true;
-          font = "Fira Code Normal 9";
         };
         zsh.loginExtra = ''
           if [[ -z "$DISPLAY" ]] && [[ $(tty) = "/dev/tty1" ]]; then
@@ -73,12 +72,6 @@ in
 
       # Wayland equivalent autorandr
       services.kanshi = { enable = true; };
-
-      services.wlsunset = {
-        enable = true;
-        latitude = "57.7";
-        longitude = "11.9";
-      };
 
       services.swayidle = {
         enable = true;

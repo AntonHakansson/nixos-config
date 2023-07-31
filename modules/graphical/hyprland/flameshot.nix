@@ -6,13 +6,12 @@
       src = pkgs.fetchFromGitHub {
         owner = "flameshot-org";
         repo = "flameshot";
-        rev = "3ededae5745761d23907d65bbaebb283f6f8e3f2";
-        sha256 = "sha256-4SMg63MndCctpfoOX3OQ1vPoLP/90l/KGLifyUzYD5g=";
+        rev = "a447b3d672ef92acb98be996d58540e36db84e35";
+        sha256 = "sha256-/GtSQE1tRbJAHKNERJiztq2Inpo5LhA3aZkbYtz/E8M=";
       };
       buildInputs = old.buildInputs ++ [ pkgs.libsForQt5.kguiaddons ];
       cmakeFlags = [
         "-DUSE_WAYLAND_CLIPBOARD=true"
-        "-DUSE_WAYLAND_GRIM=true"
       ];
     });
     readOnly = true;

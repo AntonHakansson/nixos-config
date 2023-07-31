@@ -28,7 +28,7 @@
       syncthing.enable = true;
       games.enable = true;
       media.anki.enable = true;
-      river.enable = true;
+      hyprland.enable = true;
     };
   };
 
