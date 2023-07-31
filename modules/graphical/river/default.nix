@@ -5,6 +5,9 @@ let
     riverctl map normal Super Return spawn kitty
     riverctl map normal Super D spawn ${pkgs.fuzzel}/bin/fuzzel
 
+    riverctl map normal Super     C spawn "otd applypreset nav"
+    riverctl map normal Super+Alt C spawn "otd applypreset absolute"
+
     riverctl map normal Super Q close
     riverctl map normal Super Space zoom
     riverctl map normal Super F toggle-fullscreen
