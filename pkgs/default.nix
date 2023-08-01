@@ -1,3 +1,5 @@
 { pkgs, ... }: {
-  hakanssn-test = pkgs.hello;
+  hakanssn = {
+    leetcode-to-org = pkgs.callPackage ./leetcode-to-org { };
+  };
 }

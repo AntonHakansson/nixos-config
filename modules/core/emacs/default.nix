@@ -74,6 +74,7 @@
               scheme-medium xifthen ifmtarg framed paralist titlesec wrapfig
               amsmath svg capt-of trimspaces catchfile transparent;
           })
+          hakanssn.leetcode-to-org
           # :lang nix
           nil
         ];

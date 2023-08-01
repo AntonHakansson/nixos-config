@@ -70,6 +70,7 @@
           ({ inputs, outputs, lib, config, pkgs, ... }: {
             nixpkgs = {
               overlays = [
+                (import ./overlays { inherit inputs; }).additions
                 (import ./overlays { inherit inputs; }).modifications
                 nur.overlay
                 emacs-overlay.overlay

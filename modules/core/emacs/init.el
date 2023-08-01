@@ -534,8 +534,8 @@
     (interactive)
     (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
            (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
-           (leetcode-url (read-from-minibuffer "Leetcode URL: "))
-           (command (concat org-directory "leet-to-org.py " leetcode-url)))
+           (leetcode-url (read-from-minibuffer "Leetcode slug: "))
+           (command (concat "leetcode-to-org-mode.py " leetcode-url)))
       (shell-command command dst-buffer)))
   :bind
   (("C-c a"   . org-agenda)
@@ -616,6 +616,8 @@
             (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
             ))))
   (define-key org-src-mode-map "\C-c\C-v" 'org-src-do-key-sequence-at-code-block)
+
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ;; increase scale of latex fragments
   )
 
 (use-package org-habit
