@@ -62,10 +62,10 @@
             general {
                 # See https://wiki.hyprland.org/Configuring/Variables/
                 gaps_in = 0
-                gaps_out = 0
-                border_size = 0
-                col.active_border = rgb(505050)
-                col.inactive_border = rgb(efefef)
+                gaps_out = 4
+                border_size = 6
+                col.active_border   = rgb(000000)
+                col.inactive_border = rgba(f4e6cd00)
 
                 layout = master
             }
