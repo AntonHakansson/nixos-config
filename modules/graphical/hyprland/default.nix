@@ -95,7 +95,8 @@
 
             master {
                 # See https://wiki.hyprland.org/Configuring/Master-Layout/
-                orientation = center
+                orientation = right
+                mfact = 0.6
             }
 
             gestures {
@@ -113,7 +114,6 @@
             # Window Rules
             ## See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
             windowrule = float, ^(launcher)$
-            windowrule = float, ^(kitty)$
 
           	windowrule = float, title:^(Volume Control)$
            	windowrule = size 33% 480, title:^(Volume Control)$
@@ -123,11 +123,6 @@
             windowrule = move 0 0, title:^(Firefox — Sharing Indicator)$
             windowrule = idleinhibit fullscreen, firefox
 
-            windowrule = float, ^(emacs)$
-
-            windowrule = float, ^(mpv)$
-            windowrule = center, ^(mpv)$
-            windowrule = size 1080 600, ^(mpv)$
             windowrule = idleinhibit focus, mpv
 
             # Status Bar
@@ -143,24 +138,21 @@
             bind = SUPER, F, fullscreen,
             bind = SUPER, V, togglefloating,
             bind = SUPER, T, pin,
-            bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
-            bind = SUPER, E, exec, emacsclient -c
+            # bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
+            bind = SUPER, D, exec, ${pkgs.fuzzel}/bin/fuzzel
+            bind = SUPER, G, exec, emacsclient -c
             bind = SUPER, P, exec, env XDG_CURRENT_DESKTOP=sway flameshot gui
             exec-once = env XDG_CURRENT_DESKTOP=sway flameshot
 
             # Move focus
-            bind = SUPER, h, movefocus, l
-            bind = SUPER, l, movefocus, r
-            bind = SUPER, k, layoutmsg, cycleprev
-            bind = SUPER, j, layoutmsg, cyclenext
-            bind = SUPER, Tab, cyclenext,
+            bind = SUPER, N, layoutmsg, cyclenext
+            bind = SUPER, E, layoutmsg, cycleprev
+            bind = SUPER, TAB, cyclenext,
 
             # Move windows with super shift + hjkl
-            bind = SUPER SHIFT, h, movewindow, l
-            bind = SUPER SHIFT, l, movewindow, r
-            bind = SUPER SHIFT, k, layoutmsg, swapprev
-            bind = SUPER SHIFT, j, layoutmsg, swapnext
-            bind = SUPER, space, layoutmsg, swapwithmaster
+            bind = SUPER SHIFT, N, layoutmsg, swapnext
+            bind = SUPER SHIFT, E, layoutmsg, swapprev
+            bind = SUPER,   SPACE, layoutmsg, swapwithmaster master
 
             # Switch workspaces with super + [0-9]
             bind = SUPER, 1, workspace, 1
@@ -186,8 +178,13 @@
             bind = SUPER SHIFT, 9, movetoworkspace, 9
             bind = SUPER SHIFT, 0, movetoworkspace, 10
 
+            # Master Orientation
+            bind = SUPER, LEFT,  layoutmsg, orientationleft
+            bind = SUPER, RIGHT, layoutmsg, orientationright
+            bind = SUPER, UP,    layoutmsg, orientationcenter
+
             # Scratchpad
-            bind = SUPER, MINUS, togglespecialworkspace,
+            bind = SUPER,       MINUS, togglespecialworkspace,
             bind = SUPER SHIFT, MINUS, movetoworkspace, special
 
             # Scroll through existing workspaces with super + scroll
@@ -207,13 +204,12 @@
             bind  =, XF86MonBrightnessUp,  exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+
 
             # Notifications
-            bind = SUPER,       N, exec, ${pkgs.mako}/bin/makoctl dismiss
-            bind = SUPER SHIFT, N, exec, ${pkgs.mako}/bin/makoctl invoke;
-
+            bind = SUPER,       K, exec, ${pkgs.mako}/bin/makoctl dismiss
+            bind = SUPER SHIFT, K, exec, ${pkgs.mako}/bin/makoctl invoke;
         ''
         + (lib.optionalString config.hardware.opentabletdriver.enable ''
             # OpenTabletDriver
-            bind = SUPER, C,     exec, otd applypreset nav
+            bind = SUPER,     C, exec, otd applypreset nav
             bind = SUPER ALT, C, exec, otd applypreset artist
           '');
       };
