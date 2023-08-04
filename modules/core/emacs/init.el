@@ -538,8 +538,9 @@
            (command (concat "leetcode-to-org-mode.py " leetcode-url)))
       (shell-command command dst-buffer)))
   :bind
-  (("C-c a"   . org-agenda)
-   ("C-c C-c" . org-capture))
+  (("C-c a"  . org-agenda)
+   ("C-c c"  . org-capture)
+   ("C-c l"  . org-store-link))
   :custom
   (org-babel-load-languages '((awk . t)
                               (calc . t)
@@ -605,10 +606,9 @@
            ))
         org-agenda-custom-commands
         '(("g" "Get Things Done (GTD)"
-           ((agenda "" (;; start from yesterday
-                        (org-agenda-start-day "-1d")
-                        ;; show 8 days
-                        (org-agenda-span 8)))
+           ((agenda "" (;; Show today
+                        (org-agenda-span 1)
+                        ))
             (todo "NEXT" ((org-agenda-overriding-header "Next:")))
             (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
             (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
@@ -830,6 +830,7 @@
   (corfu-auto-prefix 1 "Trigger completion early")
   :bind
   (:map corfu-map
+        ("RET" . nil) ;; return should insert a newline - not complete the sugggestion.
         ("<escape>" . (lambda ()
                         (interactive)
                         (corfu-quit)
