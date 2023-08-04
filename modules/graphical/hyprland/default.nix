@@ -144,14 +144,23 @@
             bind = SUPER, P, exec, env XDG_CURRENT_DESKTOP=sway flameshot gui
             exec-once = env XDG_CURRENT_DESKTOP=sway flameshot
 
-            # Move focus
             bind = SUPER, N, layoutmsg, cyclenext
             bind = SUPER, E, layoutmsg, cycleprev
             bind = SUPER, TAB, cyclenext,
 
-            # Move windows with super shift + hjkl
             bind = SUPER SHIFT, N, layoutmsg, swapnext
             bind = SUPER SHIFT, E, layoutmsg, swapprev
+
+            bind = SUPER ALT, M, resizeactive, -100 0
+            bind = SUPER ALT, N, resizeactive, 0 100
+            bind = SUPER ALT, E, resizeactive, 0 -100
+            bind = SUPER ALT, I, resizeactive, 100 0
+
+            bind = SUPER ALT SHIFT, M, moveactive, -100 0
+            bind = SUPER ALT SHIFT, N, moveactive, 0 100
+            bind = SUPER ALT SHIFT, E, moveactive, 0 -100
+            bind = SUPER ALT SHIFT, I, moveactive, 100 0
+
             bind = SUPER,   SPACE, layoutmsg, swapwithmaster master
 
             # Switch workspaces with super + [0-9]
