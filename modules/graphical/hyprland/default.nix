@@ -76,7 +76,6 @@
             decoration {
                 # See https://wiki.hyprland.org/Configuring/Variables/
                 rounding = 0
-                blur = no
 
                 drop_shadow = yes
                 shadow_range = 4
