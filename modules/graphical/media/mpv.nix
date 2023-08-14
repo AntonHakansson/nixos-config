@@ -1,42 +1,5 @@
 { config, lib, pkgs, ... }:
 
-let
-  mpv-uosc = pkgs.stdenvNoCC.mkDerivation rec {
-    pname = "mpv-uosc";
-    version = "4.7.0";
-
-    src = pkgs.fetchzip {
-      url =
-        "https://github.com/tomasklaen/uosc/releases/download/${version}/uosc.zip";
-      sha256 = "sha256-oIkqfo45ECDW+Cd3EA/OltwiiUXRfw/GN9HiIZnLe74==";
-      stripRoot = false;
-    };
-
-    dontBuild = true;
-    dontCheck = true;
-
-    postPatch = ''
-      substituteInPlace ./scripts/uosc.lua \
-        --replace "mp.find_config_file('scripts')" "'$out/share/mpv/scripts'"
-    '';
-
-    installPhase = ''
-      runHook preInstall
-      mkdir -p $out/share/mpv
-      ls -la ./fonts ./scripts
-      cp -r ./fonts ./scripts $out/share/mpv
-      runHook postInstall
-    '';
-
-    passthru.scriptName = "uosc.lua";
-
-    meta = with lib; {
-      description = "Feature-rich minimalist proximity-based UI for MPV player";
-      homepage = "https://github.com/tomasklaen/uosc";
-      license = licenses.gpl3;
-    };
-  };
-in
 {
   options.hakanssn.graphical.media = { mpv.enable = lib.mkEnableOption "mpv"; };
 
@@ -45,7 +8,10 @@ in
       programs.mpv = {
         enable = true;
         scripts = [
-          mpv-uosc
+          pkgs.mpvScripts.uosc         # Friendly UI.
+          pkgs.mpvScripts.quality-menu # Change ytdl-format on the fly.
+          pkgs.mpvScripts.acompressor  # Dynamic range compression filter.
+          pkgs.mpvScripts.mpv-playlistmanager
         ];
         config = {
           vo = "gpu-next";
@@ -94,16 +60,6 @@ in
           PGDWN = "playlist-next";
         };
       };
-      xdg.configFile."mpv/fonts.conf".text = ''
-        <?xml version='1.0'?>
-        <!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>
-        <fontconfig>
-          <!-- icon fonts used by uosc osd -->
-          <dir>${mpv-uosc}/share/mpv/fonts</dir>
-          <!-- include user and system fonts that will otherwise be lost -->
-          <include>${config.environment.etc.fonts.source}/fonts.conf</include>
-         </fontconfig>
-      '';
     };
   };
 }
