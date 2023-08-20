@@ -34,7 +34,7 @@
       };
       wayland.windowManager.hyprland = {
         enable = true;
-        nvidiaPatches = true;
+        enableNvidiaPatches = true;
         extraConfig = ''
             # See https://wiki.hyprland.org/Configuring/Monitors/
             monitor=HDMI-A-1,preferred,auto,1
