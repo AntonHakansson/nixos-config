@@ -8,5 +8,5 @@ setup(name='leetcode-to-org',
       author='AntonHakansson',
       author_email='anton@hakanssn.com',
       scripts = [ 'leetcode-to-org-mode.py' ],
-      requires = [ 'requests', 'lxml', 'pypandoc' ],
+      requires = [ 'requests', 'pypandoc' ],
       )

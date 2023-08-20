@@ -4,5 +4,5 @@ python3Packages.buildPythonApplication {
   pname = "leetcode-to-org";
   version = "git";
   src = ./.;
-  propagatedBuildInputs = with python3Packages; [ requests lxml pypandoc ];
+  propagatedBuildInputs = with python3Packages; [ requests pypandoc ];
 }
