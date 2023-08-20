@@ -709,7 +709,28 @@
   (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
   :bind
   (("C-c C-n" . denote)
-   ("C-c o n" . denote-open-or-create)))
+   ("C-c o n" . denote-open-or-create)
+   ("C-c o N" . hk/diary))
+  :config
+  (defun hk/diary ()
+    "Create an entry tagged 'diary' with the date as its title.
+If a diary for the current day exists, visit it.  If multiple
+entries exist, prompt with completion for a choice between them.
+Else create a new file."
+    (interactive)
+    (let* ((today (format-time-string "%A %e %B %Y"))
+           (string (denote-sluggify today))
+           (files (denote-directory-files-matching-regexp string)))
+      (cond
+       ((> (length files) 1)
+        (find-file (completing-read "Select file: " files nil :require-match)))
+       (files
+        (find-file (car files)))
+       (t
+        (denote
+         today
+         '("diary"))))))
+  )
 
 (use-package pdf-tools)
 
