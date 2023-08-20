@@ -74,7 +74,7 @@
               scheme-medium xifthen ifmtarg framed paralist titlesec wrapfig
               amsmath svg capt-of trimspaces catchfile transparent;
           })
-          hakanssn.leetcode-to-org
+          # hakanssn.leetcode-to-org TODO: fix broken leetcode-to-org package
           # :lang nix
           nil
         ];
