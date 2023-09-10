@@ -12,6 +12,7 @@
       availableKernelModules =
         [ "xhci_pci" "ahci" "usb_storage" "sd_mod" "rtsx_usb_sdmmc" ];
       kernelModules = [ ];
+      kernelParams = [ "mitigations=off" ];
     };
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
