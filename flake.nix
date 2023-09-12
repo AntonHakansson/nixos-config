@@ -30,10 +30,6 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    xdph = {
-      url = "github:hyprwm/xdg-desktop-portal-hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
@@ -51,7 +47,6 @@
     , nur
     , emacs-overlay
     , hyprland
-    , xdph
     , nixos-mailserver
     , ...
     }@inputs:
@@ -74,11 +69,6 @@
                 (import ./overlays { inherit inputs; }).modifications
                 nur.overlay
                 emacs-overlay.overlay
-                (_: prev: {
-                  xdg-desktop-portal-hyprland = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.default.override {
-                    hyprland-share-picker = inputs.xdph.packages.${prev.stdenv.hostPlatform.system}.hyprland-share-picker.override { inherit hyprland; };
-                  };
-                })
               ];
             };
           })
