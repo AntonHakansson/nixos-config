@@ -100,9 +100,9 @@
           home = "/home/hakanssn";
           description = "Anton Hakansson";
           extraGroups = [ "systemd-journal" ];
-          passwordFile = config.age.secrets."passwords/users/hakanssn".path;
+          hashedPasswordFile = config.age.secrets."passwords/users/hakanssn".path;
         };
-        root.passwordFile = config.age.secrets."passwords/users/root".path;
+        root.hashedPasswordFile = config.age.secrets."passwords/users/root".path;
       };
     };
     age.secrets."passwords/users/hakanssn".file =
