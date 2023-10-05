@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 let
   baseDirenv = {
     programs.direnv = {
@@ -75,6 +75,20 @@ in
           "hakanssn.cachix.org-1:Tt+mvpNjIQ0X6sgdeRURTMP+V3KLYwFGA9UCoev8XoY="
         ];
         trusted-users = [ "@wheel" ];
+      };
+      # Create entry in nix registry pointing to the current version of nixpkgs.
+      # Stops `nix search` from constantly updating the package list.
+      registry = {
+        nixpkgs = {
+          from = {
+            type = "indirect";
+            id = "nixpkgs";
+          };
+          to = {
+            type = "path";
+            path = inputs.nixpkgs.outPath;
+          };
+        };
       };
       extraOptions = lib.mkIf config.hakanssn.core.nix.enableDirenv ''
         keep-outputs = true
