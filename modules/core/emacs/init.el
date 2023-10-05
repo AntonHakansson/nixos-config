@@ -1046,6 +1046,25 @@ Else create a new file."
 
 ;; (load-file (concat hk/config-dir "whitebox.el"))
 
+(defun hk/replace-spaces-with-underscores ()
+  "Replace spaces with underscores between point and the previous mark."
+  (interactive)
+  (let ((start (point))
+        (end (mark)))
+    (when (> start end)
+      (setq start (mark)
+            end (point)))
+    (save-excursion
+      (goto-char start)
+      (while (< (point) end)
+        (if (eq (char-after) ?\s)
+          (progn (delete-char 1)
+                 (insert "_"))
+          (forward-char)))
+      (push-mark start t t))))
+
+(global-set-key (kbd "M-_") 'hk/replace-spaces-with-underscores)
+
 (provide 'init)
 ;;; init.el ends here
 
