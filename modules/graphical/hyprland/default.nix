@@ -13,6 +13,26 @@
       default = "";
       type = lib.types.lines;
     };
+    toggle-night-light-script = lib.mkOption {
+      default = pkgs.writeShellScriptBin "hypr-night-toggle" ''
+        day=${./shaders/day-light.glsl}
+        night=${./shaders/night-light.glsl}
+
+        current="$(hyprctl getoption decoration:screen_shader -j | ${pkgs.jq}/bin/jq -r '.str')"
+
+        if [[ "$current" == "$day" ]] then
+            hyprctl keyword decoration:screen_shader "$night"
+            echo set "$night"
+        elif [[ "$current" == "$night" ]] then
+            hyprctl keyword decoration:screen_shader "$day"
+            echo set "$day"
+        else
+            hyprctl keyword decoration:screen_shader "$night"
+            echo set "$night"
+        fi
+      '';
+      readOnly = true;
+    };
   };
 
   config = lib.mkIf config.hakanssn.graphical.hyprland.enable {
@@ -26,7 +46,7 @@
     environment.variables = { XDG_SESSION_TYPE = "wayland"; };
 
     home-manager.users.hakanssn = { pkgs, ... }: {
-      home.packages = with pkgs; [ wf-recorder wl-clipboard ];
+      home.packages = with pkgs; [ wf-recorder wl-clipboard config.hakanssn.graphical.hyprland.toggle-night-light-script ];
       services = {
         mako = {
           enable = true;
@@ -137,9 +157,10 @@
             bind = SUPER, F, fullscreen,
             bind = SUPER, V, togglefloating,
             bind = SUPER, T, pin,
-            # bind = SUPER, D, exec, ${pkgs.kitty}/bin/kitty --class launcher -e ${./launcher.zsh}
             bind = SUPER, D, exec, ${pkgs.fuzzel}/bin/fuzzel
-            bind = SUPER, G, exec, emacsclient -c
+            bind = SUPER, G, exec, emacsclient -c -e "(org-agenda :arg \"g\")"
+            bind = SUPER, Z, exec, hypr-night-toggle
+
             bind = SUPER, P, exec, env XDG_CURRENT_DESKTOP=sway flameshot gui
             exec-once = env XDG_CURRENT_DESKTOP=sway flameshot
 
