@@ -1064,6 +1064,7 @@ Else create a new file."
       (push-mark start t t))))
 
 (global-set-key (kbd "M-_") 'hk/replace-spaces-with-underscores)
+(global-set-key (kbd "<f5>") 'recompile)
 
 (provide 'init)
 ;;; init.el ends here
