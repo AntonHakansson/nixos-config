@@ -80,7 +80,9 @@
   (setq-default c-basic-offset 2)
   (defun hk/c-mode-hook ()
     (c-set-offset 'substatement 0)
-    (c-set-offset 'substatement-open 0))
+    (c-set-offset 'substatement-open 0)
+    (setq-local outline-regexp " *//\\(-+\\)")
+    )
   (add-hook 'c-mode-hook 'hk/c-mode-hook)
 
   ;; Mark ring
@@ -895,7 +897,7 @@ Else create a new file."
 (use-package eglot
   :hook
   (c++-mode . eglot-ensure)
-  (c-mode . eglot-ensure)
+  (c-mode   . eglot-ensure)
   (nix-mode . eglot-ensure)
   :bind
   (:map eglot-mode-map
