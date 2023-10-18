@@ -1064,7 +1064,13 @@ Else create a new file."
       (push-mark start t t))))
 
 (global-set-key (kbd "M-_") 'hk/replace-spaces-with-underscores)
+(global-set-key (kbd "<f1>") 'shell)
 (global-set-key (kbd "<f5>") 'recompile)
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (setq-local corfu-auto nil)
+            (corfu-mode)))
 
 (provide 'init)
 ;;; init.el ends here
