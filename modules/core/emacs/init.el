@@ -133,7 +133,7 @@
 
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
-   ;; Since special modes usually use n to move down, we only overwrite e here.
+   ;; Since special modes usually use n to move down, we only overwrite e here (Colemak-Dh).
    '("e" . meow-prev)
    '("<escape>" . ignore))
 
@@ -171,6 +171,10 @@
    '("[" . meow-beginning-of-thing)
    '("]" . meow-end-of-thing)
    '("/" . meow-visit)
+   '("!" . shell-command)
+   '("$" . jinx-correct)
+   '("M-$" . jinx-next)
+   '("%" . meow-query-replace)
    '("f" . meow-find)
    '("F" . meow-find-expand)
    '("t" . meow-till)
@@ -351,6 +355,15 @@
 
   (meow-normal-define-key
    '("P" . meow-paren-mode))
+
+  (sp-with-modes 'emacs-lisp-mode
+    ;; disable ', it's the quote character!
+    (sp-local-pair "'" nil :actions nil))
+
+  (sp-with-modes sp-c-modes
+    (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+    (sp-local-pair "/*" "*/" :post-handlers '(("| " "SPC")
+                                              ("* ||\n[i]" "RET"))))
 
   (smartparens-global-mode +1)
   (show-smartparens-global-mode +1))
@@ -1038,15 +1051,11 @@ Else create a new file."
   :config
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
 
-(use-package flyspell
-  :ensure nil)
-
-(use-package flycheck
-  :config
-  ;; (global-flycheck-mode)
-  )
-
-;; (load-file (concat hk/config-dir "whitebox.el"))
+(use-package jinx
+  ;; Enchaned Spell Checker
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages)))
 
 (defun hk/replace-spaces-with-underscores ()
   "Replace spaces with underscores between point and the previous mark."

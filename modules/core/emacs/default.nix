@@ -38,7 +38,9 @@
         e = "emacsclient -nw";
         ee = "emacsclient -c";
       };
-      home = {
+      home = let
+        aspell = (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science sv ]));
+      in {
         packages = with pkgs; [
           (pkgs.writeShellScriptBin "emacseditor" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
           (pkgs.writeShellScriptBin "emacs" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
@@ -58,7 +60,7 @@
 
           ## Module dependencies
           # :checkers spell
-          (aspellWithDicts (ds: with ds; [ en en-computers en-science sv ]))
+          aspell
           proselint
           nodePackages.textlint
           # :checkers grammar
@@ -80,6 +82,7 @@
         ];
         sessionVariables = {
           EDITOR = "emacsclient -nw";
+          ASPELL_CONF = "dict-dir ${aspell}/lib/aspell";
         };
       };
       xdg.configFile = {
