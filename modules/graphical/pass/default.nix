@@ -15,7 +15,15 @@
         enable = true;
         settings = { PASSWORD_STORE_DIR = "/home/hakanssn/repos/pass"; };
       };
-      services.password-store-sync.enable = true;
+      services.git-sync = {
+        enable = true;
+        repositories = {
+          "password-store" = {
+            uri = "git@github.com:AntonHakansson/pass.git";
+            path = "/home/hakanssn/repos/pass";
+          };
+        };
+      };
     };
   };
 }
