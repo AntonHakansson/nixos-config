@@ -128,6 +128,7 @@
   :custom
   (meow-use-clipboard 't)
   (meow-use-enhanced-selection-effect 't "i don't know what this does - let's try it out")
+  (meow-goto-line-function #'consult-goto-line)
   :config
   ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
@@ -231,6 +232,7 @@
    '("f o" . find-file-other-window)
    '("f R" . rename-file)
    '("b"   . consult-buffer)
+   '("TAB" . previous-buffer)
 
    ;; Windows
    '("w w" . clone-frame)
@@ -253,6 +255,7 @@
    ;; Applications
    '("o e" . elfeed)
    '("o a" . org-agenda)
+   '("A" . consult-org-agenda)
 
    ;; meow
    '("?" . meow-cheatsheet)
@@ -897,6 +900,15 @@ Else create a new file."
          ("C-c C-d" . #'helpful-at-point)
          ("C-h F" . #'helpful-function)
          ("C-h K" . #'helpful-keymap)))
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)))
+
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;; IDE
 (use-package rainbow-mode
