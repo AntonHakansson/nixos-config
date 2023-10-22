@@ -69,6 +69,8 @@
           editorconfig-core-c # per-project style config
           # :tools lookup & :lang org +roam
           sqlite
+          # :tools ai
+          tgpt
 
           # :lang latex & :lang org (latex previews)
           (texlive.combine {

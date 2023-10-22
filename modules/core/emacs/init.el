@@ -1039,6 +1039,13 @@ Else create a new file."
   :config
   (setq mail-user-agent 'mu4e-user-agent))
 
+(defun hk/run-tgpt ()
+  "Open shell and run the program 'tgpt' in interactive mode."
+  (interactive)
+  (shell "tgpt")
+  (insert "tgpt -i")
+  (comint-send-input))
+
 (use-package saveplace
   ;; Yes, please save my place when opening/closing files:
   :ensure nil
