@@ -484,7 +484,9 @@
 
 (use-package popper
   ;; Pop-up window management
-  :bind (("C-'"   . popper-toggle-latest)
+  :commands (popper-mode)
+  :hook (emacs-startup . popper-mode)
+  :bind (("C-'"   . popper-toggle)
          ("M-'"   . popper-cycle)         ;; Orig. abbrev-prefix-mark
          ("C-M-'" . popper-toggle-type))
   :config
@@ -510,9 +512,9 @@
           "Output\\*$"
           "\\*Async Shell Command\\*"))
   (setq popper-group-function 'popper-group-by-project)
-  (popper-mode)
+  (popper-mode +1)
   (require 'popper-echo)
-  (popper-echo-mode))
+  (popper-echo-mode +1))
 
 (use-package fancy-compilation
   ;; Support color, progress bars in compilation-mode buffer
