@@ -19,7 +19,7 @@
         config = config.hakanssn.core.emacs.fullConfig;
         package = pkgs.emacs-pgtk;
         alwaysEnsure = true;
-        extraEmacsPackages = epkgs: (lib.optional config.hakanssn.graphical.mail.enable pkgs.mu);
+        extraEmacsPackages = epkgs: (lib.optional config.hakanssn.graphical.mail.enable epkgs.mu4e);
       };
     };
   };
