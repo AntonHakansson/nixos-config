@@ -106,7 +106,10 @@
 
   ;; Hide fringe
   (set-fringe-mode 0)
-  )
+
+  ;; Fleeting notes in Scratch Buffer
+  (setq initial-major-mode 'org-mode
+        initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n"))
 
 (use-package no-littering
   ;; Put emacs files in ~/.cache/emacs/
