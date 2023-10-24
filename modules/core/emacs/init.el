@@ -709,6 +709,8 @@
 
 (use-package org-download)
 
+(use-package org-web-tools)
+
 (use-package org-appear
   :custom
   (org-appear-autosubmarkers t)

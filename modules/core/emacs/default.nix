@@ -69,6 +69,7 @@
           editorconfig-core-c # per-project style config
           # :tools lookup & :lang org +roam
           sqlite
+          pandoc
           # :tools ai
           tgpt
 
