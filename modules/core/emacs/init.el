@@ -479,7 +479,7 @@
   :hook (eww-mode   . olivetti-mode)
   :hook (Info-mode  . olivetti-mode)
   :hook (elfeed-search-mode  . olivetti-mode)
-  :hook (elfeed-search-mode  . toggle-truncate-lines)
+  :hook (elfeed-search-mode  . (lambda () (interactive) (toggle-truncate-lines 1)))
   :hook (elfeed-show-mode    . olivetti-mode)
   :config
   (setq-default olivetti-body-width 120
@@ -1080,7 +1080,6 @@ Else create a new file."
 
 (use-package jinx
   ;; Enchaned Spell Checker
-  :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
 
