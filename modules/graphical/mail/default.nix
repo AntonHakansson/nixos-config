@@ -35,8 +35,8 @@ in
             imapnotify = {
               enable = true;
               boxes = [ "Inbox" ];
-              onNotify = "${pkgs.isync}/bin/mbsync personal:Inbox";
-              onNotifyPost = "mu index && ${notifyScript "personal"}";
+              onNotify = "${pkgs.isync}/bin/mbsync personal:INBOX";
+              onNotifyPost = "${pkgs.mu}/bin/mu index && ${notifyScript "personal"}";
             };
             mbsync = {
               enable = true;
@@ -69,8 +69,8 @@ in
             imapnotify = {
               enable = true;
               boxes = [ "Inbox" ];
-              onNotify = "${pkgs.isync}/bin/mbsync webmaster:Inbox";
-              onNotifyPost = "mu index && ${notifyScript "webmaster"}";
+              onNotify = "${pkgs.isync}/bin/mbsync webmaster:INBOX";
+              onNotifyPost = "${pkgs.mu}/bin/mu index && ${notifyScript "webmaster"}";
             };
             mbsync = {
               enable = true;
