@@ -714,14 +714,15 @@
   (org-appear-autokeywords t))
 
 (use-package org-fragtog
-  :hook (org-mode . org-fragtog-mode))
+  :hook (org-mode . org-fragtog-mode)
+  :custom (org-startup-with-latex-preview t))
 
 (use-package org-modern
+  :hook
+  (org-mode . global-org-modern-mode)
   :custom
   (org-modern-hide-stars nil)
-  :hook
-  (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda))
+  (org-modern-table nil))
 
 (use-package denote
   :custom
