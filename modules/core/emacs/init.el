@@ -179,6 +179,8 @@
    '("$" . jinx-correct)
    '("M-$" . jinx-next)
    '("%" . meow-query-replace)
+   '("(" . previous-buffer)
+   '(")" . next-buffer)
    '("f" . meow-find)
    '("F" . meow-find-expand)
    '("t" . meow-till)
@@ -263,6 +265,7 @@
    ;; meow
    '("?" . meow-cheatsheet)
    '("e" . "H-e") ;; To execute original e in MOTION state, use SPC e.
+   '("'" . (lambda () (interactive) (if (meow-normal-mode-p) (meow-motion-mode +1) (meow-normal-mode +1))))
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
    '("3" . meow-digit-argument)
