@@ -704,11 +704,11 @@
   ;; Initialize
   (anki-editor-reset-cloze-number))
 
-(use-package org-roam
-  :custom
-  (org-roam-directory (concat org-directory "roam/"))
-  :config
-  (org-roam-db-autosync-mode))
+;; (use-package org-roam
+;;   :custom
+;;   (org-roam-directory (concat org-directory "roam/"))
+;;   :config
+;;   (org-roam-db-autosync-mode))
 
 (use-package org-download)
 
@@ -952,6 +952,10 @@ Else create a new file."
   :config
   (add-to-list 'eglot-server-programs '(nix-mode . ("nil"))))
 
+(use-package nix-buffer
+  ;; Load nix environment from nix-buffer-root-file file
+  )
+
 (use-package web-mode
   ;; Web (html/css/javascript)
   :mode (("\\.html?\\'" . web-mode))
@@ -1044,10 +1048,35 @@ Else create a new file."
   (mu4e-maildir "~/mail/" "Root of the maildir hierarchy")
   (mu4e-attachment-dir "~/downloads/" "Save attachments to downloads folder")
   (mu4e-compose-dont-reply-to-self t "Don't reply to myself on reply to all")
+  (mu4e-change-filenames-when-moving t "Avoid sync issues with mbsync")
   (message-send-mail-function 'message-send-mail-with-sendmail)
   (sendmail-program "msmtp" "Use msmtp to send mail")
+  (message-cite-reply-position 'below "Put reply below quoted text")
   :config
-  (setq mail-user-agent 'mu4e-user-agent))
+  (setq mail-user-agent 'mu4e-user-agent)
+  (setq mu4e-contexts `(,(make-mu4e-context :name "Personal"
+                                            :match-func (lambda (msg)
+                                                          (when msg
+                                                            (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+                                            :vars '((user-mail-address . "anton@hakanssn.com")
+                                                    (user-full-name . "Anton Hakansson")
+                                                    (mu4e-trash-folder . "/personal/Trash")
+                                                    (mu4e-sent-folder . "/personal/Sent")
+                                                    (mu4e-drafts-folder . "/personal/Drafts")
+                                                    (mu4e-refile-folder . "/personal/Trash")
+                                                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "personal"))))
+                        ,(make-mu4e-context :name "Gmail"
+                                            :match-func (lambda (msg)
+                                                          (when msg
+                                                            (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+                                            :vars '((user-mail-address . "anton.hakansson98@gmail.com")
+                                                    (user-full-name . "Anton Hakansson")
+                                                    (mu4e-trash-folder . "/gmail/[Gmail]/Trash")
+                                                    (mu4e-sent-folder . "/gmail/[Gmail]/Sent Mail")
+                                                    (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
+                                                    (mu4e-refile-folder . "/gmail/[Gmail]/All Mail")
+                                                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "gmail")))))))
+
 
 (defun hk/run-tgpt ()
   "Open shell and run the program 'tgpt' in interactive mode."

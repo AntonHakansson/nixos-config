@@ -36,7 +36,7 @@ in
               enable = true;
               boxes = [ "Inbox" ];
               onNotify = "${pkgs.isync}/bin/mbsync personal:INBOX";
-              onNotifyPost = "${pkgs.mu}/bin/mu index && ${notifyScript "personal"}";
+              onNotifyPost = "${config.hakanssn.core.emacs.package}/bin/emacsclient --eval\"(mu4e-update-index)\" && ${notifyScript "personal"}";
             };
             mbsync = {
               enable = true;

@@ -69,9 +69,9 @@
 
       indexDir = "${config.hakanssn.cachePrefix}/var/lib/dovecot/indices";
 
-      # Enable POP3 for retrieving mail with gmail because it does not support imap
-      # When configuring POP3 on gmail client use SSL on port 995
-      enablePop3Ssl = true;
+      # # Enable POP3 for retrieving mail with gmail because it does not support imap
+      # # When configuring POP3 on gmail client use SSL on port 995
+      # enablePop3Ssl = true;
 
       # Use Let's Encrypt certificates. Note that this needs to set up a stripped
       # down nginx and opens port 80.
