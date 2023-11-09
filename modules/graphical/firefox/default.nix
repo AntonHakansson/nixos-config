@@ -63,7 +63,6 @@ in
               vimium
               swedish-dictionary
               tree-style-tab
-              # bypass-paywalls-clean
               decentraleyes
               i-dont-care-about-cookies
               ublock-origin
