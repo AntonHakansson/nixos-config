@@ -623,13 +623,9 @@
            "* %i%? \n %U")
           ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
            "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
-          ("W" "Weekly Review" plain
-           (file+olp+datetree "roam/review.org")
-           (file "templates/weekly-review.org")
-           :immediate-finish t
-           :jump-to-captured t
-           :clock-in t
-           ))
+          ("w" "Web" entry (file "gtd/inbox.org")
+           "* TODO %? [[%:link][%:description]] :ref:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n\n#+begin_quote\n%i\n#+end_quote\n")
+          )
         org-agenda-custom-commands
         '(("g" "Get Things Done (GTD)"
            ((agenda "" (;; Show today
@@ -645,6 +641,9 @@
 
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ;; increase scale of latex fragments
   )
+
+(use-package org-protocol
+  :ensure nil)
 
 (use-package org-habit
   :ensure nil
