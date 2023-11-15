@@ -65,7 +65,6 @@
         (t . (1.1))))
   (setq modus-operandi-tinted-palette-overrides
         '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
-  (load-theme 'modus-operandi)
 
   ;; Turn on recentf mode
   (add-hook 'after-init-hook #'recentf-mode)
@@ -111,6 +110,23 @@
   ;; Fleeting notes in Scratch Buffer
   (setq initial-major-mode 'org-mode
         initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n"))
+
+(use-package ef-themes
+  :custom
+  (custom-safe-themes '("ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135" default))
+  (ef-themes-mixed-fonts t)
+  (ef-themes-headings
+   '((1 . (variable-pitch 1.3))
+     (2 . (1.1))
+     (agenda-date . (1.1))
+     (agenda-structure . (variable-pitch light 1.3))
+     (t . (1.1))))
+  :config
+  (load-theme 'ef-light))
+
+(use-package spacious-padding
+  :config
+  (spacious-padding-mode +1))
 
 (use-package no-littering
   ;; Put emacs files in ~/.cache/emacs/
