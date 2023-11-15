@@ -295,7 +295,8 @@
 
 (use-package avy
   :config
-  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h)))
+  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h))
+  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
 
 (use-package hydra)
 
@@ -1135,6 +1136,7 @@ Else create a new file."
 (global-set-key (kbd "M-_") 'hk/replace-spaces-with-underscores)
 (global-set-key (kbd "<f1>") 'shell)
 (global-set-key (kbd "<f5>") 'recompile)
+(global-set-key (kbd "<f7>") 'scroll-lock-mode)
 
 (add-hook 'shell-mode-hook
           (lambda ()
