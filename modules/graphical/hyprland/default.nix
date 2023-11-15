@@ -33,6 +33,16 @@
       '';
       readOnly = true;
     };
+    yt-download = lib.mkOption {
+      default = pkgs.writeShellScriptBin "yt-download" ''
+        link=$(wl-paste)
+        title=$(yt-dlp "$link" -O "%(title)s")
+        ${pkgs.libnotify}/bin/notify-send "Starting download '$title'"
+        yt-dlp "$link" -o "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" --restrict-filenames -P ~/mpv \
+          && ${pkgs.libnotify}/bin/notify-send "Download complete. '$title'"
+      '';
+      readOnly = true;
+    };
   };
 
   config = lib.mkIf config.hakanssn.graphical.hyprland.enable {
@@ -235,6 +245,10 @@
             # Notifications
             bind = SUPER,       K, exec, ${pkgs.mako}/bin/makoctl dismiss
             bind = SUPER SHIFT, K, exec, ${pkgs.mako}/bin/makoctl invoke;
+
+            # yt-dl
+            bind = SUPER, Y, exec, ${config.hakanssn.graphical.hyprland.yt-download}/bin/yt-download
+            bind = SUPER SHIFT, Y, exec, mpv ~/mpv/
         ''
         + (lib.optionalString config.hardware.opentabletdriver.enable ''
             # OpenTabletDriver
