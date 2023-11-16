@@ -37,9 +37,16 @@
       default = pkgs.writeShellScriptBin "yt-download" ''
         link=$(wl-paste)
         title=$(yt-dlp "$link" -O "%(title)s")
-        ${pkgs.libnotify}/bin/notify-send "Starting download '$title'"
+        ${pkgs.libnotify}/bin/notify-send "Starting download" "'$title'" -t 5000
         yt-dlp "$link" -o "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" --restrict-filenames -P ~/mpv \
-          && ${pkgs.libnotify}/bin/notify-send "Download complete. '$title'"
+               || (${pkgs.libnotify}/bin/notify-send "Download failed."; exit 1)
+        option=$(${pkgs.libnotify}/bin/notify-send "Download complete" "'$title'" -t 10000 \
+                -A mpv="Open in mpv" -A emac="Emacs Dired")
+        if [[ "$option" == "mpv" ]]; then
+           hyprctl dispatch exec "mpv ~/mpv/"
+        elif [[ "$option" == "emac" ]]; then
+           emacsclient -cn ~/mpv/
+        fi
       '';
       readOnly = true;
     };
@@ -244,7 +251,7 @@
 
             # Notifications
             bind = SUPER,       K, exec, ${pkgs.mako}/bin/makoctl dismiss
-            bind = SUPER SHIFT, K, exec, ${pkgs.mako}/bin/makoctl invoke;
+            bind = SUPER SHIFT, K, exec, ${pkgs.mako}/bin/makoctl menu ${pkgs.fuzzel}/bin/fuzzel -d -p "Option: "
 
             # yt-dl
             bind = SUPER, Y, exec, ${config.hakanssn.graphical.hyprland.yt-download}/bin/yt-download
