@@ -462,6 +462,7 @@
      ("r" "~/repos/"                    "Repos")
      ("b" "~/documents/books/"          "Books")
      ("o" "~/documents/org/"            "Org Notes")))
+  (dirvish-default-layout nil "disable preview pane by default")
   (dired-dwim-target t "copy/move operations based on other Dired window")
   (delete-by-moving-to-trash t)
   (dired-mouse-drag-files t "enable drag-and-drop")
@@ -479,7 +480,7 @@
   (:map dirvish-mode-map
         ("a"   . 'dirvish-quick-access)
         ("TAB" . 'dirvish-subtree-toggle)
-        ("T" . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
+        ("T"   . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
   )
 
 (require 'dirvish-quick-access)
