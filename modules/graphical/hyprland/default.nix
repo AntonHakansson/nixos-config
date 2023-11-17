@@ -39,6 +39,7 @@
         title=$(yt-dlp "$link" -O "%(title)s")
         ${pkgs.libnotify}/bin/notify-send "Starting download" "'$title'" -t 5000
         yt-dlp "$link" -o "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" --restrict-filenames -P ~/mpv \
+               --embed-metadata --embed-subs \
                || (${pkgs.libnotify}/bin/notify-send "Download failed."; exit 1)
         option=$(${pkgs.libnotify}/bin/notify-send "Download complete" "'$title'" -t 10000 \
                 -A mpv="Open in mpv" -A emac="Emacs Dired")
