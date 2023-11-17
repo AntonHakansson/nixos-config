@@ -107,6 +107,11 @@
   ;; Hide fringe
   (set-fringe-mode 0)
 
+  ;; ediff
+  (setq ediff-make-buffers-readonly-at-startup nil)
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
   ;; Fleeting notes in Scratch Buffer
   (setq initial-major-mode 'org-mode
         initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n"))
