@@ -48,9 +48,6 @@
           "extension.webm" = { loop-file = "yes"; };
         };
         bindings = {
-          l = "seek 5";
-          h = "seek -5";
-
           ">" = "add speed 0.25";
           "<" = "add speed -0.25";
 
