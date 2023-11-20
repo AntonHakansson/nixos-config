@@ -154,6 +154,11 @@
   (meow-use-clipboard 't)
   (meow-use-enhanced-selection-effect 't "i don't know what this does - let's try it out")
   (meow-goto-line-function #'consult-goto-line)
+  (meow-replace-state-name-list '((normal . "N")
+                            (motion . "M")
+                            (keypad . "K")
+                            (insert . "I")
+                            (beacon . "B")))
   :config
   ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
@@ -303,8 +308,6 @@
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?a . angle))
 
-  (meow-setup-indicator)
-  (meow-setup-line-number)
   (meow-global-mode 1))
 
 (use-package embrace
@@ -478,7 +481,7 @@
   (setq dirvish-mode-line-format
         '(:left (sort symlink) :right (omit yank index)))
   (setq dirvish-attributes
-        '(all-the-icons file-time file-size collapse subtree-state vc-state git-msg))
+        '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
   (setq dirvish-preview-dispatchers (delete 'pdf dirvish-preview-dispatchers)) ; Remove pdf preview. It is too slow.
   (dirvish-override-dired-mode)
   :bind
@@ -922,7 +925,7 @@ Else create a new file."
 (use-package mixed-pitch
   :hook (org-mode . mixed-pitch-mode))
 
-(use-package all-the-icons)
+(use-package nerd-icons)
 
 (use-package helpful
   ;; Make default `describe-*' screens more helpful
@@ -1141,24 +1144,19 @@ Else create a new file."
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
 
-(defun hk/replace-spaces-with-underscores ()
-  "Replace spaces with underscores between point and the previous mark."
-  (interactive)
-  (let ((start (point))
-        (end (mark)))
-    (when (> start end)
-      (setq start (mark)
-            end (point)))
-    (save-excursion
-      (goto-char start)
-      (while (< (point) end)
-        (if (eq (char-after) ?\s)
-          (progn (delete-char 1)
-                 (insert "_"))
-          (forward-char)))
-      (push-mark start t t))))
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :custom
+  (doom-modeline-height 20)
+  (doom-modeline-minor-modes t)
+  (doom-modeline-percent-position nil)
+  (doom-modeline-battery nil)
+  (doom-modeline-time nil))
 
-(global-set-key (kbd "M-_") 'hk/replace-spaces-with-underscores)
+(use-package poporg
+  ;; Edit comments in org-mode.
+  :bind (("C-c /" . poporg-dwim)))
+
 (global-set-key (kbd "<f1>") 'shell)
 (global-set-key (kbd "<f5>") 'recompile)
 (global-set-key (kbd "<f7>") 'scroll-lock-mode)
