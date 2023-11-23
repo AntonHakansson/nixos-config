@@ -1134,7 +1134,8 @@ Else create a new file."
   ((text-mode prog-mode) . ws-butler-mode)
   :diminish
   :custom
-  (ws-butler-keep-whitespace-before-point nil))
+  (ws-butler-keep-whitespace-before-point nil)
+  (show-trailing-whitespace t))
 
 (use-package editorconfig
   :config
