@@ -978,7 +978,8 @@ Else create a new file."
 (use-package nix-mode
   :mode (("\\.nix\\'" . nix-mode))
   :config
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil"))))
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))))
 
 (use-package nix-buffer
   ;; Load nix environment from nix-buffer-root-file file
