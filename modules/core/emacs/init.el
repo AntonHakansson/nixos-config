@@ -522,6 +522,7 @@
   :bind (("C-'"   . popper-toggle)
          ("M-'"   . popper-cycle)         ;; Orig. abbrev-prefix-mark
          ("C-M-'" . popper-toggle-type))
+  :custom (popper-mode-line nil "hide modeline in popup windows")
   :config
   (setq popper-reference-buffers
         '(
@@ -542,7 +543,7 @@
           ;; message modes
           compilation-mode
           "\\*Messages\\*"
-          "Output\\*$"
+          "[Oo]utput\\*"
           "\\*Async Shell Command\\*"))
   (setq popper-group-function 'popper-group-by-project)
   (popper-mode +1)
