@@ -69,6 +69,7 @@
         mako = {
           enable = true;
         };
+        cliphist.enable = true;
       };
       wayland.windowManager.hyprland = {
         enable = true;
@@ -165,6 +166,11 @@
             # Status Bar
             exec-once = waybar
             bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
+
+            # Clipboard manager
+            exec-once = wl-paste --type text  --watch cliphist store
+            exec-once = wl-paste --type image --watch cliphist store
+            bind = SUPER, O, exec, cliphist list | ${pkgs.fuzzel}/bin/fuzzel --dmenu -p "Select item to copy: " --width 120 | cliphist decode | wl-copy
 
             # Keybindings
             ## See https://wiki.hyprland.org/Configuring/Binds/
