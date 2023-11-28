@@ -465,10 +465,11 @@
   (dirvish-quick-access-entries
    '(("h" "~/"                          "Home")
      ("d" "~/downloads/"                "Downloads")
-     ("m" "/mnt/"                       "Drives")
+     ("m" "~/mpv/"                      "Mpv")
      ("t" "~/.local/share/Trash/files/" "TrashCan")
      ("r" "~/repos/"                    "Repos")
      ("b" "~/documents/books/"          "Books")
+     ("a" "~/documents/books/audio"     "Audio Books")
      ("o" "~/documents/org/"            "Org Notes")))
   (dirvish-default-layout nil "disable preview pane by default")
   (dired-dwim-target t "copy/move operations based on other Dired window")
