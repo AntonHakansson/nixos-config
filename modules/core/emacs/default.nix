@@ -82,6 +82,8 @@
           # hakanssn.leetcode-to-org TODO: fix broken leetcode-to-org package
           # :lang nix
           nil
+          # :lang c-mode
+          universal-ctags
         ];
         sessionVariables = {
           EDITOR = "emacsclient -nw";

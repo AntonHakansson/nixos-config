@@ -920,9 +920,19 @@ Else create a new file."
 (use-package cape
   ;; Cape for better completion-at-point support and more
   :config
+  (setq cape-dabbrev-check-other-buffers t
+        dabbrev-ignored-buffer-regexps
+        '("\\.\\(?:pdf\\|jpe?g\\|png\\|svg\\|eps\\)\\'"
+          "^ "
+          "\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\)\\(<[0-9]+>\\)?")
+        dabbrev-upcase-means-case-search t)
+
   ;; Add useful defaults completion sources from cape
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block) ;; Complete in org, markdown code block
+  (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
+  )
 
 (use-package mixed-pitch
   :hook (org-mode . mixed-pitch-mode))
@@ -960,11 +970,17 @@ Else create a new file."
   :config
   (envrc-global-mode))
 
+(use-package citre
+  :custom
+  (citre-default-create-tags-file-location 'global-cache)
+  (citre-use-project-root-when-creating-tags t)
+  (citre-tags-completion-case-sensitive nil)
+  )
+
 (use-package eglot
   :hook
-  (c++-mode . eglot-ensure)
-  (c-mode   . eglot-ensure)
   (nix-mode . eglot-ensure)
+  (c-mode-common . eglot-ensure)
   :bind
   (:map eglot-mode-map
         ("C-c C" . eglot)
