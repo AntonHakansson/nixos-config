@@ -17,9 +17,15 @@
       readOnly = true;
       default = pkgs.emacsWithPackagesFromUsePackage {
         config = config.hakanssn.core.emacs.fullConfig;
-        package = pkgs.emacs-pgtk;
+        package = pkgs.emacs-pgtk.overrideAttrs (old: {
+          passthru = old.passthru // {
+            treeSitter = true;
+          };
+        });
         alwaysEnsure = true;
-        extraEmacsPackages = epkgs: (lib.optional config.hakanssn.graphical.mail.enable epkgs.mu4e);
+        extraEmacsPackages = epkgs:
+          (lib.optional config.hakanssn.graphical.mail.enable epkgs.mu4e) ++
+          [ epkgs.treesit-grammars.with-all-grammars ];
       };
     };
   };

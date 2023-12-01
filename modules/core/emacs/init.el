@@ -854,6 +854,8 @@ Else create a new file."
           (python-mode . python-ts-mode)
           (json-mode . json-ts-mode)
           (c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
+          (c-or-c++-mode . c-or-c++-ts-mode)
           )))
 
 (use-package eglot
@@ -1140,6 +1142,14 @@ Else create a new file."
   :hook (org-mode . mixed-pitch-mode))
 
 (use-package nerd-icons)
+
+(use-package kind-icon
+  ;; Display completion kind
+  :after corfu
+  :custom
+  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package ef-themes
   :custom
