@@ -79,6 +79,30 @@
   (global-set-key (kbd "M-n") 'forward-paragraph)
   (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
 
+  ;; ibuffer
+  (setopt ibuffer-expert t) ; stop yes no prompt on delete
+  (setopt ibuffer-saved-filter-groups
+	      (quote (("default"
+		             ("dired" (mode . dired-mode))
+		             ("org"   (and
+                           (mode . org-mode)
+                           ; exclude GTD and scratch buffer
+                           (not (or (filename . "^.+/gtd/.+")
+                                    (name . "^\\*scratch\\*$")))))
+		             ("magit" (name . "^magit"))
+		             ("planner" (or
+				                     (name . "^\\*Calendar\\*$")
+				                     (name . "^\\*Org Agenda\\*")
+                             (filename . "^.+gtd.+")))
+		             ("emacs" (or
+			                     (name . "^\\*scratch\\*$")
+			                     (name . "^\\*Messages\\*$")))))))
+
+  (add-hook 'ibuffer-mode-hook
+	          (lambda ()
+	            (ibuffer-switch-to-saved-filter-groups "default")))
+
+
   ;; C-w terminal behavior
   (defun backward-kill-word-or-region (&optional arg)
     (interactive "p")
