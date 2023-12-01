@@ -1,27 +1,18 @@
 ;;; init.el --- hakanssn's custom emacs config  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
-(eval-when-compile
-  (require 'use-package)
-  (require 'use-package-ensure)
-  (setq use-package-verbose nil)
-  (setq use-package-always-ensure t))
+(when (< emacs-major-version 29)
+  (error (format "Emacs config only works with Emacs 29 and newer; you have version ~a" emacs-major-version)))
 
 (defvar hk/config-dir (or (getenv "HK_CONFIG_DIR") "~/.config/emacs/") "Location off init.el.")
 (defvar hk/data-dir (concat (or (getenv "XDG_DATA_HOME") "~/.local/share") "/emacs/") "Location for data.")
 (defvar hk/cache-dir (concat (or (getenv "XDG_CACHE_DIR") "~/.cache") "/emacs/") "Location for cache.")
 
-(use-package diminish
-  ;; Dependencies that inject `:keywords' into `use-package' should be
-  ;; included before all other packages.
-  ;; For :diminish in (use-package). Hides minor modes from the status line.
-  )
-
 (use-package emacs
   :ensure nil ;; Not a real package, but a place to collect global settings
   :init
   (setq user-mail-address "anton@hakanssn.com"
-        user-full-name "Anton Hakansson")
+        user-full-name    "Anton Hakansson")
 
   ;; Hide menu bars and scroll for clean ui
   (unless (memq window-system '(mac ns))
@@ -33,18 +24,15 @@
   (when (fboundp 'horizontal-scroll-bar-mode)
     (horizontal-scroll-bar-mode -1))
 
-  ;; Auto revert buffers
-  (customize-set-variable 'global-auto-revert-non-file-buffers t) ; Revert Dired and other buffers
-  (global-auto-revert-mode 1) ; Revert buffers when the underlying file has changed
-  (setq auto-revert-check-vc-info t)
-  (setq auto-revert-verbose t)
-
-  (setq-default indent-tabs-mode nil) ; Use spaces instead of tabs
-
-  (setq-default delete-by-moving-to-trash t)
-
-  (fset 'yes-or-no-p 'y-or-n-p) ; Shorter confirmation
-  (setq isearch-lazy-count t)
+  ;; Automatically reread from disk if the underlying file changes
+  (setopt auto-revert-avoid-polling t)
+  ;; Some systems don't do file notifications well; see
+  ;; https://todo.sr.ht/~ashton314/emacs-bedrock/11
+  (setopt auto-revert-interval 5)
+  (setopt auto-revert-check-vc-info t)
+  (setopt auto-revert-verbose t)
+  (setopt global-auto-revert-non-file-buffers t) ; Revert Dired and other buffers
+  (global-auto-revert-mode)
 
   ;; Prefer utf-8 whenever possible
   (prefer-coding-system 'utf-8)
@@ -52,42 +40,34 @@
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
 
-  ;; Relative line numbers
-  (setq display-line-numbers-type 'relative)
+  ;; Scrolling & cursor
+  (pixel-scroll-precision-mode)                       ; Smooth scrolling
+  (blink-cursor-mode -1)                              ; Steady cursor
+  (push '(vertical-scroll-bars) default-frame-alist)  ; Remove vertical scroll bar
+  (setopt mouse-wheel-progressive-speed nil)          ; don't accelerate scrolling
 
-  ;; Theme
-  (setq modus-themes-mixed-fonts t)
-  (setq modus-themes-headings
-      '((1 . (variable-pitch 1.3))
-        (2 . (1.1))
-        (agenda-date . (1.1))
-        (agenda-structure . (variable-pitch light 1.3))
-        (t . (1.1))))
-  (setq modus-operandi-tinted-palette-overrides
-        '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
+  ;; Buffers, Lines, and indentation
+  (setopt display-line-numbers-type 'relative)  ; Relative line numbers
+  (setopt indent-tabs-mode nil)                 ; Use spaces instead of tabs
+  (setopt tab-width 2)
+  (setopt x-underline-at-descent-line nil)   ; Prettier underlines
+  (setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
+  (setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
+  (setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
 
-  ;; Turn on recentf mode
-  (add-hook 'after-init-hook #'recentf-mode)
+  (add-hook 'after-init-hook #'recentf-mode)  ; Turn on recentf mode
 
-  ;; Scrolling
-  (push '(vertical-scroll-bars) default-frame-alist) ;; Remove vertical scroll bar
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-
-  ;; Indentation
-  (setq-default tab-width 2)
-  (setq-default c-basic-offset 2)
-  (defun hk/c-mode-hook ()
-    (c-set-offset 'substatement 0)
-    (c-set-offset 'substatement-open 0)
-    (setq-local outline-regexp " *//\\(-+\\)")
-    )
-  (add-hook 'c-mode-hook 'hk/c-mode-hook)
-
-  ;; Mark ring
-  (setq-default set-mark-command-repeat-pop t) ;; after =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
+  ;; Misc. Emacs tweaks
+  (fset 'yes-or-no-p 'y-or-n-p) ; Shorter confirmation
+  (setopt isearch-lazy-count t)
+  (setopt delete-by-moving-to-trash t)
+  (setopt set-mark-command-repeat-pop t) ;; after =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
+  (setopt bookmark-save-flag 1)  ; Write bookmark file when bookmark list is modified
 
   ;; Keybinds
+  (global-set-key (kbd "<f1>") 'shell)
+  (global-set-key (kbd "<f5>") 'recompile)
+  (global-set-key (kbd "<f7>") 'scroll-lock-mode)
   (global-set-key (kbd "C-t") 'hippie-expand) ;; orig. transpose-chars
   (global-set-key (kbd "M-p") 'backward-paragraph)
   (global-set-key (kbd "M-n") 'forward-paragraph)
@@ -101,24 +81,42 @@
       (backward-kill-word arg)))
   (global-set-key (kbd "C-w")  'backward-kill-word-or-region)
 
-  ;; Write bookmark file when bookmark list is modified
-  (setq bookmark-save-flag 1)
-
-  ;; Hide fringe
-  (set-fringe-mode 0)
-
   ;; ediff
-  (setq ediff-make-buffers-readonly-at-startup nil)
-  (setq ediff-split-window-function 'split-window-horizontally)
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setopt ediff-make-buffers-readonly-at-startup nil)
+  (setopt ediff-split-window-function 'split-window-horizontally)
+  (setopt ediff-window-setup-function 'ediff-setup-windows-plain)
 
   ;; Fleeting notes in Scratch Buffer
   (setq initial-major-mode 'org-mode
-        initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n"))
+        initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n")
+
+  ;; Tab bar
+  (setopt tab-bar-show 1)
+
+  ;; Theme - modus operandi
+  (setopt modus-themes-mixed-fonts t)
+  (setopt modus-themes-headings
+      '((1 . (variable-pitch 1.3))
+        (2 . (1.1))
+        (agenda-date . (1.1))
+        (agenda-structure . (variable-pitch light 1.3))
+        (t . (1.1))))
+  (setopt modus-operandi-tinted-palette-overrides
+        '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
+  )
+
+(use-package diminish
+  ;; Dependencies that inject `:keywords' into `use-package' should be
+  ;; included before all other packages.
+  ;; For :diminish in (use-package). Hides minor modes from the status line.
+  )
 
 (use-package ef-themes
   :custom
-  (custom-safe-themes '("ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135" default))
+  (custom-safe-themes
+   '("14ba61945401e42d91bb8eef15ab6a03a96ff323dd150694ab8eb3bb86c0c580"
+     "ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135"
+     default))
   (ef-themes-mixed-fonts t)
   (ef-themes-headings
    '((1 . (variable-pitch 1.3))
@@ -531,6 +529,7 @@
           help-mode
           helpful-mode
           eldoc-mode
+          "\\*eldoc\\*"
           Man-mode
           woman-mode
           ;; repl modes
@@ -989,9 +988,21 @@ Else create a new file."
         ("M-r"   . eglot-rename)
         ("C-c F" . eglot-format)))
 
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '((c++-mode c-mode) "clangd" "--clang-tidy" "--completion-style=detailed")))
+(use-package emacs
+  ;; C-mode config
+  :config
+  ;; TODO Move to CC mode
+  (setopt c-basic-offset 2)
+  (defun hk/c-mode-hook ()
+    (c-set-offset 'substatement 0)
+    (c-set-offset 'substatement-open 0)
+    (setq-local outline-regexp " *//\\(-+\\)")
+    )
+
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '((c++-mode c-mode) "clangd" "--clang-tidy" "--completion-style=detailed")))
+  )
 
 (use-package nix-mode
   :mode (("\\.nix\\'" . nix-mode))
@@ -1176,10 +1187,6 @@ Else create a new file."
 (use-package poporg
   ;; Edit comments in org-mode.
   :bind (("C-c /" . poporg-dwim)))
-
-(global-set-key (kbd "<f1>") 'shell)
-(global-set-key (kbd "<f5>") 'recompile)
-(global-set-key (kbd "<f7>") 'scroll-lock-mode)
 
 (add-hook 'shell-mode-hook
           (lambda ()

@@ -22,11 +22,20 @@
 (add-hook 'emacs-startup-hook #'hm/restore-gc)
 (add-hook 'minibuffer-exit-hook #'hm/restore-gc)
 
-;; Nix manages our packages
-(setq package-enable-at-startup nil)
-
 ;; Avoid expensive frame resizing. Inspired by Doom Emacs.
 (setq frame-inhibit-implied-resize t)
+
+;; Supress anoying logs
+(setq byte-compile-warnings '(not obsolete))
+(setq warning-suppress-log-types '((comp) (bytecomp)))
+(setq native-comp-async-report-warnings-errors 'silent)
+
+;; Silence stupid startup message
+(setq inhibit-startup-echo-area-message (user-login-name))
+
+;; Default frame configuration
+(setq frame-resize-pixelwise t)
+(tool-bar-mode -1)                      ; All these tools are in the menu-bar anyway
 
 (provide 'early-init)
 ;;; early-init.el ends here
