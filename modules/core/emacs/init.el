@@ -34,6 +34,12 @@
   (setopt global-auto-revert-non-file-buffers t) ; Revert Dired and other buffers
   (global-auto-revert-mode)
 
+  ;; Save history of minibuffer
+  (savehist-mode)
+
+  ;; Fix archaic defaults
+  (setopt sentence-end-double-space nil)
+
   ;; Prefer utf-8 whenever possible
   (prefer-coding-system 'utf-8)
   (set-default-coding-systems 'utf-8)
@@ -111,26 +117,6 @@
   ;; For :diminish in (use-package). Hides minor modes from the status line.
   )
 
-(use-package ef-themes
-  :custom
-  (custom-safe-themes
-   '("14ba61945401e42d91bb8eef15ab6a03a96ff323dd150694ab8eb3bb86c0c580"
-     "ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135"
-     default))
-  (ef-themes-mixed-fonts t)
-  (ef-themes-headings
-   '((1 . (variable-pitch 1.3))
-     (2 . (1.1))
-     (agenda-date . (1.1))
-     (agenda-structure . (variable-pitch light 1.3))
-     (t . (1.1))))
-  :config
-  (load-theme 'ef-light))
-
-(use-package spacious-padding
-  :config
-  (spacious-padding-mode +1))
-
 (use-package no-littering
   ;; Put emacs files in ~/.cache/emacs/
   :custom
@@ -145,6 +131,123 @@
   ;; Also make sure auto-save files are saved out-of-tree
   (setq auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Discovery aids
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package which-key
+  :diminish
+  :config
+  (which-key-mode))
+
+(use-package helpful
+  ;; Make default `describe-*' screens more helpful
+  :bind (([remap describe-command]  . #'helpful-command)
+         ([remap describe-function] . #'helpful-callable)
+         ([remap describe-key]      . #'helpful-key)
+         ([remap describe-symbol]   . #'helpful-symbol)
+         ([remap describe-variable] . #'helpful-variable)
+         ("C-c C-d" . #'helpful-at-point)
+         ("C-h F"   . #'helpful-function)
+         ("C-h K"   . #'helpful-keymap)))
+
+(use-package consult
+  :bind
+  (
+   ;; C-c bindings (mode-specific-map)
+   ("C-c h" . 'consult-history)
+   ("C-c m" . 'consult-mode-command)
+   ("C-c k" . 'consult-kmacro)
+   ;; C-x bindings (ctl-x-map)
+   ("C-x M-:" . 'consult-complex-command)     ; orig. repeat-complex-command
+   ("C-x b"   . 'consult-buffer)              ; orig. switch-to-buffer
+   ("C-x r b" . 'consult-bookmark)            ; orig. bookmark-jump
+   ("C-x p b" . 'consult-project-buffer)      ; orig. project-switch-to-buffer
+   ;; Other custom bindings
+   ("M-y" . 'consult-yank-pop)                ; orig. yank-pop
+   ;; M-g bindings (goto-map)
+   ("M-g e" . 'consult-compile-error)
+   ("M-g f" . 'consult-flymake)               ; Alternative: consult-flycheck
+   ("M-g g" . 'consult-goto-line)             ; orig. goto-line
+   ("M-g M-g" . 'consult-goto-line)           ; orig. goto-line
+   ("M-g o" . 'consult-outline)               ; Alternative: consult-org-heading
+   ("M-g k" . 'consult-global-mark)
+   ("M-g i" . 'consult-imenu)
+   ("M-g I" . 'consult-imenu-multi)
+   ;; M-s bindings (search-map)
+   ("M-s d" . 'consult-find)
+   ("M-s g" . 'consult-grep)
+   ("M-s G" . 'consult-git-grep)
+   ("M-s r" . 'consult-ripgrep)
+   ("M-s l" . 'consult-line)
+   ("M-s L" . 'consult-line-multi)
+   ("M-s k" . 'consult-keep-lines)
+   ;; Isearch integration
+   ("M-s e" . 'consult-isearch-history)
+   :map isearch-mode-map
+  ("M-e" . 'consult-isearch-history)         ; orig. isearch-edit-string
+   ("M-s e" . 'consult-isearch-history)       ; orig. isearch-edit-string
+   ("M-s l" . 'consult-line)                  ; needed by consult-line to detect isearch
+   ("M-s L" . 'consult-line-multi)            ; needed by consult-line to detect isearch
+   ;; Minibuffer history
+   :map minibuffer-local-map
+   ("M-s" . 'consult-history)                 ;; orig. next-matching-history-element
+   ("M-r" . 'consult-history)                 ;; orig. previous-matching-history-element
+   ("C-r" . 'consult-history))
+  :init
+  (require 'consult-imenu)
+  (require 'consult-org)
+  (require 'consult-flymake)
+  (require 'consult-compile)
+  (require 'consult-kmacro))
+
+(use-package embark
+  :after avy
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  (defun bedrock/avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
+  ;; candidate you select
+  (setf (alist-get ?. avy-dispatch-alist) 'bedrock/avy-action-embark)
+  )
+
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Motion aids
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package avy
+  :bind
+  (("C-c n" . avy-goto-word-1))
+  :config
+  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h))
+  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
+
+(use-package crux
+  ;; Collection of Ridiculously Useful eXtensions
+  :bind
+  (("M-o" . 'crux-other-window-or-switch-buffer)
+   ("C-a" . 'crux-move-beginning-of-line)))
 
 (use-package meow
   ;; Modal editing
@@ -250,7 +353,7 @@
 
    ;; Emacs general
    '("SPC" . execute-extended-command)
-   '("t t" . toggle-truncate-lines)
+   '("t t" . visual-line-mode)
    '("t l" . global-display-line-numbers-mode)
    '("t k" . kill-this-buffer)
    '("s" . "M-s")
@@ -279,9 +382,6 @@
    '("p q"	.	project-query-replace-regexp)
    '("p s"	.	consult-ripgrep)
 
-   ;; avy
-   '("n" . avy-goto-word-1)
-
    ;; Applications
    '("o e" . elfeed)
    '("o a" . org-agenda)
@@ -308,19 +408,6 @@
 
   (meow-global-mode 1))
 
-(use-package embrace
-  ;; Add/Change/Delete pairs based on expand-region.
-  ;; evil-surround replacement
-  :bind (("M-)" . 'embrace-commander)) ;; orig. move-past-close-and-reindent
-  :config
-  (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
-  (add-hook 'org-mode-hook 'embrace-org-mode-hook))
-
-(use-package avy
-  :config
-  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h))
-  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
-
 (use-package hydra)
 
 (use-package dumb-jump
@@ -337,225 +424,109 @@
     ("i" dumb-jump-go-prompt "Prompt")
     ("l" dumb-jump-quick-look "Quick look")
     ("b" dumb-jump-back "Back"))
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   )
 
-(use-package crux
-  ;; Collection of Ridiculously Useful eXtensions
-  :bind
-  (("M-o" . 'crux-other-window-or-switch-buffer)
-   ("C-a" . 'crux-move-beginning-of-line)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Minibuffer/completion settings
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package smartparens
-  :diminish
+(use-package vertico
+  ;; Vertical UI
+  ;; Completion in minibuffer
   :config
-  (setq meow-paren-keymap (make-keymap))
+  (vertico-mode))
 
-  (meow-define-state paren
-    "paren state"
-    :lighter " [P]"
-    :keymap meow-paren-keymap)
+(use-package marginalia
+  ;; Rich annotations in minibuffer
+  :config
+  (marginalia-mode))
 
-  (setq meow-cursor-type-paren 'hollow)
-
-  (defun hk/sp-wrap-string (&optional arg) (interactive "P") (sp-wrap-with-pair "\""))
-  (defun hk/sp-back-transpose () (interactive) (sp-transpose-sexp -1))
-
-  (meow-define-keys 'paren
-    '("<escape>" . meow-normal-mode)
-    '("q" . meow-normal-mode)
-    '("g" . meow-normal-mode)
-    '("u" . meow-undo)
-    '("n" . sp-forward-sexp)
-    '("N" . sp-down-sexp)
-    '("p" . sp-backward-sexp)
-    '("P" . sp-up-sexp)
-    '("e" . sp-backward-sexp)
-    '("E" . sp-up-sexp)
-    '("o s" . sp-wrap-square)
-    '("o r" . sp-wrap-round)
-    '("o c" . sp-wrap-curly)
-    '("o g" . hk/sp-wrap-string)
-    '("O" . sp-unwrap-sexp)
-    '("i" . sp-slurp-hybrid-sexp)
-    '("m" . sp-forward-barf-sexp)
-    '("," . sp-split-sexp)
-    '("a" . sp-beginning-of-sexp)
-    '("f" . sp-end-of-sexp)
-    '("G" . sp-goto-top)
-    '("t" . sp-transpose-sexp)
-    '("T" . hk/sp-back-transpose))
-
-  (meow-normal-define-key
-   '("P" . meow-paren-mode))
-
-  (sp-with-modes 'emacs-lisp-mode
-    ;; disable ', it's the quote character!
-    (sp-local-pair "'" nil :actions nil))
-
-  (sp-with-modes sp-c-modes
-    (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-    (sp-local-pair "/*" "*/" :post-handlers '(("| " "SPC")
-                                              ("* ||\n[i]" "RET"))))
-
-  (smartparens-global-mode +1)
-  (show-smartparens-global-mode +1))
-
-(use-package consult
-  :bind
-  (
-   ;; C-c bindings (mode-specific-map)
-   ("C-c h" . 'consult-history)
-   ("C-c m" . 'consult-mode-command)
-   ("C-c k" . 'consult-kmacro)
-   ;; C-x bindings (ctl-x-map)
-   ("C-x M-:" . 'consult-complex-command)     ;; orig. repeat-complex-command
-   ("C-x b" . 'consult-buffer)                ;; orig. switch-to-buffer
-   ("C-x 4 b" . 'consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-   ("C-x 5 b" . 'consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-   ("C-x r b" . 'consult-bookmark)            ;; orig. bookmark-jump
-   ("C-x p b" . 'consult-project-buffer)      ;; orig. project-switch-to-buffer
-   ;; Other custom bindings
-   ("M-y" . 'consult-yank-pop)                ;; orig. yank-pop
-   ("<help> a" . 'consult-apropos)            ;; orig. apropos-command
-   ;; M-g bindings (goto-map)
-   ("M-g e" . 'consult-compile-error)
-   ("M-g f" . 'consult-flymake)               ;; Alternative: consult-flycheck
-   ("M-g g" . 'consult-goto-line)             ;; orig. goto-line
-   ("M-g M-g" . 'consult-goto-line)           ;; orig. goto-line
-   ("M-g o" . 'consult-outline)               ;; Alternative: consult-org-heading
-   ("M-g m" . 'consult-mark)
-   ("M-g k" . 'consult-global-mark)
-   ("M-g i" . 'consult-imenu)
-   ("M-g I" . 'consult-imenu-multi)
-   ;; M-s bindings (search-map)
-   ("M-s d" . 'consult-find)
-   ("M-s D" . 'consult-locate)
-   ("M-s g" . 'consult-grep)
-   ("M-s G" . 'consult-git-grep)
-   ("M-s r" . 'consult-ripgrep)
-   ("M-s l" . 'consult-line)
-   ("M-s L" . 'consult-line-multi)
-   ("M-s m" . 'consult-multi-occur)
-   ("M-s k" . 'consult-keep-lines)
-   ("M-s u" . 'consult-focus-lines)
-   ;; Isearch integration
-   ("M-s e" . 'consult-isearch-history)
-   :map isearch-mode-map
-   ("M-e" . 'consult-isearch-history)         ;; orig. isearch-edit-string
-   ("M-s e" . 'consult-isearch-history)       ;; orig. isearch-edit-string
-   ("M-s l" . 'consult-line)                  ;; needed by consult-line to detect isearch
-   ("M-s L" . 'consult-line-multi)            ;; needed by consult-line to detect isearch
-   ;; Minibuffer history
-   :map minibuffer-local-map
-   ("M-s" . 'consult-history)                 ;; orig. next-matching-history-element
-   ("M-r" . 'consult-history)                 ;; orig. previous-matching-history-element
-   ("C-r" . 'consult-history))
+(use-package orderless
+  ;; Advanced completion style (better fuzzy matching)
   :init
-  (require 'consult-imenu)
-  (require 'consult-org)
-  (require 'consult-flymake)
-  (require 'consult-compile)
-  (require 'consult-kmacro))
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
-(use-package dirvish
+(use-package corfu
+  ;; Completion in buffer (popup ui)
   :custom
-  (dirvish-quick-access-entries
-   '(("h" "~/"                          "Home")
-     ("d" "~/downloads/"                "Downloads")
-     ("m" "~/mpv/"                      "Mpv")
-     ("t" "~/.local/share/Trash/files/" "TrashCan")
-     ("r" "~/repos/"                    "Repos")
-     ("b" "~/documents/books/"          "Books")
-     ("a" "~/documents/books/audio"     "Audio Books")
-     ("o" "~/documents/org/"            "Org Notes")))
-  (dirvish-default-layout nil "disable preview pane by default")
-  (dired-dwim-target t "copy/move operations based on other Dired window")
-  (delete-by-moving-to-trash t)
-  (dired-mouse-drag-files t "enable drag-and-drop")
-  (mouse-drag-and-drop-region-cross-program t)
-  (dired-listing-switches
-        "-l --almost-all --human-readable --group-directories-first --no-group")
-  :config
-  (setq dirvish-mode-line-format
-        '(:left (sort symlink) :right (omit yank index)))
-  (setq dirvish-attributes
-        '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
-  (setq dirvish-preview-dispatchers (delete 'pdf dirvish-preview-dispatchers)) ; Remove pdf preview. It is too slow.
-  (dirvish-override-dired-mode)
+  (corfu-auto t "Enable Auto Completion")
+  (corfu-auto-delay 0 "Disable completion suggestion delay")
+  (corfu-auto-prefix 1 "Trigger completion early")
   :bind
-  (:map dirvish-mode-map
-        ("a"   . 'dirvish-quick-access)
-        ("TAB" . 'dirvish-subtree-toggle)
-        ("T"   . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
+  (:map corfu-map
+        ("RET" . nil) ;; return should insert a newline - not complete the sugggestion.
+        ("<escape>" . (lambda ()
+                        (interactive)
+                        (corfu-quit)
+                        (meow-normal-mode))))
+  :config
+  (require 'corfu-info)
+
+  ;; Don't auto-complete in shell modes
+  (add-hook 'shell-mode-hook
+          (lambda ()
+            (setq-local corfu-auto nil)
+            (corfu-mode)))
+
+  (global-corfu-mode))
+
+(use-package cape
+  ;; Cape for better completion-at-point support and more
+  :config
+  (setq cape-dabbrev-check-other-buffers t
+        dabbrev-ignored-buffer-regexps
+        '("\\.\\(?:pdf\\|jpe?g\\|png\\|svg\\|eps\\)\\'"
+          "^ "
+          "\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\)\\(<[0-9]+>\\)?")
+        dabbrev-upcase-means-case-search t)
+
+  ;; Add useful defaults completion sources from cape
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block) ;; Complete in org, markdown code block
+  (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
   )
 
-(require 'dirvish-quick-access)
-(require 'dirvish-extras)
 
-(use-package savehist
-  :ensure nil ;; Not a real package, but a place to collect settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Notes (org-mode, etc)
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(use-package denote
   :custom
-  (savehist-autosave-interval 60)
-  :init
-  (savehist-mode))
-
-(use-package olivetti
-  ;; Center text for nicer writing and reading
-  :defer 3
-  :bind (("C-c t z" . olivetti-mode))
-  :hook (org-mode   . olivetti-mode)
-  :hook (eww-mode   . olivetti-mode)
-  :hook (Info-mode  . olivetti-mode)
-  :hook (elfeed-search-mode  . olivetti-mode)
-  :hook (elfeed-search-mode  . (lambda () (interactive) (toggle-truncate-lines 1)))
-  :hook (elfeed-show-mode    . olivetti-mode)
+  (denote-directory (concat org-directory "denote/"))
+  (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
+  :bind
+  (("C-c C-n" . denote)
+   ("C-c o n" . denote-open-or-create)
+   ("C-c o N" . hk/diary))
   :config
-  (setq-default olivetti-body-width 120
-                fill-column 90))
-
-(use-package popper
-  ;; Pop-up window management
-  :commands (popper-mode)
-  :hook (emacs-startup . popper-mode)
-  :bind (("C-'"   . popper-toggle)
-         ("M-'"   . popper-cycle)         ;; Orig. abbrev-prefix-mark
-         ("C-M-'" . popper-toggle-type))
-  :custom (popper-mode-line nil "hide modeline in popup windows")
-  :config
-  (setq popper-reference-buffers
-        '(
-          ;; help modes
-          help-mode
-          helpful-mode
-          eldoc-mode
-          "\\*eldoc\\*"
-          Man-mode
-          woman-mode
-          ;; repl modes
-          eshell-mode
-          shell-mode
-          ;; grep modes
-          occur-mode
-          grep-mode
-          xref--xref-buffer-mode
-          rg-mode
-          ;; message modes
-          compilation-mode
-          "\\*Messages\\*"
-          "[Oo]utput\\*"
-          "\\*Async Shell Command\\*"))
-  (setq popper-group-function 'popper-group-by-project)
-  (popper-mode +1)
-  (require 'popper-echo)
-  (popper-echo-mode +1))
-
-(use-package fancy-compilation
-  ;; Support color, progress bars in compilation-mode buffer
-  :commands (fancy-compilation-mode)
-  :custom (fancy-compilation-override-colors nil))
-(with-eval-after-load 'compile
-  (fancy-compilation-mode))
+  (defun hk/diary ()
+    "Create an entry tagged 'diary' with the date as its title.
+If a diary for the current day exists, visit it.  If multiple
+entries exist, prompt with completion for a choice between them.
+Else create a new file."
+    (interactive)
+    (let* ((today (format-time-string "%A %e %B %Y"))
+           (string (denote-sluggify today))
+           (files (denote-directory-files-matching-regexp string)))
+      (cond
+       ((> (length files) 1)
+        (find-file (completing-read "Select file: " files nil :require-match)))
+       (files
+        (find-file (car files)))
+       (t
+        (denote
+         today
+         '("diary"))))))
+  )
 
 (use-package htmlize)
 (use-package gnuplot)
@@ -575,6 +546,7 @@
             (replace-match (downcase (match-string 0)) t)
             (setq count (1+ count))))
         (message "Replaced %d occurances" count))))
+
   (defun hk/insert-org-from-html-clipboard ()
     "Insert html from clipboard and convert into org-mode using pandoc."
     ;; credits to u/jsled
@@ -583,6 +555,7 @@
            (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
            (command "wl-paste | pandoc -f html -t org"))
       (shell-command command dst-buffer)))
+
   (defun hk/insert-org-from-leetcode ()
     "Insert org-mode formatted leetcode problem from url."
     (interactive)
@@ -731,12 +704,6 @@
   ;; Initialize
   (anki-editor-reset-cloze-number))
 
-;; (use-package org-roam
-;;   :custom
-;;   (org-roam-directory (concat org-directory "roam/"))
-;;   :config
-;;   (org-roam-db-autosync-mode))
-
 (use-package org-download)
 
 (use-package org-web-tools)
@@ -756,64 +723,7 @@
   :hook
   (org-mode . global-org-modern-mode)
   :custom
-  (org-modern-hide-stars nil)
   (org-modern-table nil))
-
-(use-package denote
-  :custom
-  (denote-directory (concat org-directory "denote/"))
-  (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
-  :bind
-  (("C-c C-n" . denote)
-   ("C-c o n" . denote-open-or-create)
-   ("C-c o N" . hk/diary))
-  :config
-  (defun hk/diary ()
-    "Create an entry tagged 'diary' with the date as its title.
-If a diary for the current day exists, visit it.  If multiple
-entries exist, prompt with completion for a choice between them.
-Else create a new file."
-    (interactive)
-    (let* ((today (format-time-string "%A %e %B %Y"))
-           (string (denote-sluggify today))
-           (files (denote-directory-files-matching-regexp string)))
-      (cond
-       ((> (length files) 1)
-        (find-file (completing-read "Select file: " files nil :require-match)))
-       (files
-        (find-file (car files)))
-       (t
-        (denote
-         today
-         '("diary"))))))
-  )
-
-(use-package pdf-tools)
-
-(use-package string-edit-at-point
-  ;; edit strings normally and get it escaped automatically
-  )
-
-(use-package string-inflection
-  :commands
-  string-inflection-all-cycle
-  string-inflection-toggle
-  string-inflection-camelcase
-  string-inflection-lower-camelcase
-  string-inflection-kebab-case
-  string-inflection-underscore
-  string-inflection-capital-underscore
-  string-inflection-upcase)
-
-(use-package format-all)
-
-(use-package abbrev
-  :ensure nil
-  :init
-  (add-hook 'text-mode-hook #'abbrev-mode)
-  (add-hook 'prog-mode-hook #'abbrev-mode)
-  :custom
-  (save-abbrevs 'silently))
 
 (use-package laas
   :hook (LaTeX-mode . laas-mode)
@@ -831,6 +741,12 @@ Else create a new file."
     :cond #'laas-object-on-left-condition
     "qq" (lambda () (interactive) (laas-wrap-previous-object "sqrt"))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Misc. editing enhancements
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package tempel
   ;; Snippet
   :bind (("M-+" . #'tempel-complete)
@@ -838,13 +754,49 @@ Else create a new file."
   :custom
   (tempel-path "~/documents/org/tempel"))
 
-;;; Git
+(use-package embrace
+  ;; Add/Change/Delete pairs based on expand-region.
+  :bind (("M-)" . 'embrace-commander)) ;; orig. move-past-close-and-reindent
+  :config
+  (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
+  (add-hook 'org-mode-hook 'embrace-org-mode-hook))
+
+(use-package string-edit-at-point
+  ;; Edit strings normally and get it escaped automatically
+  )
+
+(use-package poporg
+  ;; Edit code comments in org-mode.
+  :bind (("C-c /" . poporg-dwim)))
+
+(use-package string-inflection
+  :commands
+  string-inflection-all-cycle
+  string-inflection-toggle
+  string-inflection-camelcase
+  string-inflection-lower-camelcase
+  string-inflection-kebab-case
+  string-inflection-underscore
+  string-inflection-capital-underscore
+  string-inflection-upcase)
+
+(use-package so-long
+  ;; Performance mitigations for files with long lines.
+  :config
+  (global-so-long-mode))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Version Control
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package magit
   :custom
   (magit-repository-directories '(("~/repos" . 2)))
   :bind
-  (("C-c o m" . 'magit))
-  )
+  (("C-c o m" . 'magit)))
 
 (use-package magit-todos
   ;; Show TODOs (and FIXMEs, etc) in Magit status buffer
@@ -871,148 +823,92 @@ Else create a new file."
   :config
   (global-git-gutter-mode +1))
 
-;;; :completion
-(use-package which-key
-  :config
-  (which-key-mode)
-  (setq which-key-idle-delay 1)
-  :diminish)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Developer and IDE config
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package vertico
-  ;; Vertical UI
-  ;; Completion in minibuffer
-  :config
-  (vertico-mode))
-
-(use-package marginalia
-  ;; Rich annotations in minibuffer
-  :config
-  (marginalia-mode))
-
-(use-package orderless
-  ;; Advanced completion style (better fuzzy matching)
-  :init
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
-
-;; https://www.reddit.com/r/emacs/comments/11u3tvj/emacs_lags_when_making_the_auto_completion_popup/
-(setq-default pgtk-wait-for-event-timeout 0)
-
-(use-package corfu
-  ;; Completion in buffer (popup ui)
-  :custom
-  (corfu-auto t "Enable Auto Completion")
-  (corfu-auto-delay 0 "Disable completion suggestion delay")
-  (corfu-auto-prefix 1 "Trigger completion early")
-  :bind
-  (:map corfu-map
-        ("RET" . nil) ;; return should insert a newline - not complete the sugggestion.
-        ("<escape>" . (lambda ()
-                        (interactive)
-                        (corfu-quit)
-                        (meow-normal-mode))))
-  :config
-  (require 'corfu-info)
-  (global-corfu-mode))
-
-(use-package cape
-  ;; Cape for better completion-at-point support and more
-  :config
-  (setq cape-dabbrev-check-other-buffers t
-        dabbrev-ignored-buffer-regexps
-        '("\\.\\(?:pdf\\|jpe?g\\|png\\|svg\\|eps\\)\\'"
-          "^ "
-          "\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\)\\(<[0-9]+>\\)?")
-        dabbrev-upcase-means-case-search t)
-
-  ;; Add useful defaults completion sources from cape
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block) ;; Complete in org, markdown code block
-  (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
-  )
-
-(use-package mixed-pitch
-  :hook (org-mode . mixed-pitch-mode))
-
-(use-package nerd-icons)
-
-(use-package helpful
-  ;; Make default `describe-*' screens more helpful
-  :bind (([remap describe-command]  . #'helpful-command)
-         ([remap describe-function] . #'helpful-callable)
-         ([remap describe-key] .  #'helpful-key)
-         ([remap describe-symbol] .  #'helpful-symbol)
-         ([remap describe-variable] . #'helpful-variable)
-         ("C-c C-d" . #'helpful-at-point)
-         ("C-h F" . #'helpful-function)
-         ("C-h K" . #'helpful-keymap)))
-
-(use-package embark
-  :bind
-  (("C-." . embark-act)
-   ("C-;" . embark-dwim))
-  :init
-  (setq prefix-help-command #'embark-prefix-help-command))
-
-(use-package embark-consult
+(use-package ws-butler
+  ;; Whitespace is evil.  Let's get rid of as much as possible.  But we
+  ;; don't want to do this with files that already had whitespace (from
+  ;; someone else's project, for example).  This mode will call
+  ;; `whitespace-cleanup' before buffers are saved (but smartly)!
+  :diminish
   :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-
-;;; IDE
-(use-package rainbow-mode
-  :hook (prog-mode . rainbow-mode)
-  :diminish)
-
-(use-package envrc
-  :config
-  (envrc-global-mode))
-
-(use-package citre
+  ((text-mode prog-mode) . ws-butler-mode)
   :custom
-  (citre-default-create-tags-file-location 'global-cache)
-  (citre-use-project-root-when-creating-tags t)
-  (citre-tags-completion-case-sensitive nil)
-  )
+  (ws-butler-keep-whitespace-before-point nil))
+
+(use-package editorconfig
+  :after ws-butler
+  :config
+  (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
+
+
+(use-package emacs
+  ;; Prefer Treesitter
+  :config
+  (setq major-mode-remap-alist
+        '((bash-mode . bash-ts-mode)
+          (python-mode . python-ts-mode)
+          (json-mode . json-ts-mode)
+          (c-mode . c-ts-mode)
+          )))
 
 (use-package eglot
   :hook
-  (nix-mode . eglot-ensure)
-  (c-mode-common . eglot-ensure)
+  (nix-mode . eglot)
+  (c-mode-common . eglot)
   :bind
   (:map eglot-mode-map
         ("C-c C" . eglot)
         ("C-c A" . eglot-code-actions)
         ("C-c R" . eglot-rename)
         ("M-r"   . eglot-rename)
-        ("C-c F" . eglot-format)))
+        ("C-c F" . eglot-format))
+  :custom
+  (eglot-send-changes-idle-time 0.1)
+  (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
+  :config
+  (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
+
+  ;; Eglot sometimes needs to know where to find language servers
+  (add-to-list
+   'eglot-server-programs
+   '((c-mode c-ts-mode c++-mode c++-ts-mode) "clangd" "--clang-tidy" "--completion-style=detailed"))
+  (add-to-list
+   'eglot-server-programs '(nix-mode . ("nil")))
+  )
+
+(use-package citre
+  ;; ctags - useful if lsp is not available
+  :custom
+  (citre-default-create-tags-file-location 'global-cache)
+  (citre-use-project-root-when-creating-tags t)
+  (citre-tags-completion-case-sensitive nil)
+  )
+
+(use-package envrc
+  :config
+  (envrc-global-mode))
+
+(use-package nix-mode :mode (("\\.nix\\'" . nix-mode)))
 
 (use-package emacs
-  ;; C-mode config
+  ;; c-mode config
   :config
-  ;; TODO Move to CC mode
   (setopt c-basic-offset 2)
   (defun hk/c-mode-hook ()
     (c-set-offset 'substatement 0)
     (c-set-offset 'substatement-open 0)
     (setq-local outline-regexp " *//\\(-+\\)")
     )
-
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs
-                 '((c++-mode c-mode) "clangd" "--clang-tidy" "--completion-style=detailed")))
+  (add-hook 'c-mode-hook 'hk/c-mode-hook)
+  (add-hook 'c-ts-mode-hook 'hk/c-mode-hook)
   )
 
-(use-package nix-mode
-  :mode (("\\.nix\\'" . nix-mode))
-  :config
-  (with-eval-after-load 'eglot
-    (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))))
-
-(use-package nix-buffer
-  ;; Load nix environment from nix-buffer-root-file file
-  )
+(use-package zig-mode)
 
 (use-package web-mode
   ;; Web (html/css/javascript)
@@ -1030,10 +926,49 @@ Else create a new file."
   ;; Expand html templates
   :hook ((web-mode . emmet-mode)))
 
-(use-package zig-mode)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;   Applications and tools
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; :tools
+(use-package dirvish
+  ;; File manager
+  :custom
+  (dirvish-quick-access-entries
+   '(("h" "~/"                          "Home")
+     ("d" "~/downloads/"                "Downloads")
+     ("m" "~/mpv/"                      "Mpv")
+     ("t" "~/.local/share/Trash/files/" "TrashCan")
+     ("r" "~/repos/"                    "Repos")
+     ("b" "~/documents/books/"          "Books")
+     ("a" "~/documents/books/audio"     "Audio Books")
+     ("o" "~/documents/org/"            "Org Notes")))
+  (dirvish-default-layout nil "disable preview pane by default")
+  (dired-dwim-target t "copy/move operations based on other Dired window")
+  (delete-by-moving-to-trash t)
+  (dired-mouse-drag-files t "enable drag-and-drop")
+  (mouse-drag-and-drop-region-cross-program t)
+  (dired-listing-switches
+        "-l --almost-all --human-readable --group-directories-first --no-group")
+  :bind
+  (:map dirvish-mode-map
+        ("a"   . 'dirvish-quick-access)
+        ("TAB" . 'dirvish-subtree-toggle)
+        ("T"   . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
+  :config
+  (setq dirvish-mode-line-format
+        '(:left (sort symlink) :right (omit yank index)))
+  (setq dirvish-attributes
+        '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
+  (setq dirvish-preview-dispatchers (delete 'pdf dirvish-preview-dispatchers)) ; Remove pdf preview. It is too slow.
+  (dirvish-override-dired-mode)
+  (require 'dirvish-quick-access)
+  (require 'dirvish-extras)
+  )
+
 (use-package eww
+  ;; Web browser
   :ensure nil
   :bind
   (:map eww-mode-map
@@ -1053,6 +988,8 @@ Else create a new file."
     (message "Images are now %s"
              (if shr-inhibit-images "off" "on")))
   )
+
+(use-package pdf-tools)
 
 (use-package devdocs
   :bind (("C-c D" . 'devdocs-lookup))
@@ -1143,37 +1080,16 @@ Else create a new file."
   (insert "tgpt -i")
   (comint-send-input))
 
-(use-package saveplace
-  ;; Yes, please save my place when opening/closing files:
-  :ensure nil
-  :config
-  (save-place-mode))
-
-(use-package so-long
-  ;; Performance mitigations for files with long lines.
-  :config
-  (global-so-long-mode))
-
-(use-package ws-butler
-  ;; Whitespace is evil.  Let's get rid of as much as possible.  But we
-  ;; don't want to do this with files that already had whitespace (from
-  ;; someone else's project, for example).  This mode will call
-  ;; `whitespace-cleanup' before buffers are saved (but smartly)!
-  :hook
-  ((text-mode prog-mode) . ws-butler-mode)
-  :diminish
-  :custom
-  (ws-butler-keep-whitespace-before-point nil)
-  (show-trailing-whitespace t))
-
-(use-package editorconfig
-  :config
-  (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
-
 (use-package jinx
   ;; Enchaned Spell Checker
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  Appearance
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -1184,14 +1100,86 @@ Else create a new file."
   (doom-modeline-battery nil)
   (doom-modeline-time nil))
 
-(use-package poporg
-  ;; Edit comments in org-mode.
-  :bind (("C-c /" . poporg-dwim)))
+(use-package popper
+  ;; Pop-up window management
+  :commands (popper-mode)
+  :hook (emacs-startup . popper-mode)
+  :bind (("C-'"   . popper-toggle)
+         ("M-'"   . popper-cycle)         ;; Orig. abbrev-prefix-mark
+         ("C-M-'" . popper-toggle-type))
+  :custom (popper-mode-line nil "hide modeline in popup windows")
+  :config
+  (setq popper-reference-buffers
+        '(
+          ;; help modes
+          help-mode
+          helpful-mode
+          eldoc-mode
+          "\\*eldoc\\*"
+          Man-mode
+          woman-mode
+          ;; repl modes
+          eshell-mode
+          shell-mode
+          ;; grep modes
+          occur-mode
+          grep-mode
+          xref--xref-buffer-mode
+          rg-mode
+          ;; message modes
+          compilation-mode
+          "\\*Messages\\*"
+          "[Oo]utput\\*"
+          "\\*Async Shell Command\\*"))
+  (setq popper-group-function 'popper-group-by-project)
+  (popper-mode +1)
+  (require 'popper-echo)
+  (popper-echo-mode +1))
 
-(add-hook 'shell-mode-hook
-          (lambda ()
-            (setq-local corfu-auto nil)
-            (corfu-mode)))
+(use-package mixed-pitch
+  :hook (org-mode . mixed-pitch-mode))
+
+(use-package nerd-icons)
+
+(use-package ef-themes
+  :custom
+  (custom-safe-themes
+   '("14ba61945401e42d91bb8eef15ab6a03a96ff323dd150694ab8eb3bb86c0c580"
+     "ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135"
+     default))
+  (ef-themes-mixed-fonts t)
+  (ef-themes-headings
+   '((1 . (variable-pitch 1.3))
+     (2 . (1.1))
+     (agenda-date . (1.1))
+     (agenda-structure . (variable-pitch light 1.3))
+     (t . (1.1))))
+  :config
+  (load-theme 'ef-light))
+
+(use-package spacious-padding
+  :config
+  (spacious-padding-mode +1))
+
+(use-package olivetti
+  ;; Center text for nicer writing and reading
+  :defer 3
+  :bind (("C-c t z" . olivetti-mode))
+  :config
+  (setq-default olivetti-body-width 120
+                fill-column 90))
+
+(use-package rainbow-mode
+  :hook (prog-mode . rainbow-mode)
+  :diminish)
+
+(use-package fancy-compilation
+  ;; Support color, progress bars in compilation-mode buffer
+  :commands (fancy-compilation-mode)
+  :custom (fancy-compilation-override-colors nil)
+  :config
+  (with-eval-after-load 'compile
+    (fancy-compilation-mode)))
 
 (provide 'init)
 ;;; init.el ends here
