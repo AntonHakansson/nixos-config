@@ -74,8 +74,8 @@
   (global-set-key (kbd "<f5>") 'recompile)
   (global-set-key (kbd "<f7>") 'scroll-lock-mode)
   (global-set-key (kbd "C-t") 'hippie-expand) ; orig. transpose-chars
-  (global-set-key (kbd "M-p") 'backward-paragraph)
-  (global-set-key (kbd "M-n") 'forward-paragraph)
+  ;; (global-set-key (kbd "M-p") 'backward-paragraph)
+  ;; (global-set-key (kbd "M-n") 'forward-paragraph)
   (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
 
   ;; ibuffer
@@ -498,10 +498,14 @@
 
 (use-package corfu
   ;; Completion in buffer (popup ui)
+  :hook (((prog-mode text-mode tex-mode) . corfu-mode)
+         ((shell-mode eshell-mode) . hk/corfu-shell-settings)
+         (minibuffer-setup . hk/corfu-enable-always-in-minibuffer))
   :custom
   (corfu-auto t "Enable Auto Completion")
-  (corfu-auto-delay 0 "Disable completion suggestion delay")
-  (corfu-auto-prefix 1 "Trigger completion early")
+  (corfu-auto-delay 0.05 "Disable completion suggestion delay")
+  (corfu-auto-prefix 3 "Trigger completion early")
+  (corfu-cycle t "Cycle candidates")
   :bind
   (:map corfu-map
         ("RET" . nil)     ; return should insert a newline - not complete the sugggestion.
@@ -509,16 +513,35 @@
                         (interactive)
                         (corfu-quit)
                         (meow-normal-mode))))
-  :config
-  (require 'corfu-info)
+  :init
+  (defun hk/corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico is not active."
+    (unless (bound-and-true-p vertico--input)
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
 
-  ;; Don't auto-complete in shell modes
-  (add-hook 'shell-mode-hook
-          (lambda ()
-            (setq-local corfu-auto nil)
-            (corfu-mode)))
+  (defun hk/corfu-shell-insert-and-send ()
+    (interactive)
+    ;; 1. First insert the completed candidate
+    (corfu-insert)
+    ;; 2. Send the entire prompt input to the shell
+    (cond
+     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
+      (eshell-send-input))
+     ((derived-mode-p 'comint-mode)
+      (comint-send-input))))
 
-  (global-corfu-mode))
+  (defun hk/corfu-shell-settings ()
+    (setq-local corfu-quit-no-match t
+                corfu-auto nil
+                completion-cycle-threshold nil)
+    (define-key corfu-map "\r" #'hk/corfu-shell-insert-and-send)
+    (corfu-mode)))
+
+(use-package corfu-info
+  :ensure nil)
 
 (use-package cape
   ;; Cape for better completion-at-point support and more
@@ -906,8 +929,9 @@ Else create a new file."
 
 (use-package eglot
   :hook
-  (nix-mode . eglot)
-  (c-mode-common . eglot)
+  ((nix-mode . eglot-ensure)
+   ((c-mode-common c-ts-mode) . eglot-ensure)
+   ((eglot-managed-mode) . hk/eglot-capf))
   :bind
   (:map eglot-mode-map
         ("C-c C" . eglot)
@@ -926,7 +950,17 @@ Else create a new file."
    'eglot-server-programs
    '((c-mode c-ts-mode c++-mode c++-ts-mode) "clangd" "--clang-tidy" "--completion-style=detailed"))
   (add-to-list
-   'eglot-server-programs '(nix-mode . ("nil")))
+   'eglot-server-programs '((nix-mode) "nil"))
+
+  :init
+  (defun hk/eglot-capf ()
+    "Use eglot completions alongside cape and tempel."
+    (setq-local completion-at-point-functions
+              (list (cape-super-capf
+                     #'eglot-completion-at-point
+                     #'tempel-complete
+                     #'cape-dabbrev-min-3
+                     #'cape-file))))
   )
 
 (use-package citre
