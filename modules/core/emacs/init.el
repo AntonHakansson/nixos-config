@@ -9,7 +9,7 @@
 (defvar hk/cache-dir (concat (or (getenv "XDG_CACHE_DIR") "~/.cache") "/emacs/") "Location for cache.")
 
 (use-package emacs
-  :ensure nil ;; Not a real package, but a place to collect global settings
+  :ensure nil                 ; Not a real package, but a place to collect global settings
   :init
   (setq user-mail-address "anton@hakanssn.com"
         user-full-name    "Anton Hakansson")
@@ -47,39 +47,39 @@
   (set-keyboard-coding-system 'utf-8)
 
   ;; Scrolling & cursor
-  (pixel-scroll-precision-mode)                       ; Smooth scrolling
-  (blink-cursor-mode -1)                              ; Steady cursor
-  (push '(vertical-scroll-bars) default-frame-alist)  ; Remove vertical scroll bar
+  (pixel-scroll-precision-mode)                      ; Smooth scrolling
+  (blink-cursor-mode -1)                             ; Steady cursor
+  (push '(vertical-scroll-bars) default-frame-alist) ; Remove vertical scroll bar
 
   ;; Buffers, Lines, and indentation
-  (setopt display-line-numbers-type 'relative)  ; Relative line numbers
-  (setopt indent-tabs-mode nil)                 ; Use spaces instead of tabs
+  (setopt display-line-numbers-type 'relative) ; Relative line numbers
+  (setopt indent-tabs-mode nil)                ; Use spaces instead of tabs
   (setopt tab-width 2)
-  (setopt x-underline-at-descent-line nil)   ; Prettier underlines
-  (setopt show-trailing-whitespace nil)      ; By default, don't underline trailing spaces
-  (setopt indicate-buffer-boundaries 'left)  ; Show buffer top and bottom in the margin
-  (setopt switch-to-buffer-obey-display-actions t)   ; Make switching buffers more consistent
+  (setopt x-underline-at-descent-line nil)  ; Prettier underlines
+  (setopt show-trailing-whitespace nil)     ; By default, don't underline trailing spaces
+  (setopt indicate-buffer-boundaries 'left) ; Show buffer top and bottom in the margin
+  (setopt switch-to-buffer-obey-display-actions t) ; Make switching buffers more consistent
 
-  (add-hook 'after-init-hook #'recentf-mode)  ; Turn on recentf mode
+  (add-hook 'after-init-hook #'recentf-mode) ; Turn on recentf mode
 
   ;; Misc. Emacs tweaks
-  (fset 'yes-or-no-p 'y-or-n-p) ; Shorter confirmation
+  (fset 'yes-or-no-p 'y-or-n-p)         ; Shorter confirmation
   (setopt isearch-lazy-count t)
   (setopt delete-by-moving-to-trash t)
-  (setopt set-mark-command-repeat-pop t) ;; after =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
-  (setopt bookmark-save-flag 1)  ; Write bookmark file when bookmark list is modified
+  (setopt set-mark-command-repeat-pop t) ; after =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
+  (setopt bookmark-save-flag 1)       ; Write bookmark file when bookmark list is modified
 
   ;; Keybinds
   (global-set-key (kbd "<f1>") 'shell)
   (global-set-key (kbd "<f5>") 'recompile)
   (global-set-key (kbd "<f7>") 'scroll-lock-mode)
-  (global-set-key (kbd "C-t") 'hippie-expand) ;; orig. transpose-chars
+  (global-set-key (kbd "C-t") 'hippie-expand) ; orig. transpose-chars
   (global-set-key (kbd "M-p") 'backward-paragraph)
   (global-set-key (kbd "M-n") 'forward-paragraph)
   (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
 
   ;; ibuffer
-  (setopt ibuffer-expert t) ; stop yes no prompt on delete
+  (setopt ibuffer-expert t)             ; stop yes no prompt on delete
   (setopt ibuffer-saved-filter-groups
 	        '(("default"
 		         ("dired" (mode . dired-mode))
@@ -158,8 +158,8 @@
   (no-littering-var-directory hk/cache-dir)
   :config
   ;; Don't create lockfiles
-  (setq create-lockfiles nil) ;; #readme.txt#
-  (setq make-backup-files nil) ;; readme.txt~
+  (setq create-lockfiles nil)           ; #readme.txt#
+  (setq make-backup-files nil)          ; readme.txt~
   (setq custom-file (concat no-littering-etc-directory "custom.el"))
   ;; Also make sure auto-save files are saved out-of-tree
   (setq auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
@@ -221,14 +221,14 @@
    ;; Isearch integration
    ("M-s e" . 'consult-isearch-history)
    :map isearch-mode-map
-  ("M-e" . 'consult-isearch-history)         ; orig. isearch-edit-string
-   ("M-s e" . 'consult-isearch-history)       ; orig. isearch-edit-string
-   ("M-s l" . 'consult-line)                  ; needed by consult-line to detect isearch
-   ("M-s L" . 'consult-line-multi)            ; needed by consult-line to detect isearch
+   ("M-e" . 'consult-isearch-history)   ; orig. isearch-edit-string
+   ("M-s e" . 'consult-isearch-history) ; orig. isearch-edit-string
+   ("M-s l" . 'consult-line)            ; needed by consult-line to detect isearch
+   ("M-s L" . 'consult-line-multi)      ; needed by consult-line to detect isearch
    ;; Minibuffer history
    :map minibuffer-local-map
-   ("M-s" . 'consult-history)                 ;; orig. next-matching-history-element
-   ("M-r" . 'consult-history)                 ;; orig. previous-matching-history-element
+   ("M-s" . 'consult-history)           ; orig. next-matching-history-element
+   ("M-r" . 'consult-history)           ; orig. previous-matching-history-element
    ("C-r" . 'consult-history))
   :init
   (require 'consult-imenu)
@@ -435,7 +435,7 @@
 
    ;; meow
    '("?" . meow-cheatsheet)
-   '("e" . "H-e") ;; To execute original e in MOTION state, use SPC e.
+   '("e" . "H-e")                      ; To execute original e in MOTION state, use SPC e.
    '("'" . (lambda () (interactive) (if (meow-normal-mode-p) (meow-motion-mode +1) (meow-normal-mode +1))))
    '("1" . meow-digit-argument)
    '("2" . meow-digit-argument)
@@ -448,7 +448,7 @@
    '("9" . meow-digit-argument)
    '("0" . meow-digit-argument))
 
-  ; Register HTML tag as a meow object/thing
+  ;; Register HTML tag as a meow object/thing
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?a . angle))
 
@@ -504,7 +504,7 @@
   (corfu-auto-prefix 1 "Trigger completion early")
   :bind
   (:map corfu-map
-        ("RET" . nil) ;; return should insert a newline - not complete the sugggestion.
+        ("RET" . nil)     ; return should insert a newline - not complete the sugggestion.
         ("<escape>" . (lambda ()
                         (interactive)
                         (corfu-quit)
@@ -532,7 +532,7 @@
 
   ;; Add useful defaults completion sources from cape
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block) ;; Complete in org, markdown code block
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block) ; Complete in org, markdown code block
   (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
   (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
   )
@@ -642,7 +642,7 @@ Else create a new file."
                               (sqlite . t)))
   (calendar-date-style 'european)
   (org-use-speed-commands
-   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ;  when point is on any star at the beginning of the headline
+   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ; when point is on any star at the beginning of the headline
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
   (org-log-into-drawer 't "instert state changes into a drawer LOGBOOK")
   (org-refile-targets '((nil :maxlevel . 9)
@@ -686,7 +686,7 @@ Else create a new file."
             ))))
   (define-key org-src-mode-map "\C-c\C-v" 'org-src-do-key-sequence-at-code-block)
 
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ;; increase scale of latex fragments
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ; increase scale of latex fragments
   )
 
 (use-package org-protocol
@@ -802,7 +802,7 @@ Else create a new file."
 
 (use-package embrace
   ;; Add/Change/Delete pairs based on expand-region.
-  :bind (("M-)" . 'embrace-commander)) ;; orig. move-past-close-and-reindent
+  :bind (("M-)" . 'embrace-commander))  ; orig. move-past-close-and-reindent
   :config
   (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
   (add-hook 'org-mode-hook 'embrace-org-mode-hook))
@@ -1182,7 +1182,7 @@ Else create a new file."
   :commands (popper-mode)
   :hook (emacs-startup . popper-mode)
   :bind (("C-'"   . popper-toggle)
-         ("M-'"   . popper-cycle)         ;; Orig. abbrev-prefix-mark
+         ("M-'"   . popper-cycle)       ; Orig. abbrev-prefix-mark
          ("C-M-'" . popper-toggle-type))
   :custom (popper-mode-line nil "hide modeline in popup windows")
   :config
