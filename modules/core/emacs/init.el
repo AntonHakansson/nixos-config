@@ -271,9 +271,9 @@
     t)
 
   (defun hk/avy-action-exchange (pt)
-      "Exchange sexp at PT with the one at point."
-      (set-mark pt)
-      (transpose-sexps 0))
+    "Exchange sexp at PT with the one at point."
+    (set-mark pt)
+    (transpose-sexps 0))
 
   :config
   ;; Colemak-Dh keys
@@ -287,7 +287,7 @@
           (?$ . avy-action-ispell)
           (?z . avy-action-zap-to-char)
           ))
-  (global-set-key (kbd "C-,") 'avy-goto-char-timer)))
+  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
 
 (use-package crux
   ;; Collection of Ridiculously Useful eXtensions
