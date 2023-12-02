@@ -304,11 +304,7 @@
   (meow-use-clipboard 't)
   (meow-use-enhanced-selection-effect 't "i don't know what this does - let's try it out")
   (meow-goto-line-function #'consult-goto-line)
-  (meow-replace-state-name-list '((normal . "N")
-                            (motion . "M")
-                            (keypad . "K")
-                            (insert . "I")
-                            (beacon . "B")))
+
   :config
   ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
 
@@ -455,6 +451,12 @@
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?a . angle))
 
+  (setq meow-replace-state-name-list
+          '((normal . "N")
+            (motion . "M")
+            (keypad . "K")
+            (insert . "I")
+            (beacon . "B")))
   (meow-global-mode 1))
 
 (use-package hydra)
