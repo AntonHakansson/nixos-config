@@ -60,6 +60,9 @@
   (setopt indicate-buffer-boundaries 'left) ; Show buffer top and bottom in the margin
   (setopt switch-to-buffer-obey-display-actions t) ; Make switching buffers more consistent
 
+  ;; Quickly access recent files
+  (setopt recentf-max-menu-items 30)    ; bump the limits a bit
+  (setopt recentf-max-saved-items 50)
   (add-hook 'after-init-hook #'recentf-mode) ; Turn on recentf mode
 
   ;; Misc. Emacs tweaks
