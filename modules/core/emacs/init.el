@@ -244,19 +244,6 @@
    ("C-;" . embark-dwim))
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
-
-  (defun bedrock/avy-action-embark (pt)
-    (unwind-protect
-        (save-excursion
-          (goto-char pt)
-          (embark-act))
-      (select-window
-       (cdr (ring-ref avy-ring 0))))
-    t)
-
-  ;; After invoking avy-goto-char-timer, hit "." to run embark at the next
-  ;; candidate you select
-  (setf (alist-get ?. avy-dispatch-alist) 'bedrock/avy-action-embark)
   )
 
 (use-package embark-consult
@@ -271,10 +258,36 @@
 
 (use-package avy
   :bind
-  (("C-c n" . avy-goto-word-1))
+  (("C-c n" . avy-goto-word-1)
+   ("C-,"   . avy-goto-char-timer))
+  :init
+  (defun hk/avy-action-embark (pt)
+    (unwind-protect
+        (save-excursion
+          (goto-char pt)
+          (embark-act))
+      (select-window
+       (cdr (ring-ref avy-ring 0))))
+    t)
+
+  (defun hk/avy-action-exchange (pt)
+      "Exchange sexp at PT with the one at point."
+      (set-mark pt)
+      (transpose-sexps 0))
+
   :config
+  ;; Colemak-Dh keys
   (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h))
-  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
+  (setq avy-dispatch-alist
+        '((?. . hk/avy-action-embark)
+          (?x . avy-action-teleport)
+          (?X . hk/avy-action-exchange)
+          (?y . avy-action-yank)
+          (?Y . avy-action-yank-line)
+          (?$ . avy-action-ispell)
+          (?z . avy-action-zap-to-char)
+          ))
+  (global-set-key (kbd "C-,") 'avy-goto-char-timer)))
 
 (use-package crux
   ;; Collection of Ridiculously Useful eXtensions
