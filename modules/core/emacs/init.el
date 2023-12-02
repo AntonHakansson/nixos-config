@@ -561,6 +561,11 @@
   (add-to-list 'completion-at-point-functions #'cape-elisp-block) ; Complete in org, markdown code block
   (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
   (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
+
+
+(use-package pcmpl-args
+  ;; Extend Pcomplete with completions from man pages.
+  ;; There is a build-in pcomplete-from-help that parses '--help' output of command.
   )
 
 
