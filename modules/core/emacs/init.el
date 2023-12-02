@@ -931,7 +931,36 @@ Else create a new file."
 (use-package nix-mode :mode (("\\.nix\\'" . nix-mode)))
 
 (use-package emacs
-  ;; c-mode config
+  ;; c-mode, c-ts-mode config
+  :init
+  (defun hk/c-ts-get-return-type ()
+    (when-let* ((defun-node (treesit-defun-at-point))
+                (return-type (treesit-node-child-by-field-name defun-node "type")))
+      (treesit-node-text return-type))
+    )
+  (defun hk/c-ts-refactor-to-result-return ()
+    (interactive)
+    (when-let* ((defun-node (treesit-defun-at-point))
+                (return-type (treesit-node-child-by-field-name defun-node "type"))
+                (body (treesit-node-child-by-field-name defun-node "body"))
+                (first-child (treesit-node-child body 1))
+                )
+      (progn
+        (while (treesit-node-match-p first-child "\\(?:comment\\)")
+          (setq first-child (treesit-node-next-sibling first-child)))
+        (goto-char (treesit-node-start first-child))
+        (insert (treesit-node-text return-type) " result = "
+                (if (treesit-node-match-p return-type "\\(?:primitive_type\\)")
+                    "0" "{0}")
+                ";\n")
+        (goto-char (treesit-node-start
+                    (treesit-node-get (treesit-node-child-by-field-name (treesit-defun-at-point) "body")
+                      '((child -1 nil)))))
+        (open-line 1)
+        (insert "return result;")
+        (prog-fill-reindent-defun)
+        ))
+    )
   :config
   (setopt c-basic-offset 2)
   (defun hk/c-mode-hook ()
