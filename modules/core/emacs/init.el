@@ -50,7 +50,6 @@
   (pixel-scroll-precision-mode)                       ; Smooth scrolling
   (blink-cursor-mode -1)                              ; Steady cursor
   (push '(vertical-scroll-bars) default-frame-alist)  ; Remove vertical scroll bar
-  (setopt mouse-wheel-progressive-speed nil)          ; don't accelerate scrolling
 
   ;; Buffers, Lines, and indentation
   (setopt display-line-numbers-type 'relative)  ; Relative line numbers
@@ -82,21 +81,21 @@
   ;; ibuffer
   (setopt ibuffer-expert t) ; stop yes no prompt on delete
   (setopt ibuffer-saved-filter-groups
-	      (quote (("default"
-		             ("dired" (mode . dired-mode))
-		             ("org"   (and
-                           (mode . org-mode)
-                           ; exclude GTD and scratch buffer
-                           (not (or (filename . "^.+/gtd/.+")
-                                    (name . "^\\*scratch\\*$")))))
-		             ("magit" (name . "^magit"))
-		             ("planner" (or
-				                     (name . "^\\*Calendar\\*$")
-				                     (name . "^\\*Org Agenda\\*")
-                             (filename . "^.+gtd.+")))
-		             ("emacs" (or
-			                     (name . "^\\*scratch\\*$")
-			                     (name . "^\\*Messages\\*$")))))))
+	        '(("default"
+		         ("dired" (mode . dired-mode))
+		         ("org"   (and
+                       (mode . org-mode)
+                       ;; exclude GTD and scratch buffer
+                       (not (or (filename . "^.+/gtd/.+")
+                                (name . "^\\*scratch\\*$")))))
+		         ("magit" (name . "^magit"))
+		         ("planner" (or
+				                 (name . "^\\*Calendar\\*$")
+				                 (name . "^\\*Org Agenda\\*")
+                         (filename . "^.+gtd.+")))
+		         ("emacs" (or
+			                 (name . "^\\*scratch\\*$")
+			                 (name . "^\\*Messages\\*$"))))))
 
   (add-hook 'ibuffer-mode-hook
 	          (lambda ()
@@ -121,18 +120,28 @@
         initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n")
 
   ;; Tab bar
-  (setopt tab-bar-show 1)
+  (defun tab-bar-format-menu-bar ()
+    "Produce the Menu button for the tab bar that shows the menu bar."
+    `((menu-bar menu-item (propertize " 𝝺 " 'face 'tab-bar-tab-inactive)
+                tab-bar-menu-bar :help "Menu Bar")))
+
+  (setopt tab-bar-format '(tab-bar-format-menu-bar
+                           tab-bar-format-tabs))
+
+  (setopt tab-bar-new-tab-choice 'ibuffer)
+  (setopt tab-bar-tab-name-function 'tab-bar-tab-name-current)
+  (setopt tab-bar-show t)
 
   ;; Theme - modus operandi
   (setopt modus-themes-mixed-fonts t)
   (setopt modus-themes-headings
-      '((1 . (variable-pitch 1.3))
-        (2 . (1.1))
-        (agenda-date . (1.1))
-        (agenda-structure . (variable-pitch light 1.3))
-        (t . (1.1))))
+          '((1 . (variable-pitch 1.3))
+            (2 . (1.1))
+            (agenda-date . (1.1))
+            (agenda-structure . (variable-pitch light 1.3))
+            (t . (1.1))))
   (setopt modus-operandi-tinted-palette-overrides
-        '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
+          '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
   )
 
 (use-package diminish
