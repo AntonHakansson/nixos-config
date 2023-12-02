@@ -76,7 +76,6 @@
   (global-set-key (kbd "<f1>") 'shell)
   (global-set-key (kbd "<f5>") 'recompile)
   (global-set-key (kbd "<f7>") 'scroll-lock-mode)
-  (global-set-key (kbd "C-t") 'hippie-expand) ; orig. transpose-chars
   ;; (global-set-key (kbd "M-p") 'backward-paragraph)
   ;; (global-set-key (kbd "M-n") 'forward-paragraph)
   (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
@@ -563,6 +562,10 @@
   (add-to-list 'completion-at-point-functions #'cape-elisp-block) ; Complete in org, markdown code block
   (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
   (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
+
+  ;; Quickly duplicate line from buffer
+  (global-set-key (kbd "C-t") 'cape-line) ; orig. transpose-chars
+  (global-set-key (kbd "C-S-t") 'hippie-expand) ; orig. transpose-chars
   )
 
 (use-package pcmpl-args
