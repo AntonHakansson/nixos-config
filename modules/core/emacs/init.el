@@ -996,6 +996,9 @@ Else create a new file."
   (citre-default-create-tags-file-location 'global-cache)
   (citre-use-project-root-when-creating-tags t)
   (citre-tags-completion-case-sensitive nil)
+  (citre-tags-substr-completion t)
+  (citre-ctags-program    (file-truename (executable-find "ctags")))
+  (citre-readtags-program (file-truename (executable-find "readtags")))
   )
 
 (use-package envrc
