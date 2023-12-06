@@ -1187,28 +1187,31 @@ Else create a new file."
   (message-cite-reply-position 'below "Put reply below quoted text")
   :config
   (setq mail-user-agent 'mu4e-user-agent)
-  (setq mu4e-contexts `(,(make-mu4e-context :name "Personal"
-                                            :match-func (lambda (msg)
-                                                          (when msg
-                                                            (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-                                            :vars '((user-mail-address . "anton@hakanssn.com")
-                                                    (user-full-name . "Anton Hakansson")
-                                                    (mu4e-trash-folder . "/personal/Trash")
-                                                    (mu4e-sent-folder . "/personal/Sent")
-                                                    (mu4e-drafts-folder . "/personal/Drafts")
-                                                    (mu4e-refile-folder . "/personal/Trash")
-                                                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "personal"))))
-                        ,(make-mu4e-context :name "Gmail"
-                                            :match-func (lambda (msg)
-                                                          (when msg
-                                                            (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-                                            :vars '((user-mail-address . "anton.hakansson98@gmail.com")
-                                                    (user-full-name . "Anton Hakansson")
-                                                    (mu4e-trash-folder . "/gmail/[Gmail]/Trash")
-                                                    (mu4e-sent-folder . "/gmail/[Gmail]/Sent Mail")
-                                                    (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
-                                                    (mu4e-refile-folder . "/gmail/[Gmail]/All Mail")
-                                                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "gmail")))))))
+  (setq mu4e-contexts
+        `(,(make-mu4e-context
+            :name "Personal"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "anton@hakanssn.com")
+                    (user-full-name . "Anton Hakansson")
+                    (mu4e-trash-folder . "/personal/Trash")
+                    (mu4e-sent-folder . "/personal/Sent")
+                    (mu4e-drafts-folder . "/personal/Drafts")
+                    (mu4e-refile-folder . "/personal/Trash")
+                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "personal"))))
+          ,(make-mu4e-context
+            :name "Gmail"
+            :match-func (lambda (msg)
+                          (when msg
+                            (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
+            :vars '((user-mail-address . "anton.hakansson98@gmail.com")
+                    (user-full-name . "Anton Hakansson")
+                    (mu4e-trash-folder . "/gmail/[Gmail]/Trash")
+                    (mu4e-sent-folder . "/gmail/[Gmail]/Sent Mail")
+                    (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
+                    (mu4e-refile-folder . "/gmail/[Gmail]/All Mail")
+                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "gmail")))))))
 
 
 (defun hk/run-tgpt ()
