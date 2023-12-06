@@ -73,6 +73,8 @@
   (setopt bookmark-save-flag 1)       ; Write bookmark file when bookmark list is modified
 
   ;; Keybinds
+  (global-set-key (kbd "C-(") 'previous-buffer)
+  (global-set-key (kbd "C-)") 'next-buffer)
   (global-set-key (kbd "<f1>") 'shell)
   (global-set-key (kbd "<f5>") 'recompile)
   (global-set-key (kbd "<f7>") 'scroll-lock-mode)
@@ -95,6 +97,7 @@
 				                 (name . "^\\*Calendar\\*$")
 				                 (name . "^\\*Org Agenda\\*")
                          (filename . "^.+gtd.+")))
+             ("config" (filename . "/nixos-config/"))
 		         ("emacs" (or
 			                 (name . "^\\*scratch\\*$")
 			                 (name . "^\\*Messages\\*$"))))))
@@ -260,10 +263,10 @@
 
 (use-package avy
   :bind
-  (("C-c n" . avy-goto-word-1)
-   ("C-,"   . avy-goto-char-timer))
+  (("C-c n" . avy-goto-word-1))
   :init
   (defun hk/avy-action-embark (pt)
+    "Run embark at PT."
     (unwind-protect
         (save-excursion
           (goto-char pt)
@@ -289,7 +292,17 @@
           (?$ . avy-action-ispell)
           (?z . avy-action-zap-to-char)
           ))
-  (global-set-key (kbd "C-,") 'avy-goto-char-timer))
+  :config
+  ;; Avy in normal mode
+  (use-package meow
+    :ensure nil
+    :config
+    (meow-normal-define-key
+     '("f" . avy-goto-char-timer)
+     '("F" . (lambda ()
+               (interactive)
+               (set-mark (point))
+               (avy-goto-char-timer))))))
 
 (use-package crux
   ;; Collection of Ridiculously Useful eXtensions
@@ -301,7 +314,6 @@
   ;; Modal editing
   :custom
   (meow-use-clipboard 't)
-  (meow-use-enhanced-selection-effect 't "i don't know what this does - let's try it out")
   (meow-goto-line-function #'consult-goto-line)
 
   :config
@@ -892,7 +904,9 @@ Else create a new file."
 (use-package git-gutter
   :diminish
   :bind
-  (("C-c g n" . #'git-gutter:next-hunk)
+  (("C-%"     . #'git-gutter:previous-hunk)
+   ("C-^"     . #'git-gutter:next-hunk)
+   ("C-c g n" . #'git-gutter:next-hunk)
    ("C-c g p" . #'git-gutter:previous-hunk)
    ("C-c g d" . #'git-gutter:popup-hunk)
    ("C-c g s" . #'git-gutter:stage-hunk)
