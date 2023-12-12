@@ -961,7 +961,6 @@ Else create a new file."
 (use-package eglot
   :hook
   ((nix-mode . eglot-ensure)
-   ((c-mode-common c-ts-mode) . eglot-ensure)
    ((eglot-managed-mode) . hk/eglot-capf))
   :bind
   (:map eglot-mode-map
@@ -996,6 +995,14 @@ Else create a new file."
 
 (use-package citre
   ;; ctags - useful if lsp is not available
+  :hook
+  ((citre-mode) . hk/citre-capf)
+  :bind
+  (:map citre-mode-map
+        ("C-x c n" . hk/citre-jump+)
+        ("C-x c N" . citre-jump-back)
+        ("C-x c p" . citre-peek)
+        ("C-x c u" . citre-update-this-tags-file))
   :custom
   (citre-default-create-tags-file-location 'global-cache)
   (citre-use-project-root-when-creating-tags t)
@@ -1003,6 +1010,23 @@ Else create a new file."
   (citre-tags-substr-completion t)
   (citre-ctags-program    (file-truename (executable-find "ctags")))
   (citre-readtags-program (file-truename (executable-find "readtags")))
+  :init
+  (require 'citre-config)
+  :init
+  (defun hk/citre-capf ()
+    (setq citre-ctags-program    (file-truename (executable-find "ctags")))
+    (setq citre-readtags-program (file-truename (executable-find "readtags")))
+    (setq-local completion-at-point-functions
+                '(citre-completion-at-point
+                  cape-dabbrev-min-3
+                  cape-file)))
+
+   (defun hk/citre-jump+ ()
+     "Jump to the definition of the symbol at point. Fallback to `xref-find-definitions'."
+     (interactive)
+     (condition-case _
+         (citre-jump)
+       (error (call-interactively #'xref-find-definitions))))
   )
 
 (use-package envrc
