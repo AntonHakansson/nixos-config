@@ -1030,6 +1030,8 @@ Else create a new file."
         (prog-fill-reindent-defun)
         ))))
 
+(use-package glsl-mode)
+
 (use-package zig-mode)
 
 (use-package web-mode
