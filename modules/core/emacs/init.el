@@ -627,41 +627,13 @@ Else create a new file."
 (require 'gnuplot-context) ; org mode error: run-hooks: Symbol’s function definition is void: gnuplot-context-sensitive-mode
 
 (use-package org
-  :init
-  (defun hk/org-syntax-convert-keyword-case-to-lower ()
-    "Convert all #+KEYWORDS to #+keywords."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (let ((count 0)
-            (case-fold-search nil))
-        (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
-          (unless (s-matches-p "RESULTS" (match-string 0))
-            (replace-match (downcase (match-string 0)) t)
-            (setq count (1+ count))))
-        (message "Replaced %d occurances" count))))
-
-  (defun hk/insert-org-from-html-clipboard ()
-    "Insert html from clipboard and convert into org-mode using pandoc."
-    ;; credits to u/jsled
-    (interactive)
-    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
-           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
-           (command "wl-paste | pandoc -f html -t org"))
-      (shell-command command dst-buffer)))
-
-  (defun hk/insert-org-from-leetcode ()
-    "Insert org-mode formatted leetcode problem from url."
-    (interactive)
-    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
-           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
-           (leetcode-url (read-from-minibuffer "Leetcode slug: "))
-           (command (concat "leetcode-to-org-mode.py " leetcode-url)))
-      (shell-command command dst-buffer)))
   :bind
   (("C-c a"  . org-agenda)
    ("C-c c"  . org-capture)
-   ("C-c l"  . org-store-link))
+   ("C-c l"  . org-store-link)
+   :map org-mode-map
+   ("C-," . nil)
+   ("C-'" . nil))
   :custom
   (org-babel-load-languages '((awk . t)
                               (calc . t)
@@ -692,7 +664,7 @@ Else create a new file."
   (org-use-speed-commands
    (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ; when point is on any star at the beginning of the headline
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
-  (org-log-into-drawer 't "instert state changes into a drawer LOGBOOK")
+  (org-log-into-drawer 't "Insert state changes into a drawer LOGBOOK")
   (org-refile-targets '((nil :maxlevel . 9)
                         (org-agenda-files :maxlevel . 3)))
   (org-refile-use-outline-path 't "Show full outline of target")
@@ -735,6 +707,38 @@ Else create a new file."
   (define-key org-src-mode-map "\C-c\C-v" 'org-src-do-key-sequence-at-code-block)
 
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ; increase scale of latex fragments
+
+  :init
+  (defun hk/org-syntax-convert-keyword-case-to-lower ()
+    "Convert all #+KEYWORDS to #+keywords."
+    (interactive)
+    (save-excursion
+      (goto-char (point-min))
+      (let ((count 0)
+            (case-fold-search nil))
+        (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+          (unless (s-matches-p "RESULTS" (match-string 0))
+            (replace-match (downcase (match-string 0)) t)
+            (setq count (1+ count))))
+        (message "Replaced %d occurances" count))))
+
+  (defun hk/insert-org-from-html-clipboard ()
+    "Insert html from clipboard and convert into org-mode using pandoc."
+    ;; credits to u/jsled
+    (interactive)
+    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
+           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
+           (command "wl-paste | pandoc -f html -t org"))
+      (shell-command command dst-buffer)))
+
+  (defun hk/insert-org-from-leetcode ()
+    "Insert org-mode formatted leetcode problem from url."
+    (interactive)
+    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
+           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
+           (leetcode-url (read-from-minibuffer "Leetcode slug: "))
+           (command (concat "leetcode-to-org-mode.py " leetcode-url)))
+      (shell-command command dst-buffer)))
   )
 
 (use-package org-protocol
