@@ -563,6 +563,14 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun hk/text-capf ()
+  "Set up completion-at-point for writing"
+  (setq-local completion-at-point-functions
+              '(cape-dabbrev-min-3
+                cape-elisp-block
+                cape-file)))
+
+(add-hook 'text-mode-hook 'hk/text-capf)
 
 (use-package denote
   :custom
