@@ -135,19 +135,7 @@
 
   (setopt tab-bar-new-tab-choice 'ibuffer)
   (setopt tab-bar-tab-name-function 'tab-bar-tab-name-current)
-  (setopt tab-bar-show t)
-
-  ;; Theme - modus operandi
-  (setopt modus-themes-mixed-fonts t)
-  (setopt modus-themes-headings
-          '((1 . (variable-pitch 1.3))
-            (2 . (1.1))
-            (agenda-date . (1.1))
-            (agenda-structure . (variable-pitch light 1.3))
-            (t . (1.1))))
-  (setopt modus-operandi-tinted-palette-overrides
-          '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
-  )
+  (setopt tab-bar-show t))
 
 (use-package diminish
   ;; Dependencies that inject `:keywords' into `use-package' should be
@@ -243,7 +231,6 @@
   (require 'consult-kmacro))
 
 (use-package embark
-  :after avy
   :bind
   (("C-." . embark-act)
    ("C-;" . embark-dwim))
@@ -264,6 +251,17 @@
 (use-package avy
   :bind
   (("C-c n" . avy-goto-word-1))
+  :config
+  ;; Colemak-Dh keys
+  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h))
+  (setq avy-dispatch-alist
+        '((?. . hk/avy-action-embark)
+          (?x . avy-action-teleport)
+          (?X . hk/avy-action-exchange)
+          (?y . avy-action-yank)
+          (?Y . avy-action-yank-line)
+          (?$ . avy-action-ispell)
+          (?z . avy-action-zap-to-char)))
   :init
   (defun hk/avy-action-embark (pt)
     "Run embark at PT."
@@ -278,31 +276,7 @@
   (defun hk/avy-action-exchange (pt)
     "Exchange sexp at PT with the one at point."
     (set-mark pt)
-    (transpose-sexps 0))
-
-  :config
-  ;; Colemak-Dh keys
-  (setq avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o ?d ?h))
-  (setq avy-dispatch-alist
-        '((?. . hk/avy-action-embark)
-          (?x . avy-action-teleport)
-          (?X . hk/avy-action-exchange)
-          (?y . avy-action-yank)
-          (?Y . avy-action-yank-line)
-          (?$ . avy-action-ispell)
-          (?z . avy-action-zap-to-char)
-          ))
-  :config
-  ;; Avy in normal mode
-  (use-package meow
-    :ensure nil
-    :config
-    (meow-normal-define-key
-     '("f" . avy-goto-char-timer)
-     '("F" . (lambda ()
-               (interactive)
-               (set-mark (point))
-               (avy-goto-char-timer))))))
+    (transpose-sexps 0)))
 
 (use-package crux
   ;; Collection of Ridiculously Useful eXtensions
@@ -317,8 +291,6 @@
   (meow-goto-line-function #'consult-goto-line)
 
   :config
-  ;; (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
-
   (meow-motion-overwrite-define-key
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here (Colemak-Dh).
@@ -485,8 +457,7 @@
     ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
     ("i" dumb-jump-go-prompt "Prompt")
     ("l" dumb-jump-quick-look "Quick look")
-    ("b" dumb-jump-back "Back"))
-  )
+    ("b" dumb-jump-back "Back")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -601,7 +572,7 @@
   (("C-c C-n" . denote)
    ("C-c o n" . denote-open-or-create)
    ("C-c o N" . hk/diary))
-  :config
+  :init
   (defun hk/diary ()
     "Create an entry tagged 'diary' with the date as its title.
 If a diary for the current day exists, visit it.  If multiple
@@ -619,8 +590,7 @@ Else create a new file."
        (t
         (denote
          today
-         '("diary"))))))
-  )
+         '("diary")))))))
 
 (use-package htmlize)
 (use-package gnuplot)
@@ -632,82 +602,61 @@ Else create a new file."
    ("C-c c"  . org-capture)
    ("C-c l"  . org-store-link)
    :map org-mode-map
-   ("C-," . nil)
-   ("C-'" . nil))
+   ("C-," . nil)  ; Orig. cycle agenda buffers
+   ("C-'" . nil)  ; Orig. cycle agenda buffers
+   :map org-src-mode-map
+   ("C-c C-v" . org-src-do-key-sequence-at-code-block))
   :custom
-  (org-babel-load-languages '((awk . t)
-                              (calc . t)
-                              (C . t)
-                              (clojure . t)
-                              (css . t)
-                              (dot . t)
-                              (emacs-lisp . t)
-                              (forth . t)
-                              (fortran . t)
-                              (gnuplot . t)
-                              (haskell . t)
-                              (js . t)
-                              (latex . t)
-                              (lisp . t)
-                              (makefile . t)
-                              (org . t)
-                              (perl . t)
-                              (plantuml . t)
-                              (python . t)
-                              (ruby . t)
-                              (sass . t)
-                              (scheme . t)
-                              (shell . t)
-                              (sql . t)
-                              (sqlite . t)))
+  (org-directory      "~/documents/org/")
+  (org-agenda-files '("~/documents/org/gtd/"))
+  (org-return-follows-link t)
+  (org-fold-catch-invisible-edits 'smart)
+  (org-startup-indented t)
+  (org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ; increase scale of latex fragments
+  (org-agenda-window-setup 'current-window)
   (calendar-date-style 'european)
-  (org-use-speed-commands
-   (lambda () (and (looking-at org-outline-regexp) (looking-back "^\\**")))) ; when point is on any star at the beginning of the headline
+  (org-deadline-warning-days 30)
+  (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
+                            (and (looking-at org-outline-regexp)
+                                 (looking-back "^\\**"))))
+  :custom
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
+  (org-babel-confirm-evaluate nil)
+  (org-babel-load-languages
+   (mapcar (lambda (e) (cons e t))
+           '(awk calc C css emacs-lisp gnu haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
+  :custom
+  (org-log-done 'time)
   (org-log-into-drawer 't "Insert state changes into a drawer LOGBOOK")
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
+     (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)")))
+  (org-capture-templates
+   '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
+      "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
+     ("T" "Tickler" entry
+      (file "gtd/repeaters.org")
+      "* %i%? \n %U")
+     ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
+      "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
+     ("w" "Web" entry (file "gtd/inbox.org")
+      "* TODO %? [[%:link][%:description]] :ref:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n\n#+begin_quote\n%i\n#+end_quote\n")
+     ))
+  (org-agenda-custom-commands
+   '(("g" "Get Things Done (GTD)"
+      ((agenda "" (;; Show today
+                   (org-agenda-span 1)
+                   ))
+       (todo "NEXT" ((org-agenda-overriding-header "Next:")))
+       (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
+       (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
+       (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
+       (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
+       ))))
+  :custom
   (org-refile-targets '((nil :maxlevel . 9)
                         (org-agenda-files :maxlevel . 3)))
   (org-refile-use-outline-path 't "Show full outline of target")
-  :config
-  (setq org-directory "~/documents/org/"
-        org-agenda-files '("~/documents/org/gtd/")
-        org-return-follows-link t
-        org-deadline-warning-days 30
-        org-startup-indented t
-        org-agenda-window-setup 'current-window
-        org-log-done 'time
-        org-fold-catch-invisible-edits 'smart
-        org-confirm-babel-evaluate nil
-        ;; Task Management
-        org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
-          (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)"))
-        org-capture-templates
-        '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
-           "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
-          ("T" "Tickler" entry
-           (file "gtd/repeaters.org")
-           "* %i%? \n %U")
-          ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
-           "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
-          ("w" "Web" entry (file "gtd/inbox.org")
-           "* TODO %? [[%:link][%:description]] :ref:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n\n#+begin_quote\n%i\n#+end_quote\n")
-          )
-        org-agenda-custom-commands
-        '(("g" "Get Things Done (GTD)"
-           ((agenda "" (;; Show today
-                        (org-agenda-span 1)
-                        ))
-            (todo "NEXT" ((org-agenda-overriding-header "Next:")))
-            (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
-            (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
-            (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
-            (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
-            ))))
-  (define-key org-src-mode-map "\C-c\C-v" 'org-src-do-key-sequence-at-code-block)
-
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ; increase scale of latex fragments
-
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
     "Convert all #+KEYWORDS to #+keywords."
@@ -738,8 +687,7 @@ Else create a new file."
            (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
            (leetcode-url (read-from-minibuffer "Leetcode slug: "))
            (command (concat "leetcode-to-org-mode.py " leetcode-url)))
-      (shell-command command dst-buffer)))
-  )
+      (shell-command command dst-buffer))))
 
 (use-package org-protocol
   :ensure nil)
@@ -755,13 +703,32 @@ Else create a new file."
 
 (use-package anki-editor
   :defer 5
+  :after org
   :bind (:map org-mode-map
               ("<f12>" . anki-editor-cloze-region-dont-incr)
               ("<f11>" . anki-editor-cloze-region-auto-incr)
               ("<f10>" . anki-editor-reset-cloze-number)
               ("<f9>"  . anki-editor-push-tree))
   :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
-  :preface
+  :config
+  (setq anki-editor-create-decks t
+        anki-editor-org-tags-as-anki-tags t)
+
+  ;; Org-capture templates
+  (setq hk/org-anki-file "~/documents/org/anki.org")
+  (add-to-list 'org-capture-templates
+               '("a" "Anki basic"
+                 entry
+                 (file+headline hk/org-anki-file "Scratch")
+                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n%x\n"))
+  (add-to-list 'org-capture-templates
+               '("A" "Anki cloze"
+                 entry
+                 (file+headline hk/org-anki-file "Scratch")
+                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n"))
+  ;; Initialize
+  (anki-editor-reset-cloze-number)
+  :init
   (defun anki-editor-cloze-region-auto-incr (&optional arg)
     "Cloze region without hint and increase card number."
     (interactive)
@@ -781,26 +748,7 @@ Else create a new file."
     "Push all notes under a tree."
     (interactive)
     (anki-editor-push-notes '(4))
-    (anki-editor-reset-cloze-number))
-
-  :config
-  (setq anki-editor-create-decks t
-        anki-editor-org-tags-as-anki-tags t)
-
-  ;; Org-capture templates
-  (setq hk/org-anki-file "~/documents/org/anki.org")
-  (add-to-list 'org-capture-templates
-               '("a" "Anki basic"
-                 entry
-                 (file+headline hk/org-anki-file "Scratch")
-                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n%x\n"))
-  (add-to-list 'org-capture-templates
-               '("A" "Anki cloze"
-                 entry
-                 (file+headline hk/org-anki-file "Scratch")
-                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n"))
-  ;; Initialize
-  (anki-editor-reset-cloze-number))
+    (anki-editor-reset-cloze-number)))
 
 (use-package org-download)
 
@@ -1026,8 +974,7 @@ Else create a new file."
      (interactive)
      (condition-case _
          (citre-jump)
-       (error (call-interactively #'xref-find-definitions))))
-  )
+       (error (call-interactively #'xref-find-definitions)))))
 
 (use-package envrc
   :config
@@ -1037,12 +984,21 @@ Else create a new file."
 
 (use-package emacs
   ;; c-mode, c-ts-mode config
+  :config
+  (setopt c-basic-offset 2)
+  (add-hook 'c-mode-hook 'hk/c-mode-hook)
+  (add-hook 'c-ts-mode-hook 'hk/c-mode-hook)
   :init
+  (defun hk/c-mode-hook ()
+    (c-set-offset 'substatement 0)
+    (c-set-offset 'substatement-open 0)
+    (setq-local outline-regexp " *//\\(-+\\)"))
+
   (defun hk/c-ts-get-return-type ()
     (when-let* ((defun-node (treesit-defun-at-point))
                 (return-type (treesit-node-child-by-field-name defun-node "type")))
-      (treesit-node-text return-type))
-    )
+      (treesit-node-text return-type)))
+
   (defun hk/c-ts-refactor-to-result-return ()
     (interactive)
     (when-let* ((defun-node (treesit-defun-at-point))
@@ -1064,18 +1020,7 @@ Else create a new file."
         (open-line 1)
         (insert "return result;")
         (prog-fill-reindent-defun)
-        ))
-    )
-  :config
-  (setopt c-basic-offset 2)
-  (defun hk/c-mode-hook ()
-    (c-set-offset 'substatement 0)
-    (c-set-offset 'substatement-open 0)
-    (setq-local outline-regexp " *//\\(-+\\)")
-    )
-  (add-hook 'c-mode-hook 'hk/c-mode-hook)
-  (add-hook 'c-ts-mode-hook 'hk/c-mode-hook)
-  )
+        ))))
 
 (use-package zig-mode)
 
@@ -1103,6 +1048,11 @@ Else create a new file."
 
 (use-package dirvish
   ;; File manager
+  :bind
+  (:map dirvish-mode-map
+        ("a"   . 'dirvish-quick-access)
+        ("TAB" . 'dirvish-subtree-toggle)
+        ("T"   . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
   :custom
   (dirvish-quick-access-entries
    '(("h" "~/"                          "Home")
@@ -1120,11 +1070,6 @@ Else create a new file."
   (mouse-drag-and-drop-region-cross-program t)
   (dired-listing-switches
         "-l --almost-all --human-readable --group-directories-first --no-group")
-  :bind
-  (:map dirvish-mode-map
-        ("a"   . 'dirvish-quick-access)
-        ("TAB" . 'dirvish-subtree-toggle)
-        ("T"   . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
   :config
   (setq dirvish-mode-line-format
         '(:left (sort symlink) :right (omit yank index)))
@@ -1133,8 +1078,7 @@ Else create a new file."
   (setq dirvish-preview-dispatchers (delete 'pdf dirvish-preview-dispatchers)) ; Remove pdf preview. It is too slow.
   (dirvish-override-dired-mode)
   (require 'dirvish-quick-access)
-  (require 'dirvish-extras)
-  )
+  (require 'dirvish-extras))
 
 (use-package eww
   ;; Web browser
@@ -1149,14 +1093,14 @@ Else create a new file."
   (setq browse-url-browser-function #'eww-browse-url)
   (setq browse-url-generic-program "firefox")
 
+  :init
   (defun hk/eww-toggle-images ()
     "Toggle whether images are loaded and reload the current page."
     (interactive)
     (setq-local shr-inhibit-images (not shr-inhibit-images))
     (eww-reload t)
     (message "Images are now %s"
-             (if shr-inhibit-images "off" "on")))
-  )
+             (if shr-inhibit-images "off" "on"))))
 
 (use-package pdf-tools)
 
@@ -1181,13 +1125,6 @@ Else create a new file."
 
 (use-package elfeed-tube
   :after elfeed
-  :preface
-  (defun hk/mpv-play-url-at-point ()
-    "Open the URL at point in mpv."
-    (interactive)
-    (let ((url (thing-at-point-url-at-point)))
-      (when url
-        (async-shell-command (concat "umpv \"" url "\"") nil nil))))
   :bind
   (:map elfeed-show-mode-map
         ("F" . elfeed-tube-fetch)
@@ -1197,7 +1134,14 @@ Else create a new file."
         ("F" . elfeed-tube-fetch)
         ([remap save-buffer] . elfeed-tube-save))
   :config
-  (elfeed-tube-setup))
+  (elfeed-tube-setup)
+  :init
+  (defun hk/mpv-play-url-at-point ()
+    "Open the URL at point in mpv."
+    (interactive)
+    (let ((url (thing-at-point-url-at-point)))
+      (when url
+        (async-shell-command (concat "umpv \"" url "\"") nil nil)))))
 
 (use-package elfeed-tube-mpv
   :bind
@@ -1308,8 +1252,7 @@ Else create a new file."
   (require 'popper-echo)
   (popper-echo-mode +1))
 
-(use-package mixed-pitch
-  :hook (org-mode . mixed-pitch-mode))
+(use-package mixed-pitch)
 
 (use-package nerd-icons)
 
@@ -1326,6 +1269,8 @@ Else create a new file."
   (custom-safe-themes
    '("14ba61945401e42d91bb8eef15ab6a03a96ff323dd150694ab8eb3bb86c0c580"
      "ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135"
+     "e6b0ec96166bb3bb2843d83e56c0292308aab10ee5b79fb921d16ad2dbea5d5f"
+     "7f34e5ab75ec580aff579b3b0f40379d280f8441e424b7a04322524ed7f348b6"
      default))
   (ef-themes-mixed-fonts t)
   (ef-themes-headings
@@ -1335,6 +1280,17 @@ Else create a new file."
      (agenda-structure . (variable-pitch light 1.3))
      (t . (1.1))))
   :config
+  ;; Theme - modus operandi
+  (setopt modus-themes-mixed-fonts t)
+  (setopt modus-themes-headings
+          '((1 . (variable-pitch 1.3))
+            (2 . (1.1))
+            (agenda-date . (1.1))
+            (agenda-structure . (variable-pitch light 1.3))
+            (t . (1.1))))
+  (setopt modus-operandi-tinted-palette-overrides
+          '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
+
   (load-theme 'ef-light))
 
 (use-package spacious-padding
@@ -1356,10 +1312,8 @@ Else create a new file."
 (use-package fancy-compilation
   ;; Support color, progress bars in compilation-mode buffer
   :commands (fancy-compilation-mode)
-  :custom (fancy-compilation-override-colors nil)
-  :config
-  (with-eval-after-load 'compile
-    (fancy-compilation-mode)))
+  :hook (compile . fancy-compilation-mode)
+  :custom (fancy-compilation-override-colors nil))
 
 (provide 'init)
 ;;; init.el ends here
