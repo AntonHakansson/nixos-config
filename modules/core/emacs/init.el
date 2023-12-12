@@ -530,6 +530,10 @@
 (use-package corfu-info
   :ensure nil)
 
+(use-package corfu-history
+  :config
+  (corfu-history-mode))
+
 (use-package cape
   ;; Cape for better completion-at-point support and more
   :config
@@ -632,7 +636,7 @@ Else create a new file."
   (org-babel-confirm-evaluate nil)
   (org-babel-load-languages
    (mapcar (lambda (e) (cons e t))
-           '(awk calc C css emacs-lisp gnu haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
+           '(awk calc C css emacs-lisp haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
   :custom
   (org-log-done 'time)
   (org-log-into-drawer 't "Insert state changes into a drawer LOGBOOK")
