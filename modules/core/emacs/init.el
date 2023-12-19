@@ -335,8 +335,6 @@
    '("$" . jinx-correct)
    '("M-$" . jinx-next)
    '("%" . meow-query-replace)
-   '("(" . previous-buffer)
-   '(")" . next-buffer)
    '("f" . meow-find)
    '("F" . meow-find-expand)
    '("t" . meow-till)
@@ -531,6 +529,7 @@
   :ensure nil)
 
 (use-package corfu-history
+  :ensure nil
   :config
   (corfu-history-mode))
 
@@ -1328,6 +1327,88 @@ Else create a new file."
   :commands (fancy-compilation-mode)
   :hook (compile . fancy-compilation-mode)
   :custom (fancy-compilation-override-colors nil))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  Transient helpers
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package transient
+  :ensure nil
+  :bind
+  (:map isearch-mode-map
+        ("C-t" . hk/isearch-menu))
+  :init
+  (transient-define-prefix hk/isearch-menu ()
+    "isearch Menu"
+    [["Edit Search String"
+      ("e"
+       "Edit the search string (recursive)"
+       isearch-edit-string
+       :transient nil)
+      ("w"
+       "Pull next word or character word from buffer"
+       isearch-yank-word-or-char
+       :transient nil)
+      ("s"
+       "Pull next symbol or character from buffer"
+       isearch-yank-symbol-or-char
+       :transient nil)
+      ("l"
+       "Pull rest of line from buffer"
+       isearch-yank-line
+       :transient nil)
+      ("y"
+       "Pull string from kill ring"
+       isearch-yank-kill
+       :transient nil)
+      ("t"
+       "Pull thing from buffer"
+       isearch-forward-thing-at-point
+       :transient nil)]
+
+     ["Replace"
+      ("q"
+       "Start ‘query-replace’"
+       isearch-query-replace
+       :if-nil buffer-read-only
+       :transient nil)
+      ("x"
+       "Start ‘query-replace-regexp’"
+       isearch-query-replace-regexp
+       :if-nil buffer-read-only
+       :transient nil)]]
+
+    [["Toggle"
+      ("X"
+       "Toggle regexp searching"
+       isearch-toggle-regexp
+       :transient nil)
+      ("S"
+       "Toggle symbol searching"
+       isearch-toggle-symbol
+       :transient nil)
+      ("W"
+       "Toggle word searching"
+       isearch-toggle-word
+       :transient nil)
+      ("F"
+       "Toggle case fold"
+       isearch-toggle-case-fold
+       :transient nil)
+      ("L"
+       "Toggle lax whitespace"
+       isearch-toggle-lax-whitespace
+       :transient nil)]
+
+     ["Misc"
+      ("o"
+       "occur"
+       isearch-occur
+       :transient nil)]]))
+
+
 
 (provide 'init)
 ;;; init.el ends here
