@@ -2,7 +2,7 @@
 
 {
   config =
-    let pinentryFlavor = if config.hakanssn.graphical.enable then "gtk2" else "tty";
+    let pinentryFlavor = if config.hakanssn.graphical.enable then "gnome3" else "tty";
     in {
       hakanssn.core.zfs.homeDataLinks = [{
         directory = ".gnupg";
