@@ -71,6 +71,8 @@
       usbutils
       util-linux
       whois
+      wget
+      curl
     ];
 
     security = {
