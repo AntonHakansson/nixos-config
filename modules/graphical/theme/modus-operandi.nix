@@ -153,7 +153,7 @@ in
               # extraConfig = "colorscheme modus-operandi";
             };
 
-          programs.kitty = { theme = "Modus Operandi Tinted"; };
+          programs.kitty = { theme = "Novel"; };
 
           programs.zathura.options = {
             default-bg = c.bg-main;
