@@ -75,19 +75,14 @@
       ];
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;
-      powerManagement.enable = true;
       open = true;
+      modesetting.enable = true;
+      powerManagement.enable = true;
     };
   };
-  services.fstrim.enable = true;
 
   # Nvidia proprietary drivers
   hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
   services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.nvidia.modesetting.enable = true;
-  home-manager.users.hakanssn = { pkgs, ... }: {
-    wayland.windowManager.sway.extraOptions = [ "--unsupported-gpu" ];
-  };
   environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
-
 }
