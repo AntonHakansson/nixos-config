@@ -6,10 +6,10 @@
   };
 
   config = lib.mkIf config.hakanssn.graphical.media.documents.enable {
-    hakanssn.core.zfs.homeCacheLinks = [ ".local/share/sioyek" ".config/inkscape" ];
+    hakanssn.core.zfs.homeCacheLinks = [ ".local/share/sioyek" ".config/inkscape" ".config/xournalpp" ];
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ okular inkscape ];
+      home.packages = with pkgs; [ okular inkscape xournalpp ];
       programs.sioyek = {
         enable = true;
       };
