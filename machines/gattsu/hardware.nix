@@ -67,17 +67,15 @@
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
     bluetooth.enable = true;
-    opengl.enable = true;
-    opengl.extraPackages = with pkgs;
-      [
-        # vaapiVdpau
-        libvdpau-va-gl
-      ];
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;
-      open = true;
       modesetting.enable = true;
-      powerManagement.enable = true;
+      open = false;
     };
   };
 
