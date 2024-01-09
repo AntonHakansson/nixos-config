@@ -6,12 +6,13 @@
       src = pkgs.fetchFromGitHub {
         owner = "flameshot-org";
         repo = "flameshot";
-        rev = "a447b3d672ef92acb98be996d58540e36db84e35";
-        sha256 = "sha256-/GtSQE1tRbJAHKNERJiztq2Inpo5LhA3aZkbYtz/E8M=";
+        rev = "3d21e4967b68e9ce80fb2238857aa1bf12c7b905";
+        sha256 = "sha256-OLRtF/yjHDN+sIbgilBZ6sBZ3FO6K533kFC1L2peugc=";
       };
       buildInputs = old.buildInputs ++ [ pkgs.libsForQt5.kguiaddons ];
       cmakeFlags = [
         "-DUSE_WAYLAND_CLIPBOARD=true"
+        "-DUSE_WAYLAND_GRIM=true"
       ];
     });
     readOnly = true;
@@ -22,6 +23,8 @@
       home.packages = with pkgs; [
         wl-clipboard
         config.hakanssn.graphical.flameshot.package
+        slurp
+        grim
       ];
     };
   };
