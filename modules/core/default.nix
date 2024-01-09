@@ -73,6 +73,7 @@
       whois
       wget
       curl
+      unzip
     ];
 
     security = {
