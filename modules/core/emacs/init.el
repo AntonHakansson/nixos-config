@@ -47,7 +47,6 @@
   (set-keyboard-coding-system 'utf-8)
 
   ;; Scrolling & cursor
-  (pixel-scroll-precision-mode)                      ; Smooth scrolling
   (blink-cursor-mode -1)                             ; Steady cursor
   (push '(vertical-scroll-bars) default-frame-alist) ; Remove vertical scroll bar
 
@@ -556,7 +555,7 @@
 
 (use-package pcmpl-args
   ;; Extend Pcomplete with completions from man pages.
-  ;; There is a build-in pcomplete-from-help that parses '--help' output of command.
+  ;; There is a built-in pcomplete-from-help that parses '--help' output of command.
   )
 
 
@@ -608,6 +607,7 @@ Else create a new file."
 (require 'gnuplot-context) ; org mode error: run-hooks: Symbol’s function definition is void: gnuplot-context-sensitive-mode
 
 (use-package org
+  :hook (org-agenda-mode . olivetti-mode)
   :bind
   (("C-c a"  . org-agenda)
    ("C-c c"  . org-capture)
@@ -621,38 +621,20 @@ Else create a new file."
   (org-directory      "~/documents/org/")
   (org-agenda-files '("~/documents/org/gtd/"))
   (org-return-follows-link t)
-  (org-fold-catch-invisible-edits 'smart)
   (org-startup-indented t)
-  (org-format-latex-options (plist-put org-format-latex-options :scale 1.8)) ; increase scale of latex fragments
-  (org-agenda-window-setup 'current-window)
-  (calendar-date-style 'european)
-  (org-deadline-warning-days 30)
+  (org-fold-catch-invisible-edits 'smart)
   (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
                             (and (looking-at org-outline-regexp)
                                  (looking-back "^\\**"))))
+  (org-format-latex-options (plist-put org-format-latex-options :scale 1.5)) ; increase scale of latex fragments
   :custom
-  (org-babel-results-keyword "results" "Make babel results blocks lowercase")
-  (org-babel-confirm-evaluate nil)
-  (org-babel-load-languages
-   (mapcar (lambda (e) (cons e t))
-           '(awk calc C css emacs-lisp haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
-  :custom
-  (org-log-done 'time)
-  (org-log-into-drawer 't "Insert state changes into a drawer LOGBOOK")
-  (org-todo-keywords
-   '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
-     (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)")))
-  (org-capture-templates
-   '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
-      "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
-     ("T" "Tickler" entry
-      (file "gtd/repeaters.org")
-      "* %i%? \n %U")
-     ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
-      "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
-     ("w" "Web" entry (file "gtd/inbox.org")
-      "* TODO %? [[%:link][%:description]] :ref:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n\n#+begin_quote\n%i\n#+end_quote\n")
-     ))
+  (calendar-date-style 'european)
+  (org-agenda-window-setup 'current-window)
+  (org-agenda-time-grid '((daily today require-timed) (600 1200 1800 2200) "" ""))
+  (org-agenda-current-time-string "<-")
+  (org-agenda-block-separator (kbd " "))
+  (org-agenda-tags-column 90)           ; play nice with olivetti-mode
+  (org-deadline-warning-days 30)
   (org-agenda-custom-commands
    '(("g" "Get Things Done (GTD)"
       ((agenda "" (;; Show today
@@ -665,9 +647,35 @@ Else create a new file."
        (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
        ))))
   :custom
+  (org-babel-results-keyword "results" "Make babel results blocks lowercase")
+  (org-confirm-babel-evaluate nil)
+  (org-babel-load-languages
+   (mapcar (lambda (e) (cons e t))
+           '(awk calc C css emacs-lisp haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
+  :custom
+  (org-todo-keywords
+   '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
+     (sequence "WAIT(w@/!)" "|" "CANCELLED(c@/!)")))
+  (org-log-done 'time)
+  (org-log-into-drawer 't "Insert state changes into a drawer LOGBOOK")
+  (org-capture-templates
+   '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
+      "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
+     ("T" "Tickler" entry
+      (file "gtd/repeaters.org")
+      "* %i%? \n %U")
+     ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
+      "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
+     ("w" "Web" entry (file+function "gtd/inbox.org" hk/org-capture-template-goto-link)
+      "* %<%H:%M>\n%(hk/org-capture-html)\n" :immediate-finish t)
+     ("W" "Webclip" entry (file+headline "gtd/inbox.org" "Unsorted Webclips")
+      "* %? :webclip:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%(hk/insert-org-from-html-clipboard)")
+     ))
+  :custom
   (org-refile-targets '((nil :maxlevel . 9)
                         (org-agenda-files :maxlevel . 3)))
   (org-refile-use-outline-path 't "Show full outline of target")
+  :config
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
     "Convert all #+KEYWORDS to #+keywords."
@@ -690,6 +698,42 @@ Else create a new file."
            (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
            (command "wl-paste | pandoc -f html -t org"))
       (shell-command command dst-buffer)))
+
+  ; https://www.reddit.com/r/emacs/comments/7m6nwo/comment/drt7mmr
+  (defun hk/org-capture-template-goto-link ()
+    "Set point for capturing at what capture target file+headline with headline set to %l would do."
+    (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target)) (org-capture-get :annotation)))
+    (org-capture-put-target-region-and-position)
+    (let ((hd (nth 2 (org-capture-get :target))))
+      (goto-char (point-min))
+      (if (re-search-forward
+           (format org-complex-heading-regexp-format (regexp-quote hd))
+           nil t)
+          (beginning-of-line)
+        (goto-char (point-max))
+        (or (bolp) (insert "\n"))
+        (save-excursion
+          (insert "* " hd " :webclip:" "\n"
+                  ":PROPERTIES:" "\n"
+                  ":ENTERED_ON: [" (format-time-string "%Y-%m-%d %a") "]\n"
+                  ":END:" "\n" "\n"))
+        (beginning-of-line))))
+
+  (defun hk/sanitize-html (html)
+    (with-temp-buffer
+      (insert html)
+      (cl-loop for (match . replace) in (list (cons "&nbsp;" " "))
+           do (progn
+                (goto-char (point-min))
+                (while (re-search-forward match nil t)
+                  (replace-match replace))))
+      (buffer-string)))
+
+  (defun hk/org-capture-html ()
+    (require 'org-web-tools)
+    (let* ((html (plist-get org-store-link-plist :initial))
+           (html-sanitized (hk/sanitize-html html)))
+      (org-web-tools--html-to-org-with-pandoc html-sanitized)))
 
   (defun hk/insert-org-from-leetcode ()
     "Insert org-mode formatted leetcode problem from url."
@@ -781,6 +825,13 @@ Else create a new file."
   (org-mode . global-org-modern-mode)
   :custom
   (org-modern-table nil))
+
+(use-package idle-org-agenda
+  :after org-agenda
+  :ensure t
+  :custom
+  (idle-org-agenda-key "g")
+  :config (idle-org-agenda-mode))
 
 (use-package laas
   :hook (LaTeX-mode . laas-mode)
@@ -1096,10 +1147,11 @@ Else create a new file."
 (use-package eww
   ;; Web browser
   :ensure nil
+  :hook (eww-mode . olivetti-mode)
   :bind
   (:map eww-mode-map
-        ("M-n" . nil)
-        ("M-p" . nil)
+        ("n" . scroll-up-line)
+        ("e" . scroll-down-line)
         ("I" . #'hk/eww-toggle-images))
   :config
   ;; Use & to open externally if eww can't handle the page
@@ -1220,6 +1272,10 @@ Else create a new file."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package pixel-scroll
+  :ensure nil
+  :hook (emacs-startup . pixel-scroll-precision-mode))
+
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :custom
@@ -1306,17 +1362,13 @@ Else create a new file."
 
   (load-theme 'ef-light))
 
-(use-package spacious-padding
-  :config
-  (spacious-padding-mode +1))
-
 (use-package olivetti
   ;; Center text for nicer writing and reading
   :defer 3
   :bind (("C-c t z" . olivetti-mode))
-  :config
-  (setq-default olivetti-body-width 120
-                fill-column 90))
+  :custom
+  (olivetti-body-width 120)
+  (fill-column 90))
 
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
