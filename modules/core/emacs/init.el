@@ -61,7 +61,7 @@
 
   ;; Quickly access recent files
   (setopt recentf-max-menu-items 30)    ; bump the limits a bit
-  (setopt recentf-max-saved-items 50)
+  (setopt recentf-max-saved-items 100)
   (add-hook 'after-init-hook #'recentf-mode) ; Turn on recentf mode
 
   ;; Misc. Emacs tweaks
@@ -757,8 +757,7 @@ Else create a new file."
         org-habit-preceding-days 21))
 
 (use-package anki-editor
-  :defer 5
-  :after org
+  :after org-capture
   :bind (:map org-mode-map
               ("<f12>" . anki-editor-cloze-region-dont-incr)
               ("<f11>" . anki-editor-cloze-region-auto-incr)
@@ -805,9 +804,29 @@ Else create a new file."
     (anki-editor-push-notes '(4))
     (anki-editor-reset-cloze-number)))
 
-(use-package org-download)
+(use-package org-download
+  :custom
+  (org-download-method 'attach)
+  (org-download-screenshot-method "flameshot gui --raw > %s"))
 
-(use-package org-web-tools)
+(use-package org-web-tools
+  :config
+  (defun hk/org-web-tools-url-as-denote (&optional url)
+    "Create denote entry of URL's web page content.
+Content is processed with `eww-readable' and Pandoc.
+Takes optional URL or gets it from the clipboard."
+    (interactive)
+    (require 'denote)
+    (-let* ((url (or url (org-web-tools--get-first-url)))
+            (dom (plz 'get url :as #'org-web-tools--sanitized-dom))
+            ((title . readable) (org-web-tools--eww-readable dom))
+            (title (org-web-tools--cleanup-title (or title "")))
+            (converted (org-web-tools--html-to-org-with-pandoc readable))
+            (link (org-link-make-string url title))
+            (timestamp (format-time-string (org-time-stamp-format 'with-time 'inactive))))
+      (denote-create-note title '("ref" "article") 'org)
+      (insert converted)
+      (save-buffer))))
 
 (use-package org-appear
   :custom
@@ -956,8 +975,8 @@ Else create a new file."
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
 
 
-(use-package emacs
-  ;; Prefer Treesitter
+(use-package emacs ;; treesitter
+  :ensure nil
   :config
   (setq major-mode-remap-alist
         '((bash-mode . bash-ts-mode)
@@ -965,8 +984,7 @@ Else create a new file."
           (json-mode . json-ts-mode)
           (c-mode . c-ts-mode)
           (c++-mode . c++-ts-mode)
-          (c-or-c++-mode . c-or-c++-ts-mode)
-          )))
+          (c-or-c++-mode . c-or-c++-ts-mode))))
 
 (use-package eglot
   :hook
@@ -1044,8 +1062,9 @@ Else create a new file."
 
 (use-package nix-mode :mode (("\\.nix\\'" . nix-mode)))
 
-(use-package emacs
+(use-package emacs ;; c-mode
   ;; c-mode, c-ts-mode config
+  :ensure nil
   :config
   (setopt c-basic-offset 2)
   (add-hook 'c-mode-hook 'hk/c-mode-hook)
@@ -1274,7 +1293,9 @@ Else create a new file."
 
 (use-package pixel-scroll
   :ensure nil
-  :hook (emacs-startup . pixel-scroll-precision-mode))
+  :hook (emacs-startup . pixel-scroll-precision-mode)
+  :custom
+  (pixel-scroll-precision-interpolate-page t))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -1374,11 +1395,15 @@ Else create a new file."
   :hook (prog-mode . rainbow-mode)
   :diminish)
 
-(use-package fancy-compilation
-  ;; Support color, progress bars in compilation-mode buffer
-  :commands (fancy-compilation-mode)
-  :hook (compile . fancy-compilation-mode)
-  :custom (fancy-compilation-override-colors nil))
+(use-package emacs ;; compilation
+  :ensure nil
+  :config
+  ;; By default, compilation doesn't support ANSI colors. Enable them for compilation.
+  (require 'ansi-color)
+  (defun colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
+  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1459,6 +1484,12 @@ Else create a new file."
        "occur"
        isearch-occur
        :transient nil)]]))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;;  Scratch Area
+;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
