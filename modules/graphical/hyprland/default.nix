@@ -17,16 +17,22 @@
       default = pkgs.writeShellScriptBin "hypr-night-toggle" ''
         day=${./shaders/day-light.glsl}
         night=${./shaders/night-light.glsl}
+        monochrome=${./shaders/monochrome.glsl}
 
         current="$(hyprctl getoption decoration:screen_shader -j | ${pkgs.jq}/bin/jq -r '.str')"
 
+        echo current "$current"
         if [[ "$current" == "$day" ]] then
             hyprctl keyword decoration:screen_shader "$night"
             echo set "$night"
         elif [[ "$current" == "$night" ]] then
+            hyprctl keyword decoration:screen_shader "$monochrome"
+            echo set "$monochrome"
+        elif [[ "$current" == "$monochrome" ]] then
             hyprctl keyword decoration:screen_shader "$day"
             echo set "$day"
         else
+            # current == empty == $day
             hyprctl keyword decoration:screen_shader "$night"
             echo set "$night"
         fi
