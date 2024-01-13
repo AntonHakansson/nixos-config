@@ -619,15 +619,22 @@ Else create a new file."
    ("C-c C-v" . org-src-do-key-sequence-at-code-block))
   :custom
   (org-directory      "~/documents/org/")
-  (org-agenda-files '("~/documents/org/gtd/"))
   (org-return-follows-link t)
   (org-startup-indented t)
   (org-fold-catch-invisible-edits 'smart)
   (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
                             (and (looking-at org-outline-regexp)
                                  (looking-back "^\\**"))))
-  (org-format-latex-options (plist-put org-format-latex-options :scale 1.5)) ; increase scale of latex fragments
+  (org-footnote-section nil) ; define footnotes locally at end of subtree
+  (org-id-method 'ts)
+  (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  ;; Put attachment in: <org-attach-directory>/year-month/<rest>
+  (org-attach-id-to-path-function-list '(org-attach-id-ts-folder-format
+                                         org-attach-id-uuid-folder-format
+                                         org-attach-id-fallback-folder-format))
+  (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; increase scale of latex fragments
   :custom
+  (org-agenda-files '("~/documents/org/gtd/"))
   (calendar-date-style 'european)
   (org-agenda-window-setup 'current-window)
   (org-agenda-time-grid '((daily today require-timed) (600 1200 1800 2200) "" ""))
