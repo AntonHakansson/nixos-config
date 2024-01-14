@@ -1193,7 +1193,11 @@ Takes optional URL or gets it from the clipboard."
     (message "Images are now %s"
              (if shr-inhibit-images "off" "on"))))
 
-(use-package pdf-tools)
+(use-package pdf-tools
+  :custom
+  (pdf-view-display-size 'fit-page)
+  :config
+  (pdf-tools-install))
 
 (use-package devdocs
   :bind (("C-c D" . 'devdocs-lookup))
