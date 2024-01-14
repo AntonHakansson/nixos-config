@@ -627,6 +627,9 @@ Else create a new file."
   (org-directory      "~/documents/org/")
   (org-return-follows-link t)
   (org-startup-indented t)
+  (org-startup-with-inline-images t)
+  (org-cycle-hide-block-startup t)
+  (org-startup-folded "show2levels") ; apparently default showeverything overrides hide-block
   (org-fold-catch-invisible-edits 'smart)
   (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
                             (and (looking-at org-outline-regexp)
@@ -756,6 +759,92 @@ Else create a new file."
            (leetcode-url (read-from-minibuffer "Leetcode slug: "))
            (command (concat "leetcode-to-org-mode.py " leetcode-url)))
       (shell-command command dst-buffer))))
+
+(use-package org ; ox-extra ignore-headlines
+  :config (add-hook 'org-export-filter-parse-tree-functions #'org-export-ignore-headlines)
+  :init
+  ;; During export headlines which have the "ignore" tag are removed
+  ;; from the parse tree.  Their contents are retained (leading to a
+  ;; possibly invalid parse tree, which nevertheless appears to function
+  ;; correctly with most export backends) all children headlines are
+  ;; retained and are promoted to the level of the ignored parent
+  ;; headline.
+  ;;
+  ;; This makes it possible to add structure to the original Org-mode
+  ;; document which does not effect the exported version, such as in the
+  ;; following examples.
+  ;;
+  ;; Wrapping an abstract in a headline
+  ;;
+  ;;     * Abstract                        :ignore:
+  ;;     #+LaTeX: \begin{abstract}
+  ;;     #+HTML: <div id="abstract">
+  ;;
+  ;;     ...
+  ;;
+  ;;     #+HTML: </div>
+  ;;     #+LaTeX: \end{abstract}
+  ;;
+  ;; Placing References under a headline (using ox-bibtex in contrib)
+  ;;
+  ;;     * References                     :ignore:
+  ;;     #+BIBLIOGRAPHY: dissertation plain
+  ;;
+  ;; Inserting an appendix for LaTeX using the appendix package.
+  ;;
+  ;;     * Appendix                       :ignore:
+  ;;     #+LaTeX: \begin{appendices}
+  ;;     ** Reproduction
+  ;;     ...
+  ;;     ** Definitions
+  ;;     #+LaTeX: \end{appendices}
+  ;;
+  (defun org-export-ignore-headlines (data backend info)
+    "Remove headlines tagged \"ignore\" retaining contents and promoting children.
+Each headline tagged \"ignore\" will be removed retaining its
+contents and promoting any children headlines to the level of the
+parent."
+    (org-element-map data 'headline
+      (lambda (object)
+        (when (member "ignore" (org-element-property :tags object))
+          (let ((level-top (org-element-property :level object))
+                level-diff)
+            (mapc (lambda (el)
+                    ;; recursively promote all nested headlines
+                    (org-element-map el 'headline
+                      (lambda (el)
+                        (when (equal 'headline (org-element-type el))
+                          (unless level-diff
+                            (setq level-diff (- (org-element-property :level el)
+                                                level-top)))
+                          (org-element-put-property el
+                                                    :level (- (org-element-property :level el)
+                                                              level-diff)))))
+                    ;; insert back into parse tree
+                    (org-element-insert-before el object))
+                  (org-element-contents object)))
+          (org-element-extract-element object)))
+      info nil)
+    (org-extra--merge-sections data backend info)
+    data)
+
+  (defun org-extra--merge-sections (data _backend info)
+    (org-element-map data 'headline
+      (lambda (hl)
+        (let ((sections
+               (cl-loop
+                for el in (org-element-map (org-element-contents hl)
+                              '(headline section) #'identity info)
+                until (eq (org-element-type el) 'headline)
+                collect el)))
+          (when (and sections
+                     (> (length sections) 1))
+            (apply #'org-element-adopt-elements
+                   (car sections)
+                   (cl-mapcan (lambda (s) (org-element-contents s))
+                              (cdr sections)))
+            (mapc #'org-element-extract-element (cdr sections)))))
+      info)))
 
 (use-package org-protocol
   :ensure nil)
