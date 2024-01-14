@@ -121,7 +121,7 @@
 
   ;; Fleeting notes in Scratch Buffer
   (setq initial-major-mode 'org-mode
-        initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n")
+        initial-scratch-message "#+title: Scratch Buffer\n\nFor random thoughts.\n\n#+begin_src emacs-lisp\n\n#+end_src\n")
 
   ;; Tab bar
   (defun tab-bar-format-menu-bar ()
@@ -575,6 +575,7 @@
 (add-hook 'text-mode-hook 'hk/text-capf)
 
 (use-package denote
+  :hook (dirvish-mode-hook . denote-dired-mode)
   :custom
   (denote-directory (concat org-directory "denote/"))
   (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
@@ -598,16 +599,19 @@ Else create a new file."
        (files
         (find-file (car files)))
        (t
-        (denote
-         today
-         '("diary")))))))
+        (denote today '("diary")))))))
 
 (use-package htmlize)
 (use-package gnuplot)
 (require 'gnuplot-context) ; org mode error: run-hooks: Symbol’s function definition is void: gnuplot-context-sensitive-mode
 
+(defun hk/truncate-lines ()
+  (message "truncating lines")
+  (toggle-truncate-lines +1))
+
 (use-package org
   :hook (org-agenda-mode . olivetti-mode)
+  :hook (org-agenda-finalize-hook . #'hk/truncate-lines)
   :bind
   (("C-c a"  . org-agenda)
    ("C-c c"  . org-capture)
@@ -857,6 +861,7 @@ Takes optional URL or gets it from the clipboard."
   :ensure t
   :custom
   (idle-org-agenda-key "g")
+  (idle-org-agenda-interval (* 5 60))
   :config (idle-org-agenda-mode))
 
 (use-package laas
