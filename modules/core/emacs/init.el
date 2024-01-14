@@ -575,7 +575,8 @@
 (add-hook 'text-mode-hook 'hk/text-capf)
 
 (use-package denote
-  :hook (dirvish-mode-hook . denote-dired-mode)
+  :hook (dirvish-mode . denote-dired-mode)
+  :hook (dirvish-mode . hk/truncate-lines)
   :custom
   (denote-directory (concat org-directory "denote/"))
   (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
@@ -611,7 +612,8 @@ Else create a new file."
 
 (use-package org
   :hook (org-agenda-mode . olivetti-mode)
-  :hook (org-agenda-finalize-hook . #'hk/truncate-lines)
+  :hook (org-agenda-finalize . hk/truncate-lines)
+  :hook (org-after-refile-insert . org-save-all-org-buffers)
   :bind
   (("C-c a"  . org-agenda)
    ("C-c c"  . org-capture)
