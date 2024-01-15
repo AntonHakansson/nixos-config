@@ -630,6 +630,7 @@ Else create a new file."
   (org-startup-with-inline-images t)
   (org-cycle-hide-block-startup t)
   (org-startup-folded "show2levels") ; apparently default showeverything overrides hide-block
+  (org-image-actual-width nil) ; Use width from #+attr_org and fallback to original width.
   (org-fold-catch-invisible-edits 'smart)
   (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
                             (and (looking-at org-outline-regexp)
@@ -926,7 +927,7 @@ Takes optional URL or gets it from the clipboard."
             (converted (org-web-tools--html-to-org-with-pandoc readable))
             (link (org-link-make-string url title))
             (timestamp (format-time-string (org-time-stamp-format 'with-time 'inactive))))
-      (denote-create-note title '("ref" "article") 'org)
+      (denote-create-note title '("article" "ref") 'org)
       (insert converted)
       (save-buffer))))
 
@@ -987,9 +988,8 @@ Takes optional URL or gets it from the clipboard."
 (use-package embrace
   ;; Add/Change/Delete pairs based on expand-region.
   :bind (("M-)" . 'embrace-commander))  ; orig. move-past-close-and-reindent
-  :config
-  (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
-  (add-hook 'org-mode-hook 'embrace-org-mode-hook))
+  :hook (LaTeX-mode . embrace-LaTeX-mode)
+  :hook (org-mode   . embrace-org-mode-hook))
 
 (use-package string-edit-at-point
   ;; Edit strings normally and get it escaped automatically
@@ -1462,13 +1462,8 @@ Takes optional URL or gets it from the clipboard."
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package ef-themes
+  :hook (after-init . (lambda () (load-theme 'ef-melissa-light)))
   :custom
-  (custom-safe-themes
-   '("14ba61945401e42d91bb8eef15ab6a03a96ff323dd150694ab8eb3bb86c0c580"
-     "ccb2ff53e9794d059ff941fabcf265b67c8418da664db8c4d6a3d656962b7135"
-     "e6b0ec96166bb3bb2843d83e56c0292308aab10ee5b79fb921d16ad2dbea5d5f"
-     "7f34e5ab75ec580aff579b3b0f40379d280f8441e424b7a04322524ed7f348b6"
-     default))
   (ef-themes-mixed-fonts t)
   (ef-themes-headings
    '((1 . (variable-pitch 1.3))
@@ -1487,8 +1482,7 @@ Takes optional URL or gets it from the clipboard."
             (t . (1.1))))
   (setopt modus-operandi-tinted-palette-overrides
           '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
-
-  (load-theme 'ef-light))
+  )
 
 (use-package olivetti
   ;; Center text for nicer writing and reading
