@@ -1270,6 +1270,8 @@ Takes optional URL or gets it from the clipboard."
   ;; Web browser
   :ensure nil
   :hook (eww-mode . olivetti-mode)
+  :hook (eww-after-render . hk/eww-redirect-to-bloatfree-alt)
+  :hook (eww-after-render . eww-readable)
   :bind
   (:map eww-mode-map
         ("n" . scroll-up-line)
@@ -1287,7 +1289,24 @@ Takes optional URL or gets it from the clipboard."
     (setq-local shr-inhibit-images (not shr-inhibit-images))
     (eww-reload t)
     (message "Images are now %s"
-             (if shr-inhibit-images "off" "on"))))
+             (if shr-inhibit-images "off" "on")))
+
+  (defun hk/map-url-to-bloatfree-alt (url)
+    (cond
+     ((string-match "reddit\\.com" url)
+      (s-replace "www.reddit.com" "redlib.freedit.eu" url))
+     ((string-match "youtube\\.com" url)
+      (s-replace "www.youtube.com" "invidious.io.lol" url))
+     ((string-match "x\\.com" url)
+      (s-replace "x.com" "nitter.net" url))
+     ((string-match "twitter\\.com" url)
+      (s-replace "twitter.com" "nitter.net" url))))
+
+  (defun hk/eww-redirect-to-bloatfree-alt ()
+    (when-let* ((url (eww-current-url))
+                (alt-url (hk/map-url-to-bloatfree-alt url)))
+      (message "Redirecting to bloatfree alt. " alt-url)
+      (eww alt-url))))
 
 (use-package pdf-tools
   :custom
