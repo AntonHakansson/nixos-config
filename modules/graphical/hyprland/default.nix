@@ -179,7 +179,8 @@
 
             # Keybindings
             ## See https://wiki.hyprland.org/Configuring/Binds/
-            bind = SUPER, return, exec, kitty --single-instance
+            bind = SUPER, return, exec, emacsclient -c -e "(shell)"
+            bind = SUPER SHIFT, return, exec, kitty --single-instance
             bind = SUPER, Q, killactive,
             bind = SUPER SHIFT, E, exec, hyprctl kill
             bind = SUPER SHIFT, M, exit,
