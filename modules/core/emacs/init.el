@@ -1712,8 +1712,7 @@ current buffer, killing it."
   :init
   (defun hk/edraw-insert-link ()
     (interactive)
-    (unless (edraw-org-link-at-point)
-      (insert "[[edraw:]]"))
+    (insert "[[edraw:]]")
     (edraw-org-edit-link))
 
   (defun hk/edraw-toggle-interval ()
