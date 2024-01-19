@@ -613,7 +613,8 @@
 - [ ] [[file:~/videos][Video]] entertainment for bicycle workout
 - [ ] [[file:~/documents/books/audio][Audio]] entertainment for chores")))
   :config
-  (hk/diary)
+  (unless (hk/diary-today-file)
+    (hk/diary))
   :init
   (defun hk/diary-today-file ()
     (let* ((today (format-time-string "%A %e %B %Y"))
@@ -700,12 +701,32 @@ The file is added to 'org-agenda-files' if not present."
       ((agenda "" (;; Show today
                    (org-agenda-span 1)
                    ))
-       (todo "NEXT" ((org-agenda-overriding-header "Next:")))
-       (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
-       (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
+       (tags-todo "project|inbox//NEXT" ((org-agenda-overriding-header "Next:")))
+       (tags-todo "project|inbox//WAIT" ((org-agenda-overriding-header "Waiting on:")))
+       (tags-todo "inbox//TODO" ((org-agenda-overriding-header "Inbox:")))
        (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
        (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
        ))))
+  (org-agenda-prefix-format
+        '((agenda . " %i %?-12t% s")
+          (todo . " %i %-12:(concat (truncate-string-to-width (car (org-get-outline-path)) 9 nil nil t))")
+          (tags . " %i ")
+          (search . " %i %-12:c")))
+  :config
+  (use-package nerd-icons
+    :config
+    (setq org-agenda-category-icon-alist
+          `(("inbox"     ,(list (nerd-icons-faicon "nf-fa-inbox")) nil nil :ascent center)
+            ("projects"  ,(list (nerd-icons-faicon "nf-fa-folder")) nil nil :ascent center)
+            ("someday"   ,(list (nerd-icons-faicon "nf-fa-balance_scale")) nil nil :ascent center)
+            ("repeaters" ,(list (nerd-icons-faicon "nf-fa-repeat")) nil nil :ascent center)
+            ("home"      ,(list (nerd-icons-faicon "nf-fa-home")) nil nil :ascent center)
+            ("comp"      ,(list (nerd-icons-faicon "nf-fa-laptop")) nil nil :ascent center)
+            ("read"      ,(list (nerd-icons-faicon "nf-fa-bookmark")) nil nil :ascent center)
+            ("uni"       ,(list (nerd-icons-faicon "nf-fa-graduation_cap")) nil nil :ascent center)
+            ("birthday"  ,(list (nerd-icons-faicon "nf-fa-birthday_cake")) nil nil :ascent center)
+            (".*_diary"  ,(list (nerd-icons-faicon "nf-fa-sun_o")) nil nil :ascent center)
+            )))
   :custom
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
   (org-confirm-babel-evaluate nil)
