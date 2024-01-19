@@ -575,21 +575,58 @@
 (add-hook 'text-mode-hook 'hk/text-capf)
 
 (use-package denote
+  :demand t
+  :after org
   :hook (dirvish-mode . denote-dired-mode)
-  :hook (dirvish-mode . hk/truncate-lines)
-  :custom
-  (denote-directory (concat org-directory "denote/"))
-  (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
   :bind
   (("C-c C-n" . denote)
    ("C-c o n" . denote-open-or-create)
    ("C-c o N" . hk/diary))
+  :custom
+  (denote-directory "~/documents/org/denote/")
+  (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
+  (denote-org-front-matter
+   ":PROPERTIES:
+:ID: %4$s
+:END:
+#+title:      %1$s
+#+date:       %2$s
+#+filetags:   %3$s
+#+identifier: %4$s\n\n")
+  (denote-templates `((diary .   "* TODO Morning Checklist
+
+- [ ] Sunlight + Water + Meditate
+- [ ] Bicycle + [[file:~/videos][Video]] | Workout
+- [ ] Cold Shower
+- [ ] Breakfast
+- [ ] Process [[elisp:(mu4e)][Mail]]
+- [ ] Process [[file:~/documents/org/gtd/inbox.org][Inbox]]
+- [ ] Process yesterday
+- [ ] Plan day
+  - [ ] Free recall practice
+  - [ ]
+- [ ] Clock in!
+
+* TODO Preperation for tomorrow
+
+- [ ] Overnight oats
+- [ ] [[file:~/videos][Video]] entertainment for bicycle workout
+- [ ] [[file:~/documents/books/audio][Audio]] entertainment for chores")))
+  :config
+  (hk/diary)
   :init
+  (defun hk/diary-today-file ()
+    (let* ((today (format-time-string "%A %e %B %Y"))
+           (sluggified (denote-sluggify today))
+           (file (car (denote-directory-files-matching-regexp sluggified))))
+      file))
   (defun hk/diary ()
     "Create an entry tagged 'diary' with the date as its title.
 If a diary for the current day exists, visit it.  If multiple
 entries exist, prompt with completion for a choice between them.
-Else create a new file."
+Else create a new file.
+
+The file is added to 'org-agenda-files' if not present."
     (interactive)
     (let* ((today (format-time-string "%A %e %B %Y"))
            (string (denote-sluggify today))
@@ -600,7 +637,12 @@ Else create a new file."
        (files
         (find-file (car files)))
        (t
-        (denote today '("diary")))))))
+        (denote today '("diary") nil nil nil 'diary))
+       ))
+    (let ((file (hk/diary-today-file)))
+      (unless (member file org-agenda-files)
+        (add-to-list 'org-agenda-files file)))
+    ))
 
 (use-package htmlize)
 (use-package gnuplot)
@@ -642,9 +684,10 @@ Else create a new file."
   (org-attach-id-to-path-function-list '(org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format
                                          org-attach-id-fallback-folder-format))
+  (org-attach-use-inheritance t) ; always respect parent IDs
   (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; increase scale of latex fragments
   :custom
-  (org-agenda-files '("~/documents/org/gtd/"))
+  (org-agenda-files (mapcar (lambda (f) (concat org-directory "gtd/" f)) '("inbox.org" "projects.org" "repeaters.org" "someday.org")))
   (calendar-date-style 'european)
   (org-agenda-window-setup 'current-window)
   (org-agenda-time-grid '((daily today require-timed) (600 1200 1800 2200) "" ""))
@@ -913,6 +956,8 @@ parent."
   (org-download-screenshot-method "flameshot gui --raw > %s"))
 
 (use-package org-web-tools
+  :bind (:map org-mode-map
+              ("C-c y" . org-web-tools-insert-link-for-url))
   :config
   (defun hk/org-web-tools-url-as-denote (&optional url)
     "Create denote entry of URL's web page content.
@@ -1228,6 +1273,7 @@ Takes optional URL or gets it from the clipboard."
 
 
 (use-package sqlite-mode
+  :ensure nil
   :config
   (defun ct/sqlite-view-file-magically ()
     "Runs `sqlite-mode-open-file' on the file name visited by the
@@ -1494,7 +1540,7 @@ current buffer, killing it."
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package ef-themes
-  :hook (after-init . (lambda () (load-theme 'ef-melissa-light)))
+  ;; :hook (after-init . (lambda () (load-theme 'ef-melissa-light)))
   :custom
   (ef-themes-mixed-fonts t)
   (ef-themes-headings
@@ -1624,6 +1670,72 @@ current buffer, killing it."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package org-timeblock
+  :custom
+  (org-timeblock-inbox-file (concat org-directory "gtd/" "inbox.org"))
+  :config
+  (use-package denote
+    :config
+    (setq org-timeblock-inbox-file (hk/diary-today-file))))
+
+(use-package org-rich-yank
+  :demand t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank))
+  :custom
+  (org-rich-yank-format-paste #'hk/org-rich-yank-format-paste)
+  :init
+  (defun hk/org-rich-yank-format-paste (language contents link)
+    "Based on `org-rich-yank--format-paste-default'."
+    (format "#+begin_src %s\n%s\n#+end_src\n#+comment: %s"
+            language
+            (org-rich-yank--trim-nl contents)
+            link)))
+
+(use-package el-easydraw
+  ;; A SVG Editor within Emacs. Perfect with wacom tablet for small sketches and thoughts.
+  :bind (:map org-mode-map
+              ("<f7>" . hk/edraw-insert-link)
+         :map edraw-editor-map
+              ("@" . hk/edraw-toggle-interval))
+  :config
+  (with-eval-after-load 'org
+    (require 'edraw-org)
+    (edraw-org-setup-default))
+  ;; When using the org-export-in-background option (when using the
+  ;; asynchronous export function), the following settings are
+  ;; required. This is because Emacs started in a separate process does
+  ;; not load org.el but only ox.el.
+  (with-eval-after-load "ox"
+    (require 'edraw-org)
+    (edraw-org-setup-exporter))
+  :init
+  (defun hk/edraw-insert-link ()
+    (interactive)
+    (unless (edraw-org-link-at-point)
+      (insert "[[edraw:]]"))
+    (edraw-org-edit-link))
+
+  (defun hk/edraw-toggle-interval ()
+    "Switched between the default interaval and a interval of 1
+Useful when using wacom tablet for freehand"
+    (interactive)
+    (let* ((editor (edraw-current-editor))
+           (current-interval (edraw-get-setting editor 'grid-interval)))
+      (if (= current-interval edraw-editor-default-grid-interval)
+          (progn (message "interval 1")
+                 (edraw-editor-set-grid-interval editor 1)
+                 (edraw-set-grid-visible editor nil))
+        (message "interval 20")
+        (edraw-editor-set-grid-interval editor 20)
+        (edraw-set-grid-visible editor t)))
+    ))
+
+(use-package org-noter)
+
+(use-package journalctl-mode
+  ;; View systemd's journalctl within Emacs
+  )
 
 
 (provide 'init)
