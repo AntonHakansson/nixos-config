@@ -701,32 +701,34 @@ The file is added to 'org-agenda-files' if not present."
       ((agenda "" (;; Show today
                    (org-agenda-span 1)
                    ))
-       (tags-todo "project|inbox//NEXT" ((org-agenda-overriding-header "Next:")))
-       (tags-todo "project|inbox//WAIT" ((org-agenda-overriding-header "Waiting on:")))
-       (tags-todo "inbox//TODO" ((org-agenda-overriding-header "Inbox:")))
+       (todo "NEXT" ((org-agenda-overriding-header "Next:")))
+       (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
+       (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
        (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
        (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
+       (tags-todo "someday" ((org-agenda-overriding-header "Someday:")))
        ))))
   (org-agenda-prefix-format
         '((agenda . " %i %?-12t% s")
-          (todo . " %i %-12:(concat (truncate-string-to-width (car (org-get-outline-path)) 9 nil nil t))")
+          (todo . " %i ")
           (tags . " %i ")
           (search . " %i %-12:c")))
   :config
-  (use-package nerd-icons
+  (use-package svg-lib
     :config
     (setq org-agenda-category-icon-alist
-          `(("inbox"     ,(list (nerd-icons-faicon "nf-fa-inbox")) nil nil :ascent center)
-            ("projects"  ,(list (nerd-icons-faicon "nf-fa-folder")) nil nil :ascent center)
-            ("someday"   ,(list (nerd-icons-faicon "nf-fa-balance_scale")) nil nil :ascent center)
-            ("repeaters" ,(list (nerd-icons-faicon "nf-fa-repeat")) nil nil :ascent center)
-            ("home"      ,(list (nerd-icons-faicon "nf-fa-home")) nil nil :ascent center)
-            ("comp"      ,(list (nerd-icons-faicon "nf-fa-laptop")) nil nil :ascent center)
-            ("read"      ,(list (nerd-icons-faicon "nf-fa-bookmark")) nil nil :ascent center)
-            ("uni"       ,(list (nerd-icons-faicon "nf-fa-graduation_cap")) nil nil :ascent center)
-            ("birthday"  ,(list (nerd-icons-faicon "nf-fa-birthday_cake")) nil nil :ascent center)
-            (".*_diary"  ,(list (nerd-icons-faicon "nf-fa-sun_o")) nil nil :ascent center)
-            )))
+          `(("inbox"     ,(concat svg-lib-icons-dir "material_inbox.svg") nil nil :ascent center :scale 0.8)
+            ("projects"  ,(concat svg-lib-icons-dir "material_description.svg") nil nil :ascent center :scale 0.8)
+            ("someday"   ,(concat svg-lib-icons-dir "material_lightbulb-on-90.svg") nil nil :ascent center :scale 0.8)
+            ("repeaters" ,(concat svg-lib-icons-dir "material_restart.svg") nil nil :ascent center :scale 0.8)
+            ("home"      ,(concat svg-lib-icons-dir "material_home.svg") nil nil :ascent center :scale 0.8)
+            ("comp"      ,(concat svg-lib-icons-dir "material_laptop.svg") nil nil :ascent center :scale 0.8)
+            ("read"      ,(concat svg-lib-icons-dir "material_book.svg") nil nil :ascent center :scale 0.8)
+            ("uni"       ,(concat svg-lib-icons-dir "material_school.svg") nil nil :ascent center :scale 0.8)
+            ("birthday"  ,(concat svg-lib-icons-dir "material_cake.svg") nil nil :ascent center :scale 0.8)
+            (".*_diary"  ,(concat svg-lib-icons-dir "material_weather-sunset.svg") nil nil :ascent center :scale 0.8)
+            ))
+    )
   :custom
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
   (org-confirm-babel-evaluate nil)
@@ -1751,7 +1753,10 @@ Useful when using wacom tablet for freehand"
         (edraw-set-grid-visible editor t)))
     ))
 
-(use-package org-noter)
+(use-package org-noter
+  :custom
+  (org-noter-notes-search-path '("~/documents/org/"))
+  (org-noter-default-notes-file-names '("notes.org")))
 
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
