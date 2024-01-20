@@ -1315,6 +1315,10 @@ current buffer, killing it."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package shell-mode
+  :ensure nil
+  :bind ("C-r" . consult-history))
+
 (use-package dirvish
   ;; File manager
   :bind
