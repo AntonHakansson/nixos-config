@@ -1767,6 +1767,8 @@ Useful when using wacom tablet for freehand"
   ;; View systemd's journalctl within Emacs
   )
 
+(use-package unfill)
+
 
 (provide 'init)
 ;;; init.el ends here
