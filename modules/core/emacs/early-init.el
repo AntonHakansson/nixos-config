@@ -26,7 +26,6 @@
 (setopt frame-inhibit-implied-resize t)
 
 ;; Supress anoying logs
-(setopt byte-compile-warnings '(not obsolete))
 (setopt warning-suppress-log-types '((comp) (bytecomp)))
 (setopt native-comp-async-report-warnings-errors 'silent)
 

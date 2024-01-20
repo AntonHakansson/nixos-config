@@ -703,10 +703,11 @@ The file is added to 'org-agenda-files' if not present."
                    ))
        (todo "NEXT" ((org-agenda-overriding-header "Next:")))
        (todo "WAIT" ((org-agenda-overriding-header "Waiting on:")))
-       (tags-todo "inbox" ((org-agenda-overriding-header "Inbox:")))
+       (tags-todo "inbox//TODO" ((org-agenda-overriding-header "Inbox:")))
        (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
+       (tags-todo "diary//TODO" ((org-agenda-overriding-header "Today:")))
        (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
-       (tags-todo "someday" ((org-agenda-overriding-header "Someday:")))
+       (tags-todo "someday//TODO" ((org-agenda-overriding-header "Someday:")))
        ))))
   (org-agenda-prefix-format
         '((agenda . " %i %?-12t% s")
