@@ -615,6 +615,9 @@
   :config
   (unless (hk/diary-today-file)
     (hk/diary))
+  ;; Accept any symbol in a .dir-locals.el file; makes it easier to use silos.
+  ;; See "silos" in the manual: https://protesilaos.com/emacs/denote
+  (put 'denote-file-type 'safe-local-variable-p 'symbolp)
   :init
   (defun hk/diary-today-file ()
     (let* ((today (format-time-string "%A %e %B %Y"))
