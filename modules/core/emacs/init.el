@@ -1058,7 +1058,10 @@ Takes optional URL or gets it from the clipboard."
   ;; Add/Change/Delete pairs based on expand-region.
   :bind (("M-)" . 'embrace-commander))  ; orig. move-past-close-and-reindent
   :hook (LaTeX-mode . embrace-LaTeX-mode)
-  :hook (org-mode   . embrace-org-mode-hook))
+  :hook (org-mode   . embrace-org-mode-hook)
+  :config
+  (with-eval-after-load 'meow
+    (meow-normal-define-key '("(" . embrace-commander))))
 
 (use-package string-edit-at-point
   ;; Edit strings normally and get it escaped automatically
