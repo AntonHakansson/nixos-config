@@ -593,19 +593,21 @@
 #+date:       %2$s
 #+filetags:   %3$s
 #+identifier: %4$s\n\n")
-  (denote-templates `((diary .   "* TODO Morning Checklist
+  (denote-templates `((diary .   "
+* TODO Morning Checklist
 
-- [ ] Sunlight + Water + Meditate
-- [ ] Bicycle + [[file:~/videos][Video]] | Workout
+- [ ] Sunlight + Water
+- [ ] Motion
+  - [ ] Bicycle + [[file:~/videos][Video]] or
+  - [ ] Workout + [[file:~/documents/books/audio/][Audio]] or
+  - [ ] Alternative (shuffle snow etc.)
 - [ ] Cold Shower
 - [ ] Breakfast
 - [ ] Process [[elisp:(mu4e)][Mail]]
 - [ ] Process [[file:~/documents/org/gtd/inbox.org][Inbox]]
 - [ ] Process yesterday
-- [ ] Plan day
-  - [ ] Free recall practice
-  - [ ]
-- [ ] Clock in!
+- [ ] [[elisp:org-timeblock][Timeblock]]
+  - [ ] Allocate one [[file:~/documents/org/gtd/repeaters.org::*Free Recall][Free Recall]] practice
 
 * TODO Preperation for tomorrow
 
