@@ -748,9 +748,10 @@ The file is added to 'org-agenda-files' if not present."
   (org-capture-templates
    '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
       "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
-     ("T" "Tickler" entry
-      (file "gtd/repeaters.org")
-      "* %i%? \n %U")
+     ("m" "Mail [inbox]" entry (file "gtd/inbox.org")
+      "* TODO Respond to %a\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
+     ("T" "Tickler" entry (file "gtd/repeaters.org")
+      "* %i%?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n")
      ("a" "Anki Basic" entry (file+headline "anki.org" "Scratch")
       "* %<%H:%M>\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n")
      ("w" "Web" entry (file+function "gtd/inbox.org" hk/org-capture-template-goto-link)
