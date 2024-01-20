@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 (when (< emacs-major-version 29)
-  (error (format "Emacs config only works with Emacs 29 and newer; you have version ~a" emacs-major-version)))
+  (error (format "Emacs config only works with Emacs 29 and newer; you have version %d" emacs-major-version)))
 
 (defvar hk/config-dir (or (getenv "HK_CONFIG_DIR") "~/.config/emacs/") "Location off init.el.")
 (defvar hk/data-dir (concat (or (getenv "XDG_DATA_HOME") "~/.local/share") "/emacs/") "Location for data.")
