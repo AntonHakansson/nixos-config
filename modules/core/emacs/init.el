@@ -61,7 +61,7 @@
 
   ;; Quickly access recent files
   (setopt recentf-max-menu-items 30)    ; bump the limits a bit
-  (setopt recentf-max-saved-items 100)
+  (setopt recentf-max-saved-items 256)
   (add-hook 'after-init-hook #'recentf-mode) ; Turn on recentf mode
 
   ;; Misc. Emacs tweaks
