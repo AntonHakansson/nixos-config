@@ -679,7 +679,7 @@ The file is added to 'org-agenda-files' if not present."
   (org-cycle-hide-block-startup t)
   (org-startup-folded "show2levels") ; apparently default showeverything overrides hide-block
   (org-image-actual-width nil) ; Use width from #+attr_org and fallback to original width.
-  (org-fold-catch-invisible-edits 'smart)
+  (org-fold-catch-invisible-edits 'show-and-error)
   (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
                             (and (looking-at org-outline-regexp)
                                  (looking-back "^\\**"))))
