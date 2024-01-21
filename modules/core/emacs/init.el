@@ -1326,7 +1326,14 @@ current buffer, killing it."
 
 (use-package shell-mode
   :ensure nil
-  :bind ("C-r" . consult-history))
+  :bind ("C-r" . consult-history)
+  :init
+  (defun hk/run-tgpt ()
+    "Open shell and run the program 'tgpt' in interactive mode."
+    (interactive)
+    (shell "tgpt")
+    (insert "tgpt -i")
+    (comint-send-input)))
 
 (use-package dirvish
   ;; File manager
@@ -1494,13 +1501,6 @@ current buffer, killing it."
                     (mu4e-refile-folder . "/gmail/[Gmail]/All Mail")
                     (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "gmail")))))))
 
-
-(defun hk/run-tgpt ()
-  "Open shell and run the program 'tgpt' in interactive mode."
-  (interactive)
-  (shell "tgpt")
-  (insert "tgpt -i")
-  (comint-send-input))
 
 (use-package jinx
   ;; Enchaned Spell Checker
