@@ -675,6 +675,7 @@ The file is added to 'org-agenda-files' if not present."
   (org-directory      "~/documents/org/")
   (org-return-follows-link t)
   (org-startup-indented t)
+  (org-cycle-separator-lines 0) ; hide emptly lines between subtrees
   (org-startup-with-inline-images t)
   (org-cycle-hide-block-startup t)
   (org-startup-folded "show2levels") ; apparently default showeverything overrides hide-block
