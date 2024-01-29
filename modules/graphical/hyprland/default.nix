@@ -105,29 +105,19 @@
 
             general {
                 # See https://wiki.hyprland.org/Configuring/Variables/
+                border_size = 2
                 gaps_in = 0
-                gaps_out = 4
-                border_size = 6
-                col.active_border   = rgb(000000)
-                col.inactive_border = rgba(f4e6cd00)
+                gaps_out = 0
 
                 layout = master
             }
 
             # background color
-            exec-once = ${pkgs.swaybg}/bin/swaybg -c "##f4e6cd"
+            exec-once = ${pkgs.swaybg}/bin/swaybg -c "#131c2b"
 
             decoration {
                 # See https://wiki.hyprland.org/Configuring/Variables/
                 rounding = 0
-
-                drop_shadow = yes
-                shadow_range = 4
-                shadow_render_power = 3
-                col.shadow = rgba(1a1a1aee)
-
-                dim_inactive = true
-                dim_strength = 0.1
             }
 
             animations {
@@ -138,8 +128,10 @@
 
             master {
                 # See https://wiki.hyprland.org/Configuring/Master-Layout/
-                orientation = right
-                mfact = 0.6
+                orientation = center
+                mfact = 0.5
+                always_center_master = true
+                new_is_master = false
             }
 
             gestures {
@@ -167,10 +159,6 @@
             windowrule = idleinhibit fullscreen, firefox
 
             windowrule = idleinhibit focus, mpv
-
-            # Status Bar
-            exec-once = waybar
-            bind = SUPER, b, exec, ${pkgs.killall}/bin/killall -SIGUSR1 .waybar-wrapped
 
             # Clipboard manager
             exec-once = wl-paste --type text  --watch cliphist store
@@ -275,122 +263,6 @@
             bind = SUPER,     C, exec, otd applypreset nav
             bind = SUPER ALT, C, exec, otd applypreset artist
           '');
-      };
-      programs.waybar = {
-        enable = true;
-        package = pkgs.waybar.overrideAttrs (oldAttrs: {
-          mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-        });
-        settings = [{
-          position = "top";
-          margin = "6 6 0 6";
-          modules-left = [ "wlr/workspaces" ];
-          modules-center = [ "clock" ];
-          modules-right = [
-            "custom/media"
-            "network"
-            "pulseaudio"
-            "battery"
-            "tray"
-          ];
-          "clock" = {
-            format = "{:%a %d %b    %H:%M}";
-            interval = 60;
-            tooltip-format = "{:%Y-%m-%d}";
-            on-click = "emacsclient -cn -e \"(progn (org-agenda :arg \\\"g\\\") (delete-other-windows))\"";
-          };
-          "custom/media" = {
-            "format" = "{icon} {}";
-            "return-type" = "json";
-            "format-icons" = {
-              "Playing" = " ";
-              "Paused" = " ";
-            };
-            "max-length" = 70;
-            "exec" = ''
-              ${pkgs.playerctl}/bin/playerctl -a metadata --format '{"text": "{{trunc(artist, 10)}} - {{markup_escape(title)}}", "tooltip": "{{playerName}} : {{markup_escape(title)}}", "alt": "{{status}}", "class": "{{status}}"}' -F
-            '';
-            "on-click" = "${pkgs.playerctl}/bin/playerctl play-pause";
-          };
-          "network" = {
-            format = "";
-          };
-          "pulseaudio" = {
-            format = "{icon}";
-            format-muted = "<span color=\"#4a4a4a\"></span>";
-            format-icons = [ "" "" "" ];
-            on-click = "${pkgs.pavucontrol}/bin/pavucontrol --tab=3";
-          };
-          "battery" = {
-            format = "{icon} {capacity}%";
-            format-charging = " {capacity}%";
-            format-icons = [ "" "" "" "" "" ];
-            tooltip = false;
-          };
-        }];
-        style = ''
-          * {
-              font-family: FontAwesome, Iosevka, Roboto, Helvetica, Arial, sans-serif;
-              font-size: 13px;
-          }
-
-          window#waybar {
-              background: transparent;
-              color: #000000;
-          }
-
-          button {
-              border: none;
-              border-radius: 0;
-          }
-
-          #workspaces button {
-             border-bottom: 1px solid transparent;
-          }
-
-          #workspaces button.active {
-              border-bottom: 1px solid #B6A6A0;
-          }
-
-          #workspaces button:hover {
-              background: rgba(0, 0, 0, 0.2);
-          }
-
-          #workspaces button.urgent {
-              background-color: #eb4d4b;
-          }
-
-          #clock,
-          #battery,
-          #cpu,
-          #memory,
-          #disk,
-          #temperature,
-          #backlight,
-          #network,
-          #pulseaudio,
-          #wireplumber,
-          #custom-media,
-          #tray,
-          #mode,
-          #idle_inhibitor,
-          #scratchpad,
-          #mpd {
-              padding: 0 10px;
-              color: #000000;
-              background: transparent;
-          }
-
-          /* If workspaces is the leftmost module, omit left margin */
-          .modules-left > widget:first-child > #workspaces {
-              margin-left: 0;
-          }
-
-          /* If workspaces is the rightmost module, omit right margin */
-          .modules-right > widget:last-child > #workspaces {
-              margin-right: 0;
-          }
-        '';
       };
     };
   };
