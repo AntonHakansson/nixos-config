@@ -25,7 +25,19 @@
         alwaysEnsure = true;
         extraEmacsPackages = epkgs:
           (lib.optional config.hakanssn.graphical.mail.enable epkgs.mu4e) ++
-          [ epkgs.treesit-grammars.with-all-grammars ];
+          [ epkgs.treesit-grammars.with-all-grammars ] ++
+          [(epkgs.trivialBuild rec {
+            name = "org-nix-shell";
+            pname = "org-nix-shell";
+            version = "v0.3.1";
+            packageRequires = [ epkgs.envrc ];
+            src = pkgs.fetchFromGitHub {
+              owner = "AntonHakansson";
+              repo = pname;
+              rev = version;
+              sha256 = "sha256-KHoz0BVYe/EXusZqeR8ehFnsFLnvXifOAJQXKSM7Q1w=";
+            };
+          })];
       };
     };
   };
