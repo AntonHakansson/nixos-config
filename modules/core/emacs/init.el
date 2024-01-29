@@ -26,8 +26,6 @@
 
   ;; Automatically reread from disk if the underlying file changes
   (setopt auto-revert-avoid-polling t)
-  ;; Some systems don't do file notifications well; see
-  ;; https://todo.sr.ht/~ashton314/emacs-bedrock/11
   (setopt auto-revert-interval 5)
   (setopt auto-revert-check-vc-info t)
   (setopt auto-revert-verbose t)
@@ -74,14 +72,11 @@
   ;; Keybinds
   (global-set-key (kbd "C-(") 'previous-buffer)
   (global-set-key (kbd "C-)") 'next-buffer)
-  (global-set-key (kbd "<f1>") 'shell)
   (global-set-key (kbd "<f5>") 'recompile)
   (global-set-key (kbd "<f7>") 'scroll-lock-mode)
-  ;; (global-set-key (kbd "M-p") 'backward-paragraph)
-  ;; (global-set-key (kbd "M-n") 'forward-paragraph)
-  (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
 
   ;; ibuffer
+  (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
   (setopt ibuffer-expert t)             ; stop yes no prompt on delete
   (setopt ibuffer-saved-filter-groups
 	        '(("default"
@@ -193,6 +188,7 @@
    ("C-x p b" . 'consult-project-buffer)      ; orig. project-switch-to-buffer
    ;; Other custom bindings
    ("M-y" . 'consult-yank-pop)                ; orig. yank-pop
+   ("<f6>" . 'consult-bookmark)
    ;; M-g bindings (goto-map)
    ("M-g e" . 'consult-compile-error)
    ("M-g f" . 'consult-flymake)               ; Alternative: consult-flycheck
@@ -310,7 +306,6 @@
    '("9" . meow-expand-9))
 
   ;; Movement
-  ;; REVIEW: have a keyboard layer for navigating horizontally by character (mi on colemak-dh) and rebind keys for something useful
   (meow-normal-define-key
    '("n" . meow-next)
    '("N" . meow-next-expand)
@@ -330,16 +325,15 @@
    '("[" . meow-beginning-of-thing)
    '("]" . meow-end-of-thing)
    '("/" . meow-visit)
-   '("!" . shell-command)
-   '("$" . jinx-correct)
-   '("M-$" . jinx-next)
-   '("%" . meow-query-replace)
+   '("v" . meow-search)
    '("f" . meow-find)
    '("F" . meow-find-expand)
    '("t" . meow-till)
    '("T" . meow-till-expand)
-   '("L" . meow-goto-line))
+   '("L" . meow-goto-line)
+   )
 
+  ;; Operations
   (meow-normal-define-key
    '("-" . negative-argument)
    '("a" . meow-append)
@@ -363,14 +357,21 @@
    '("S" . meow-open-above)
    '("u" . meow-undo)
    '("U" . meow-undo-in-selection)
-   '("v" . meow-search)
    '("x" . meow-delete)
    '("X" . meow-backward-delete)
    '("y" . meow-save)
    '("z" . meow-pop-selection)
-   '("'" . repeat)
    '("<escape>" . ignore))
 
+  ;; Commands
+  (meow-normal-define-key
+   '("!" . shell-command)
+   '("%" . meow-query-replace)
+   '("$" . jinx-correct)
+   '("M-$" . jinx-next)
+   '("'" . repeat))
+
+  ;; Leader Commands
   (meow-leader-define-key
    ;; m -> M-
    ;; g -> C-M-
@@ -390,26 +391,13 @@
    '("f o" . find-file-other-window)
    '("f R" . rename-file)
    '("b"   . consult-buffer)
-   '("TAB" . previous-buffer)
 
    ;; Windows
    '("w w" . clone-frame)
    '("w /" . split-window-right)
    '("w d" . delete-window)
 
-   ;; Project
-   '("P"    . "C-x p")
-   '("p p"	.	project-switch-project)
-   '("p b"	.	consult-project-buffer)
-   '("p c"	.	project-compile)
-   '("p b"	.	project-swith-buffer)
-   '("p f"	.	project-find-file)
-   '("p q"	.	project-query-replace-regexp)
-   '("p s"	.	consult-ripgrep)
-
    ;; Applications
-   '("o e" . elfeed)
-   '("o a" . org-agenda)
    '("A" . consult-org-agenda)
 
    ;; meow
@@ -439,22 +427,24 @@
             (beacon . "B")))
   (meow-global-mode 1))
 
-(use-package hydra)
 
 (use-package dumb-jump
   :bind
   (("C-c j" . hk/dumb-jump-hydra/body))
   :commands dumb-jumb-go
   :config
-  (defhydra hk/dumb-jump-hydra (:color blue :columns 3)
-    "Dumb Jump"
-    ("j" dumb-jump-go "Go")
-    ("o" dumb-jump-go-other-window "Other window")
-    ("e" dumb-jump-go-prefer-external "Go external")
-    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
-    ("i" dumb-jump-go-prompt "Prompt")
-    ("l" dumb-jump-quick-look "Quick look")
-    ("b" dumb-jump-back "Back")))
+  (use-package hydra
+    :config
+    (defhydra hk/dumb-jump-hydra (:color blue :columns 3)
+      "Dumb Jump"
+      ("j" dumb-jump-go "Go")
+      ("o" dumb-jump-go-other-window "Other window")
+      ("e" dumb-jump-go-prefer-external "Go external")
+      ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+      ("i" dumb-jump-go-prompt "Prompt")
+      ("l" dumb-jump-quick-look "Quick look")
+      ("b" dumb-jump-back "Back")))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -534,6 +524,10 @@
 
 (use-package cape
   ;; Cape for better completion-at-point support and more
+  :bind
+  ;; Quickly duplicate line from buffer
+  (("C-t" . 'cape-line)                 ; orig. transpose-chars
+   ("C-S-t" . 'hippie-expand))          ; orig. transpose-chars
   :config
   (setq cape-dabbrev-check-other-buffers t
         dabbrev-ignored-buffer-regexps
@@ -546,12 +540,7 @@
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block) ; Complete in org, markdown code block
   (defalias 'cape-dabbrev-min-3 (cape-capf-prefix-length #'cape-dabbrev 3))
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3)
-
-  ;; Quickly duplicate line from buffer
-  (global-set-key (kbd "C-t") 'cape-line) ; orig. transpose-chars
-  (global-set-key (kbd "C-S-t") 'hippie-expand) ; orig. transpose-chars
-  )
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev-min-3))
 
 (use-package pcmpl-args
   ;; Extend Pcomplete with completions from man pages.
@@ -575,8 +564,6 @@
 (add-hook 'text-mode-hook 'hk/text-capf)
 
 (use-package denote
-  :demand t
-  :after org
   :hook (dirvish-mode . denote-dired-mode)
   :bind
   (("C-c C-n" . denote)
@@ -603,6 +590,7 @@
   - [ ] Alternative (shuffle snow etc.)
 - [ ] Cold Shower
 - [ ] Breakfast
+- [ ] Clean Desk
 - [ ] Process [[elisp:(mu4e)][Mail]]
 - [ ] Process [[file:~/documents/org/gtd/inbox.org][Inbox]]
 - [ ] Process yesterday
@@ -725,7 +713,7 @@ The file is added to 'org-agenda-files' if not present."
     :config
     (setq org-agenda-category-icon-alist
           `(("inbox"     ,(concat svg-lib-icons-dir "material_inbox.svg") nil nil :ascent center :scale 0.8)
-            ("projects"  ,(concat svg-lib-icons-dir "material_description.svg") nil nil :ascent center :scale 0.8)
+            ("project"   ,(concat svg-lib-icons-dir "material_star.svg") nil nil :ascent center :scale 0.8)
             ("someday"   ,(concat svg-lib-icons-dir "material_lightbulb-on-90.svg") nil nil :ascent center :scale 0.8)
             ("repeaters" ,(concat svg-lib-icons-dir "material_restart.svg") nil nil :ascent center :scale 0.8)
             ("home"      ,(concat svg-lib-icons-dir "material_home.svg") nil nil :ascent center :scale 0.8)
@@ -1305,7 +1293,6 @@ Takes optional URL or gets it from the clipboard."
   ;; Expand html templates
   :hook ((web-mode . emmet-mode)))
 
-
 (use-package sqlite-mode
   :ensure nil
   :config
@@ -1327,7 +1314,9 @@ current buffer, killing it."
 
 (use-package shell-mode
   :ensure nil
-  :bind ("C-r" . consult-history)
+  :bind (("<f1>" . 'shell)
+         :map shell-mode-map
+         ("C-r" . consult-history))
   :init
   (defun hk/run-tgpt ()
     "Open shell and run the program 'tgpt' in interactive mode."
@@ -1425,6 +1414,7 @@ current buffer, killing it."
 
 (use-package elfeed
   ;; rss reader
+  :bind ("C-c o e" . elfeed)
   :custom
   (elfeed-sort-order 'ascending)
   :config
@@ -1616,11 +1606,8 @@ current buffer, killing it."
   :ensure nil
   :config
   ;; By default, compilation doesn't support ANSI colors. Enable them for compilation.
-  (require 'ansi-color)
-  (defun colorize-compilation-buffer ()
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region (point-min) (point-max))))
-  (add-hook 'compilation-filter-hook 'colorize-compilation-buffer))
+  (use-package ansi-color
+    :hook (compilation-filter . ansi-color-compilation-filter)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1709,8 +1696,11 @@ current buffer, killing it."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package org-timeblock
+  :bind
+  ("C-c o t" . org-timeblock)
   :custom
   (org-timeblock-inbox-file (concat org-directory "gtd/" "inbox.org"))
+  (org-timeblock-span 1 "show today")
   :config
   (use-package denote
     :config
@@ -1773,12 +1763,13 @@ Useful when using wacom tablet for freehand"
   (org-noter-notes-search-path '("~/documents/org/"))
   (org-noter-default-notes-file-names '("notes.org")))
 
+;; (use-package org-nix-shell
+;;   :hook (org-mode . org-nix-shell-mode)
+;;   )
+
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
-  )
-
-(use-package unfill)
-
+  :bind ("C-c o j" . journalctl))
 
 (provide 'init)
 ;;; init.el ends here
