@@ -90,6 +90,9 @@ in
           };
         };
       };
+      nixPath = [
+        "nixpkgs=${inputs.nixpkgs.outPath}"
+      ];
       extraOptions = lib.mkIf config.hakanssn.core.nix.enableDirenv ''
         keep-outputs = true
         keep-derivations = true
