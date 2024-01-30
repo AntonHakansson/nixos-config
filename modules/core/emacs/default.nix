@@ -180,6 +180,7 @@
       iosevka-bin
       (iosevka-bin.override { variant = "aile"; })
       nerdfonts
+      hakanssn.iosvmata
     ];
   };
 }
