@@ -228,8 +228,9 @@
             bind = SUPER SHIFT, 0, movetoworkspacesilent, 10
 
             # Master Orientation
-            bind = SUPER, LEFT,  layoutmsg, orientationleft
+            bind = SUPER, RIGHT, layoutmsg, mfact 0.55
             bind = SUPER, RIGHT, layoutmsg, orientationright
+            bind = SUPER, UP,    layoutmsg, mfact 0.45
             bind = SUPER, UP,    layoutmsg, orientationcenter
 
             # Scratchpad
