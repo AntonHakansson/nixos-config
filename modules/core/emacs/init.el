@@ -721,12 +721,18 @@ The file is added to 'org-agenda-files' if not present."
             (".*_diary"  ,(concat svg-lib-icons-dir "material_weather-sunset.svg") nil nil :ascent center :scale 0.8)
             ))
     )
+
+  :hook (org-babel-after-execute . hk/maybe-org-redisplay-inline-images)
   :custom
   (org-babel-results-keyword "results" "Make babel results blocks lowercase")
   (org-confirm-babel-evaluate nil)
   (org-babel-load-languages
    (mapcar (lambda (e) (cons e t))
            '(awk calc C css emacs-lisp haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
+  :init
+  (defun hk/maybe-org-redisplay-inline-images (&optional beg end)
+    (if (org--inline-image-overlays beg end)
+        (org-redisplay-inline-images)))
   :custom
   (org-todo-keywords
    '((sequence "TODO(t)" "NEXT(n!)" "|" "DONE(d)")
