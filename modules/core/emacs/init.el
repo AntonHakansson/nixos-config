@@ -397,9 +397,6 @@
    '("w /" . split-window-right)
    '("w d" . delete-window)
 
-   ;; Applications
-   '("A" . consult-org-agenda)
-
    ;; meow
    '("?" . meow-cheatsheet)
    '("e" . "H-e")                      ; To execute original e in MOTION state, use SPC e.
@@ -651,9 +648,9 @@ The file is added to 'org-agenda-files' if not present."
   :hook (org-agenda-finalize . hk/truncate-lines)
   :hook (org-after-refile-insert . org-save-all-org-buffers)
   :bind
-  (("C-c a"  . org-agenda)
-   ("C-c c"  . org-capture)
-   ("C-c l"  . org-store-link)
+  (("C-c o a" . org-agenda)
+   ("C-c c"   . org-capture)
+   ("C-c l"   . org-store-link)
    :map org-mode-map
    ("C-," . nil)  ; Orig. cycle agenda buffers
    ("C-'" . nil)  ; Orig. cycle agenda buffers
@@ -1763,9 +1760,8 @@ Useful when using wacom tablet for freehand"
   (org-noter-notes-search-path '("~/documents/org/"))
   (org-noter-default-notes-file-names '("notes.org")))
 
-;; (use-package org-nix-shell
-;;   :hook (org-mode . org-nix-shell-mode)
-;;   )
+(use-package org-nix-shell
+  :hook (org-mode . org-nix-shell-mode))
 
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
