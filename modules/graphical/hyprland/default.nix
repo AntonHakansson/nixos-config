@@ -105,9 +105,11 @@
 
             general {
                 # See https://wiki.hyprland.org/Configuring/Variables/
-                border_size = 2
                 gaps_in = 0
                 gaps_out = 0
+
+                border_size = 4
+                col.active_border = 0xff065fff
 
                 layout = master
             }
