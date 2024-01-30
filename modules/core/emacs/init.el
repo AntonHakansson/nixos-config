@@ -58,7 +58,7 @@
   (setopt switch-to-buffer-obey-display-actions t) ; Make switching buffers more consistent
 
   ;; Quickly access recent files
-  (setopt recentf-max-menu-items 30)    ; bump the limits a bit
+  (setopt recentf-max-menu-items 30)    ; Bump the limits a bit
   (setopt recentf-max-saved-items 256)
   (add-hook 'after-init-hook #'recentf-mode) ; Turn on recentf mode
 
@@ -66,7 +66,7 @@
   (fset 'yes-or-no-p 'y-or-n-p)         ; Shorter confirmation
   (setopt isearch-lazy-count t)
   (setopt delete-by-moving-to-trash t)
-  (setopt set-mark-command-repeat-pop t) ; after =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
+  (setopt set-mark-command-repeat-pop t) ; After =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
   (setopt bookmark-save-flag 1)       ; Write bookmark file when bookmark list is modified
 
   ;; Keybinds
@@ -77,7 +77,7 @@
 
   ;; ibuffer
   (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
-  (setopt ibuffer-expert t)             ; stop yes no prompt on delete
+  (setopt ibuffer-expert t)             ; Stop yes no prompt on delete
   (setopt ibuffer-saved-filter-groups
 	        '(("default"
 		         ("dired" (mode . dired-mode))
@@ -211,8 +211,8 @@
    :map isearch-mode-map
    ("M-e" . 'consult-isearch-history)   ; orig. isearch-edit-string
    ("M-s e" . 'consult-isearch-history) ; orig. isearch-edit-string
-   ("M-s l" . 'consult-line)            ; needed by consult-line to detect isearch
-   ("M-s L" . 'consult-line-multi)      ; needed by consult-line to detect isearch
+   ("M-s l" . 'consult-line)            ; Needed by consult-line to detect isearch
+   ("M-s L" . 'consult-line-multi)      ; Needed by consult-line to detect isearch
    ;; Minibuffer history
    :map minibuffer-local-map
    ("M-s" . 'consult-history)           ; orig. next-matching-history-element
@@ -482,7 +482,7 @@
   (corfu-cycle t "Cycle candidates")
   :bind
   (:map corfu-map
-        ("RET" . nil)     ; return should insert a newline - not complete the sugggestion.
+        ("RET" . nil)     ; Return should insert a newline - not complete the sugggestion.
         ("<escape>" . (lambda ()
                         (interactive)
                         (corfu-quit)
@@ -663,24 +663,24 @@ The file is added to 'org-agenda-files' if not present."
   (org-directory      "~/documents/org/")
   (org-return-follows-link t)
   (org-startup-indented t)
-  (org-cycle-separator-lines 0) ; hide emptly lines between subtrees
+  (org-cycle-separator-lines 0) ; Hide emptly lines between subtrees
   (org-startup-with-inline-images t)
   (org-cycle-hide-block-startup t)
-  (org-startup-folded "show2levels") ; apparently default showeverything overrides hide-block
+  (org-startup-folded "show2levels") ; Apparently default showeverything overrides hide-block
   (org-image-actual-width nil) ; Use width from #+attr_org and fallback to original width.
   (org-fold-catch-invisible-edits 'show-and-error)
-  (org-use-speed-commands (lambda () ; when point is on any star at the beginning of the headline
+  (org-use-speed-commands (lambda () ; When point is on any star at the beginning of the headline
                             (and (looking-at org-outline-regexp)
                                  (looking-back "^\\**"))))
-  (org-footnote-section nil) ; define footnotes locally at end of subtree
+  (org-footnote-section nil) ; Define footnotes locally at end of subtree
   (org-id-method 'ts)
   (org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
   ;; Put attachment in: <org-attach-directory>/year-month/<rest>
   (org-attach-id-to-path-function-list '(org-attach-id-ts-folder-format
                                          org-attach-id-uuid-folder-format
                                          org-attach-id-fallback-folder-format))
-  (org-attach-use-inheritance t) ; always respect parent IDs
-  (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; increase scale of latex fragments
+  (org-attach-use-inheritance t) ; Always respect parent IDs
+  (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
   :custom
   (org-agenda-files (mapcar (lambda (f) (concat org-directory "gtd/" f)) '("inbox.org" "projects.org" "repeaters.org" "someday.org")))
   (calendar-date-style 'european)
@@ -688,7 +688,7 @@ The file is added to 'org-agenda-files' if not present."
   (org-agenda-time-grid '((daily today require-timed) (600 1200 1800 2200) "" ""))
   (org-agenda-current-time-string "<-")
   (org-agenda-block-separator (kbd " "))
-  (org-agenda-tags-column 90)           ; play nice with olivetti-mode
+  (org-agenda-tags-column 90)           ; Play nice with olivetti-mode
   (org-deadline-warning-days 30)
   (org-agenda-custom-commands
    '(("g" "Get Things Done (GTD)"
@@ -873,7 +873,7 @@ parent."
           (let ((level-top (org-element-property :level object))
                 level-diff)
             (mapc (lambda (el)
-                    ;; recursively promote all nested headlines
+                    ;; Recursively promote all nested headlines
                     (org-element-map el 'headline
                       (lambda (el)
                         (when (equal 'headline (org-element-type el))
@@ -883,7 +883,7 @@ parent."
                           (org-element-put-property el
                                                     :level (- (org-element-property :level el)
                                                               level-diff)))))
-                    ;; insert back into parse tree
+                    ;; Insert back into parse tree
                     (org-element-insert-before el object))
                   (org-element-contents object)))
           (org-element-extract-element object)))
@@ -1425,7 +1425,7 @@ current buffer, killing it."
   :after elfeed
   :config
   (setq rmh-elfeed-org-files (list (concat org-directory "elfeed.org")))
-  (elfeed-org)) ;; hook up elfeed-org to read the configuration when elfeed starts
+  (elfeed-org)) ;; Hook up elfeed-org to read the configuration when elfeed starts
 
 (use-package elfeed-tube
   :after elfeed
@@ -1563,7 +1563,7 @@ current buffer, killing it."
   ;; Display completion kind
   :after corfu
   :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  (kind-icon-default-face 'corfu-default) ; Compute blended backgrounds correctly
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
