@@ -1243,6 +1243,7 @@ Takes optional URL or gets it from the clipboard."
 (use-package emacs ;; c-mode
   ;; c-mode, c-ts-mode config
   :ensure nil
+  :bind ("C-c o w" . hk/launch-whitebox)
   :config
   (setopt c-basic-offset 2)
   (add-hook 'c-mode-hook 'hk/c-mode-hook)
@@ -1279,7 +1280,14 @@ Takes optional URL or gets it from the clipboard."
         (open-line 1)
         (insert "return result;")
         (prog-fill-reindent-defun)
-        ))))
+        )))
+
+  (defvar hk/whitebox-directory (file-truename "~/documents/whitebox/whitebox_v0.122.0/"))
+  (defun hk/launch-whitebox ()
+    (interactive)
+    (shell-command (concat "hyprctl dispatch exec " hk/whitebox-directory "whitebox"))
+    (load-file (concat hk/whitebox-directory "editor_plugins/emacs/whitebox.el"))
+    (when (derived-mode-p '(c-mode c-ts-mode)) (whitebox-mode))))
 
 (use-package glsl-mode)
 
