@@ -655,6 +655,7 @@ The file is added to 'org-agenda-files' if not present."
    ("C-," . nil)  ; Orig. cycle agenda buffers
    ("C-'" . nil)  ; Orig. cycle agenda buffers
    :map org-src-mode-map
+   ("C-c C-c" . hk/org-src-do-babel-execute)
    ("C-c C-v" . org-src-do-key-sequence-at-code-block))
   :custom
   (org-directory      "~/documents/org/")
@@ -771,6 +772,10 @@ The file is added to 'org-agenda-files' if not present."
             (replace-match (downcase (match-string 0)) t)
             (setq count (1+ count))))
         (message "Replaced %d occurances" count))))
+
+  (defun hk/org-src-do-babel-execute ()
+    (interactive)
+    (org-src-do-key-sequence-at-code-block "e"))
 
   (defun hk/insert-org-from-html-clipboard ()
     "Insert html from clipboard and convert into org-mode using pandoc."
