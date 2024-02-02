@@ -383,19 +383,14 @@
    '("t l" . global-display-line-numbers-mode)
    '("t k" . kill-this-buffer)
    '("s" . "M-s")
-   '("d" . dirvish)
 
    ;; Files & buffer
-   '("f f" . find-file)
-   '("r"   . consult-recent-file)
-   '("f o" . find-file-other-window)
-   '("f R" . rename-file)
-   '("b"   . consult-buffer)
-
-   ;; Windows
-   '("w w" . clone-frame)
-   '("w /" . split-window-right)
-   '("w d" . delete-window)
+   '("d" . dirvish)
+   '("f" . find-file)
+   '("r" . consult-recent-file)
+   '("b" . consult-buffer)
+   '("B" . consult-bookmark)
+   '("p" . "C-x p")
 
    ;; meow
    '("?" . meow-cheatsheet)
@@ -578,7 +573,7 @@
 #+filetags:   %3$s
 #+identifier: %4$s\n\n")
   (denote-templates `((diary .   "
-* TODO Morning Checklist
+* Morning Checklist
 
 - [ ] Sunlight + Water
 - [ ] Motion
@@ -594,7 +589,7 @@
 - [ ] [[elisp:org-timeblock][Timeblock]]
   - [ ] Allocate one [[file:~/documents/org/gtd/repeaters.org::*Free Recall][Free Recall]] practice
 
-* TODO Preperation for tomorrow
+* Preperation for tomorrow
 
 - [ ] Overnight oats
 - [ ] [[file:~/videos][Video]] entertainment for bicycle workout
@@ -644,12 +639,9 @@ The file is added to 'org-agenda-files' if not present."
   (toggle-truncate-lines +1))
 
 (use-package org
-  :hook (org-agenda-mode . olivetti-mode)
-  :hook (org-agenda-finalize . hk/truncate-lines)
   :hook (org-after-refile-insert . org-save-all-org-buffers)
   :bind
-  (("C-c o a" . org-agenda)
-   ("C-c c"   . org-capture)
+  (("C-c c"   . org-capture)
    ("C-c l"   . org-store-link)
    :map org-mode-map
    ("C-," . nil)  ; Orig. cycle agenda buffers
@@ -679,6 +671,10 @@ The file is added to 'org-agenda-files' if not present."
                                          org-attach-id-fallback-folder-format))
   (org-attach-use-inheritance t) ; Always respect parent IDs
   (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
+
+  :bind ("C-c a" . org-agenda)
+  :hook (org-agenda-mode . olivetti-mode)
+  :hook (org-agenda-finalize . hk/truncate-lines)
   :custom
   (org-agenda-files (mapcar (lambda (f) (concat org-directory "gtd/" f)) '("inbox.org" "projects.org" "repeaters.org" "someday.org")))
   (calendar-date-style 'european)
@@ -786,7 +782,7 @@ The file is added to 'org-agenda-files' if not present."
            (command "wl-paste | pandoc -f html -t org"))
       (shell-command command dst-buffer)))
 
-  ; https://www.reddit.com/r/emacs/comments/7m6nwo/comment/drt7mmr
+  ;; https://www.reddit.com/r/emacs/comments/7m6nwo/comment/drt7mmr
   (defun hk/org-capture-template-goto-link ()
     "Set point for capturing at what capture target file+headline with headline set to %l would do."
     (org-capture-put :target (list 'file+headline (nth 1 (org-capture-get :target)) (org-capture-get :annotation)))
@@ -810,10 +806,10 @@ The file is added to 'org-agenda-files' if not present."
     (with-temp-buffer
       (insert html)
       (cl-loop for (match . replace) in (list (cons "&nbsp;" " "))
-           do (progn
-                (goto-char (point-min))
-                (while (re-search-forward match nil t)
-                  (replace-match replace))))
+               do (progn
+                    (goto-char (point-min))
+                    (while (re-search-forward match nil t)
+                      (replace-match replace))))
       (buffer-string)))
 
   (defun hk/org-capture-html ()
