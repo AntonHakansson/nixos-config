@@ -684,6 +684,25 @@ The file is added to 'org-agenda-files' if not present."
   (org-agenda-block-separator (kbd " "))
   (org-agenda-tags-column 90)           ; Play nice with olivetti-mode
   (org-deadline-warning-days 30)
+  (org-stuck-projects '("LEVEL=1&+project" ("NEXT") nil ""))
+  :init
+  (defun hk/org-skip-subtree-if-habit ()
+    "Skip an agenda entry if it has a STYLE property equal to \"habit\"."
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (if (string= (org-entry-get nil "STYLE") "habit")
+          subtree-end
+        nil)))
+  (defun hk/org-skip-subtree-if-priority (priority)
+    "Skip an agenda subtree if it has a priority of PRIORITY.
+
+PRIORITY may be one of the characters ?A, ?B, or ?C."
+    (let ((subtree-end (save-excursion (org-end-of-subtree t)))
+          (pri-value (* 1000 (- org-lowest-priority priority)))
+          (pri-current (org-get-priority (thing-at-point 'line t))))
+      (if (= pri-value pri-current)
+          subtree-end
+        nil)))
+  :custom
   (org-agenda-custom-commands
    '(("g" "Get Things Done (GTD)"
       ((agenda "" (;; Show today
@@ -695,29 +714,53 @@ The file is added to 'org-agenda-files' if not present."
        (tags-todo "project//TODO" ((org-agenda-overriding-header "Projects:")))
        (tags-todo "diary//TODO" ((org-agenda-overriding-header "Today:")))
        (tags "CLOSED>=\"<today>\"" ((org-agenda-overriding-header "Completed today:")))
-       (tags-todo "someday//TODO" ((org-agenda-overriding-header "Someday:")))
-       ))))
+       (tags-todo "someday//TODO" ((org-agenda-overriding-header "Someday:")))))
+     ("p" "Project List"
+      ((tags "project" ((org-use-tag-inheritance nil)))))
+     ("d" "Daily"
+      ((agenda "" ((org-agenda-span 1)
+                   (org-agenda-time-grid '((daily) () "" ""))
+                   (org-habit-show-habits nil)))
+       (tags "PRIORITY=\"A\""
+             ((org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+              (org-agenda-overriding-header "High-priority:")))
+       (todo "NEXT" ((org-agenda-overriding-header "Next:")))
+       (alltodo ""
+                ((org-agenda-skip-function '(or (hk/org-skip-subtree-if-habit)
+                                                (hk/org-skip-subtree-if-priority ?A)
+                                                (org-agenda-skip-if nil '(scheduled deadline))
+                                                (org-agenda-skip-entry-if 'todo '("NEXT" "WAIT"))
+                                                ))
+                 (org-agenda-overriding-header "Actions:")))
+       (todo "WAIT" ((org-agenda-overriding-header "Waiting on:"))))
+      ;; Set Config
+      ((org-agenda-tag-filter '("-someday"))))
+     ))
   (org-agenda-prefix-format
         '((agenda . " %i %?-12t% s")
           (todo . " %i ")
           (tags . " %i ")
           (search . " %i %-12:c")))
   :config
-  (use-package svg-lib
-    :config
+  ;; https://github.com/Templarian/MaterialDesign/
+  ;; webui: https://pictogrammers.com/library/mdi/category/files-folders/
+  (let ((hk/icons-dir "~/documents/org/theme/icons/"))
     (setq org-agenda-category-icon-alist
-          `(("inbox"     ,(concat svg-lib-icons-dir "material_inbox.svg") nil nil :ascent center :scale 0.8)
-            ("project"   ,(concat svg-lib-icons-dir "material_star.svg") nil nil :ascent center :scale 0.8)
-            ("someday"   ,(concat svg-lib-icons-dir "material_lightbulb-on-90.svg") nil nil :ascent center :scale 0.8)
-            ("repeaters" ,(concat svg-lib-icons-dir "material_restart.svg") nil nil :ascent center :scale 0.8)
-            ("home"      ,(concat svg-lib-icons-dir "material_home.svg") nil nil :ascent center :scale 0.8)
-            ("comp"      ,(concat svg-lib-icons-dir "material_laptop.svg") nil nil :ascent center :scale 0.8)
-            ("read"      ,(concat svg-lib-icons-dir "material_book.svg") nil nil :ascent center :scale 0.8)
-            ("uni"       ,(concat svg-lib-icons-dir "material_school.svg") nil nil :ascent center :scale 0.8)
-            ("birthday"  ,(concat svg-lib-icons-dir "material_cake.svg") nil nil :ascent center :scale 0.8)
-            (".*_diary"  ,(concat svg-lib-icons-dir "material_weather-sunset.svg") nil nil :ascent center :scale 0.8)
-            ))
-    )
+          `(("inbox"     ,(concat hk/icons-dir "inbox-arrow-down.svg") nil nil :ascent center :scale 0.8)
+            ("project"   ,(concat hk/icons-dir "folder-pound.svg") nil nil :ascent center :scale 0.8)
+            ("someday"   ,(concat hk/icons-dir "material_lightbulb-on-90.svg") nil nil :ascent center :scale 0.8)
+            ("repeaters" ,(concat hk/icons-dir "material_restart.svg") nil nil :ascent center :scale 0.8)
+            ("home"      ,(concat hk/icons-dir "material_home.svg") nil nil :ascent center :scale 0.8)
+            ("comp"      ,(concat hk/icons-dir "material_laptop.svg") nil nil :ascent center :scale 0.8)
+            ("read"      ,(concat hk/icons-dir "material_book.svg") nil nil :ascent center :scale 0.8)
+            ("uni"       ,(concat hk/icons-dir "material_school.svg") nil nil :ascent center :scale 0.8)
+            ("birthday"  ,(concat hk/icons-dir "material_cake.svg") nil nil :ascent center :scale 0.8)
+            (".*_diary"  ,(concat hk/icons-dir "material_weather-sunset.svg") nil nil :ascent center :scale 0.8)
+            ("one-off"   ,(concat hk/icons-dir "checkbox-blank-outline.svg") nil nil :ascent center :scale 0.8)
+            ("code"      ,(concat hk/icons-dir "xml.svg") nil nil :ascent center :scale 0.8)
+            ("nixos"     ,(concat hk/icons-dir "nix.svg") nil nil :ascent center :scale 0.8)
+            ("emacs"     ,(concat hk/icons-dir "emacs-icon.svg") nil nil :ascent center :scale 0.4)
+            )))
 
   :hook (org-babel-after-execute . hk/maybe-org-redisplay-inline-images)
   :custom
