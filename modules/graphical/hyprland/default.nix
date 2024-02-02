@@ -264,12 +264,18 @@
 
             # yt-dl
             bind = SUPER, Y, exec, ${config.hakanssn.graphical.hyprland.yt-download}/bin/yt-download
-            bind = SUPER SHIFT, Y, exec, mpv ~/mpv/
+            bind = SUPER SHIFT, Y, exec, emacsclient -c ~/mpv/
         ''
         + (lib.optionalString config.hardware.opentabletdriver.enable ''
             # OpenTabletDriver
-            bind = SUPER,     C, exec, otd applypreset nav
-            bind = SUPER ALT, C, exec, otd applypreset artist
+            bind = SUPER,       W, submap, wacom
+            submap = wacom
+                   bind = , W, exec, otd applypreset portrait_nav
+                   bind = , W, submap, reset
+                   bind = , A, exec, otd applypreset portrait_artist
+                   bind = , A, submap, reset
+                   bind = , escape, submap, reset
+            submap = reset
           '');
       };
     };
