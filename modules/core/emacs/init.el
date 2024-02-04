@@ -792,10 +792,13 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
      ("W" "Webclip" entry (file+headline "gtd/inbox.org" "Unsorted Webclips")
       "* %? :webclip:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%(hk/insert-org-from-html-clipboard)")
      ))
+
   :custom
   (org-refile-targets '((nil :maxlevel . 9)
                         (org-agenda-files :maxlevel . 3)))
-  (org-refile-use-outline-path 't "Show full outline of target")
+  (org-refile-use-outline-path 'file)
+  (org-outline-path-complete-in-steps nil)
+
   :custom
   (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
   (org-preview-latex-image-directory "/tmp/ltximg/") ; Don't pollute working dir
