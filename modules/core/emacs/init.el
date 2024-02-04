@@ -670,7 +670,6 @@ The file is added to 'org-agenda-files' if not present."
                                          org-attach-id-uuid-folder-format
                                          org-attach-id-fallback-folder-format))
   (org-attach-use-inheritance t) ; Always respect parent IDs
-  (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
 
   :bind ("C-c a" . org-agenda)
   :hook (org-agenda-mode . olivetti-mode)
@@ -797,6 +796,10 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-refile-targets '((nil :maxlevel . 9)
                         (org-agenda-files :maxlevel . 3)))
   (org-refile-use-outline-path 't "Show full outline of target")
+  :custom
+  (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
+  (org-preview-latex-image-directory "/tmp/ltximg/") ; Don't pollute working dir
+
   :config
   :init
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
