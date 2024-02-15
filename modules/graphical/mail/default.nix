@@ -14,7 +14,6 @@ in
 
   config = lib.mkIf config.hakanssn.graphical.mail.enable {
     hakanssn.core.zfs.homeDataLinks = [ "mail" ];
-    hakanssn.core.zfs.homeCacheLinks = [ ".cache/mu" ];
 
     home-manager.users.hakanssn = { ... }: {
       accounts.email = {
@@ -32,12 +31,6 @@ in
               port = 993;
               tls.enable = true;
             };
-            imapnotify = {
-              enable = true;
-              boxes = [ "Inbox" ];
-              onNotify = "${pkgs.isync}/bin/mbsync personal:INBOX";
-              onNotifyPost = "${config.hakanssn.core.emacs.package}/bin/emacsclient --eval\"(mu4e-update-index)\" && ${notifyScript "personal"}";
-            };
             mbsync = {
               enable = true;
               create = "both";
@@ -54,7 +47,7 @@ in
                 useStartTls = true;
               };
             };
-            mu.enable = true;
+            notmuch.enable = true;
           };
           webmaster = {
             address = "webmaster@hakanssn.com";
@@ -88,7 +81,6 @@ in
                 useStartTls = true;
               };
             };
-            mu.enable = true;
           };
           gmail = {
             address = "anton.hakansson98@gmail.com";
@@ -112,8 +104,9 @@ in
                 };
               };
             };
-            mu.enable = true;
             msmtp.enable = true;
+            notmuch.enable = true;
+            mujmap.enable = true; # gmail for notmuch
           };
         };
       };
@@ -121,6 +114,7 @@ in
         mbsync.enable = true;
         msmtp.enable = true;
         mu.enable = true;
+        notmuch.enable = true;
       };
       services = {
         imapnotify.enable = true;

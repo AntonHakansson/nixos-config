@@ -1514,45 +1514,27 @@ current buffer, killing it."
         ("C-c C-f" . elfeed-tube-mpv-follow-mode)
         ("C-c C-w" . elfeed-tube-mpv-where)))
 
-(use-package mu4e
-  :ensure nil
+(use-package notmuch
+  :defer t
+  :bind (("C-x m" . notmuch))
   :custom
-  (mu4e-change-filenames-when-moving t "Avoid sync issues with mbsync")
-  (mu4e-maildir "~/mail/" "Root of the maildir hierarchy")
-  (mu4e-attachment-dir "~/downloads/" "Save attachments to downloads folder")
-  (mu4e-compose-dont-reply-to-self t "Don't reply to myself on reply to all")
-  (mu4e-change-filenames-when-moving t "Avoid sync issues with mbsync")
+  (sendmail-program "msmtp")
+  (message-directory "~/mail/")
   (message-send-mail-function 'message-send-mail-with-sendmail)
-  (sendmail-program "msmtp" "Use msmtp to send mail")
-  (message-cite-reply-position 'below "Put reply below quoted text")
-  :config
-  (setq mail-user-agent 'mu4e-user-agent)
-  (setq mu4e-contexts
-        `(,(make-mu4e-context
-            :name "Personal"
-            :match-func (lambda (msg)
-                          (when msg
-                            (string-prefix-p "/personal" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "anton@hakanssn.com")
-                    (user-full-name . "Anton Hakansson")
-                    (mu4e-trash-folder . "/personal/Trash")
-                    (mu4e-sent-folder . "/personal/Sent")
-                    (mu4e-drafts-folder . "/personal/Drafts")
-                    (mu4e-refile-folder . "/personal/Trash")
-                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "personal"))))
-          ,(make-mu4e-context
-            :name "Gmail"
-            :match-func (lambda (msg)
-                          (when msg
-                            (string-prefix-p "/gmail" (mu4e-message-field msg :maildir))))
-            :vars '((user-mail-address . "anton.hakansson98@gmail.com")
-                    (user-full-name . "Anton Hakansson")
-                    (mu4e-trash-folder . "/gmail/[Gmail]/Trash")
-                    (mu4e-sent-folder . "/gmail/[Gmail]/Sent Mail")
-                    (mu4e-drafts-folder . "/gmail/[Gmail]/Drafts")
-                    (mu4e-refile-folder . "/gmail/[Gmail]/All Mail")
-                    (message-sendmail-extra-arguments . ("--read-envelope-from" "--account" "gmail")))))))
+  (message-cite-reply-position 'below)
+  (message-kill-buffer-on-exit t)
 
+  :custom
+  (notmuch-show-logo nil)
+
+  :config
+  (use-package meow
+    :config
+    (dolist (state '((notmuch-hello-mode . motion)
+                     (notmuch-search-mode . motion)
+                     (notmuch-tree-mode . motion)
+                     (notmuch-show-mode . motion)))
+      (add-to-list 'meow-mode-state-list state))))
 
 (use-package jinx
   ;; Enchaned Spell Checker
@@ -1830,6 +1812,18 @@ Useful when using wacom tablet for freehand"
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
   :bind ("C-c o j" . journalctl))
+
+(use-package hercules
+  :config
+  (hercules-def
+   :toggle-funs #'org-babel-mode
+   :keymap 'org-babel-map
+   :transient t
+   :blacklist-keys '("C-n" "C-p" "C-a" "C-e" "C-b" "C-r" "C-i" "C-f" "C-d" "C-j" "C-l" "C-o" "C-s" "C-t" "C-u" "C-v" "C-x" "C-z"))
+  (define-key org-mode-map (kbd "C-c C-v") #'org-babel-mode)
+  )
+
+
 
 (provide 'init)
 ;;; init.el ends here
