@@ -1162,18 +1162,26 @@ Takes optional URL or gets it from the clipboard."
   :bind
   (("C-%"     . #'git-gutter:previous-hunk)
    ("C-^"     . #'git-gutter:next-hunk)
-   ("C-c g n" . #'git-gutter:next-hunk)
-   ("C-c g p" . #'git-gutter:previous-hunk)
-   ("C-c g d" . #'git-gutter:popup-hunk)
-   ("C-c g s" . #'git-gutter:stage-hunk)
-   ("C-c g k" . #'git-gutter:revert-hunk))
+   ("C-c g"   . #'hk/git-gutter-hydra/body))
   :custom
   ;; Only show color to indicate hunks
   (git-gutter:added-sign " ")
   (git-gutter:deleted-sign " ")
   (git-gutter:modified-sign " ")
   :config
-  (global-git-gutter-mode +1))
+  (global-git-gutter-mode +1)
+  (use-package hydra
+    :config
+    (defhydra hk/git-gutter-hydra ()
+      "git-gutter hydra."
+      ("n" git-gutter:next-hunk "Next")
+      ("p" git-gutter:previous-hunk "Previous")
+      ("e" git-gutter:previous-hunk "Previous")
+      ("h" git-gutter:mark-hunk "Mark")
+      ("d" git-gutter:popup-hunk "Popup")
+      ("s" git-gutter:stage-hunk "Stage")
+      ("k" git-gutter:revert-hunk "Revert")
+      ("m" magit "Magit"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
