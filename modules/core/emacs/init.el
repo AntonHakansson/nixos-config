@@ -1070,7 +1070,7 @@ Takes optional URL or gets it from the clipboard."
   :ensure t
   :custom
   (idle-org-agenda-key "g")
-  (idle-org-agenda-interval (* 5 60))
+  (idle-org-agenda-interval (* 15 60))
   :config (idle-org-agenda-mode))
 
 (use-package laas
