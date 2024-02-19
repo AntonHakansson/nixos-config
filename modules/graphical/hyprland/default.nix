@@ -154,7 +154,7 @@
             }
 
             # Window Rules
-            ## See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
+            # See https://wiki.hyprland.org/Configuring/Window-Rules/ for more
             windowrule = float, ^(launcher)$
 
           	windowrule = float, title:^(Volume Control)$
@@ -173,7 +173,7 @@
             bind = SUPER, O, exec, cliphist list | ${pkgs.fuzzel}/bin/fuzzel --dmenu -p "Select item to copy: " --width 120 | cliphist decode | wl-copy
 
             # Keybindings
-            ## See https://wiki.hyprland.org/Configuring/Binds/
+            # See https://wiki.hyprland.org/Configuring/Binds/
             bind = SUPER, return, exec, emacsclient -c -e "(shell)"
             bind = SUPER SHIFT, return, exec, kitty --single-instance
             bind = SUPER, Q, killactive,

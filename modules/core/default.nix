@@ -92,7 +92,6 @@
     services.fwupd.enable = true;
 
     time.timeZone = lib.mkDefault "Europe/Stockholm";
-    i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
     users = {
       mutableUsers = false;
