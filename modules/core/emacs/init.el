@@ -1065,14 +1065,6 @@ Takes optional URL or gets it from the clipboard."
   :custom
   (org-modern-table nil))
 
-(use-package idle-org-agenda
-  :after org-agenda
-  :ensure t
-  :custom
-  (idle-org-agenda-key "g")
-  (idle-org-agenda-interval (* 15 60))
-  :config (idle-org-agenda-mode))
-
 (use-package laas
   :hook (LaTeX-mode . laas-mode)
   :hook (org-mode . laas-mode)
