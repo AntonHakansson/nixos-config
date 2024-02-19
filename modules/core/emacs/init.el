@@ -1823,7 +1823,11 @@ Useful when using wacom tablet for freehand"
   (define-key org-mode-map (kbd "C-c C-v") #'org-babel-mode)
   )
 
-
+(use-package erc
+  ;; IRC client
+  :hook (erc-mode . erc-log-mode)
+  :custom
+  (erc-hide-list '("JOIN" "PART" "QUIT")))
 
 (provide 'init)
 ;;; init.el ends here
