@@ -521,12 +521,11 @@
   (("C-t" . 'cape-line)                 ; orig. transpose-chars
    ("C-S-t" . 'hippie-expand))          ; orig. transpose-chars
   :config
-  (setq cape-dabbrev-check-other-buffers t
+  (setq cape-dabbrev-check-other-buffers 'some
         dabbrev-ignored-buffer-regexps
         '("\\.\\(?:pdf\\|jpe?g\\|png\\|svg\\|eps\\)\\'"
           "^ "
-          "\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\)\\(<[0-9]+>\\)?")
-        dabbrev-upcase-means-case-search t)
+          "\\(TAGS\\|tags\\|ETAGS\\|etags\\|GTAGS\\|GRTAGS\\|GPATH\\)\\(<[0-9]+>\\)?"))
 
   ;; Add useful defaults completion sources from cape
   (add-to-list 'completion-at-point-functions #'cape-file)
@@ -559,8 +558,7 @@
   :hook (dirvish-mode . denote-dired-mode)
   :bind
   (("C-c C-n" . denote)
-   ("C-c o n" . denote-open-or-create)
-   ("C-c o N" . hk/diary))
+   ("C-c o n" . denote-open-or-create))
   :custom
   (denote-directory "~/documents/org/denote/")
   (denote-known-keywords '("emacs" "philosophy" "pol" "compsci" "cc"))
@@ -595,40 +593,9 @@
 - [ ] [[file:~/videos][Video]] entertainment for bicycle workout
 - [ ] [[file:~/documents/books/audio][Audio]] entertainment for chores")))
   :config
-  (unless (hk/diary-today-file)
-    (hk/diary))
   ;; Accept any symbol in a .dir-locals.el file; makes it easier to use silos.
   ;; See "silos" in the manual: https://protesilaos.com/emacs/denote
-  (put 'denote-file-type 'safe-local-variable-p 'symbolp)
-  :init
-  (defun hk/diary-today-file ()
-    (let* ((today (format-time-string "%A %e %B %Y"))
-           (sluggified (denote-sluggify today))
-           (file (car (denote-directory-files-matching-regexp sluggified))))
-      file))
-  (defun hk/diary ()
-    "Create an entry tagged 'diary' with the date as its title.
-If a diary for the current day exists, visit it.  If multiple
-entries exist, prompt with completion for a choice between them.
-Else create a new file.
-
-The file is added to 'org-agenda-files' if not present."
-    (interactive)
-    (let* ((today (format-time-string "%A %e %B %Y"))
-           (string (denote-sluggify today))
-           (files (denote-directory-files-matching-regexp string)))
-      (cond
-       ((> (length files) 1)
-        (find-file (completing-read "Select file: " files nil :require-match)))
-       (files
-        (find-file (car files)))
-       (t
-        (denote today '("diary") nil nil nil 'diary))
-       ))
-    (let ((file (hk/diary-today-file)))
-      (unless (member file org-agenda-files)
-        (add-to-list 'org-agenda-files file)))
-    ))
+  (put 'denote-file-type 'safe-local-variable-p 'symbolp))
 
 (use-package htmlize)
 (use-package gnuplot)
@@ -780,7 +747,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-log-into-drawer 't "Insert state changes into a drawer LOGBOOK")
   (org-capture-templates
    '(("t" "Todo [inbox]" entry (file "gtd/inbox.org")
-      "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
+      "* TODO %?\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n" :empty-lines 1)
+     ("i" "Clocked Todo" entry (file "gtd/inbox.org")
+      "* NEXT %^{activity}\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n" :empty-lines 1 :clock-in t :clock-keep t)
      ("m" "Mail [inbox]" entry (file "gtd/inbox.org")
       "* TODO Respond to %a\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%i\n")
      ("T" "Tickler" entry (file "gtd/repeaters.org")
@@ -791,6 +760,12 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
       "* %<%H:%M>\n%(hk/org-capture-html)\n" :immediate-finish t)
      ("W" "Webclip" entry (file+headline "gtd/inbox.org" "Unsorted Webclips")
       "* %? :webclip:\n:PROPERTIES:\n:ENTERED_ON: %U\n:END:\n%(hk/insert-org-from-html-clipboard)")
+     ("c" "Item to Current Clocked Task" item (clock)
+      "%i%?" :empty-lines 1)
+     ("C" "Contents to Current Clocked Task" plain (clock)
+      "%i" :immediate-finish t :empty-lines 1)
+     ("k" "Kill-ring to Current Clocked Task" plain (clock)
+      "%c" :immediate-finish t :empty-lines 1)
      ))
 
   :custom
@@ -1237,7 +1212,7 @@ Takes optional URL or gets it from the clipboard."
   (defun hk/eglot-capf ()
     "Use eglot completions alongside cape and tempel."
     (setq-local completion-at-point-functions
-              (list (cape-super-capf
+              (list (cape-capf-super
                      #'eglot-completion-at-point
                      #'tempel-complete
                      #'cape-dabbrev-min-3
@@ -1743,11 +1718,7 @@ current buffer, killing it."
   ("C-c o t" . org-timeblock)
   :custom
   (org-timeblock-inbox-file (concat org-directory "gtd/" "inbox.org"))
-  (org-timeblock-span 1 "show today")
-  :config
-  (use-package denote
-    :config
-    (setq org-timeblock-inbox-file (hk/diary-today-file))))
+  (org-timeblock-span 1 "show today"))
 
 (use-package org-rich-yank
   :demand t
@@ -1828,6 +1799,13 @@ Useful when using wacom tablet for freehand"
   :hook (erc-mode . erc-log-mode)
   :custom
   (erc-hide-list '("JOIN" "PART" "QUIT")))
+
+(use-package eat
+  :config
+  (use-package meow
+    :config
+    (dolist (state '((eat-mode . insert)))
+      (add-to-list 'meow-mode-state-list state))))
 
 (provide 'init)
 ;;; init.el ends here
