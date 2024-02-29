@@ -162,6 +162,40 @@
               });
         '';
       };
+      programs.firefox.profiles.hakanssn.bookmarks.codechef-capture = {
+        name = "capture codechef problem";
+        url = ''
+            javascript:location.href='org-protocol://capture?' +
+              new URLSearchParams({
+                    template: 'w',
+                    url: window.location.href,
+                    title: function () {
+                      var problem_title = document.getElementById("problem-statement").getElementsByTagName("h2")[0].innerText;
+                      return "Codechef: " + problem_title;
+                    }(),
+                    body: function () {
+                          var html = document.getElementById("problem-statement").innerHTML;
+                          var relToAbs = function (href) {
+                              var a = document.createElement("a");
+                              a.href = href;
+                              var abs = a.protocol + "//" + a.host + a.pathname + a.search + a.hash;
+                              a.remove();
+                              return abs;
+                          };
+                          var elementTypes = [['a', 'href'], ['img', 'src']];
+                          var div = document.createElement('div');
+                          div.innerHTML = html;
+                          elementTypes.map(function(elementType) {
+                              var elements = div.getElementsByTagName(elementType[0]);
+                              for (var i = 0; i < elements.length; i++) {
+                                  elements[i].setAttribute(elementType[1], relToAbs(elements[i].getAttribute(elementType[1])));
+                              }
+                          });
+                          return div.innerHTML;
+                    }(),
+              });
+        '';
+      };
     };
     fonts.packages = with pkgs; [
       emacs-all-the-icons-fonts

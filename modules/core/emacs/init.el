@@ -801,10 +801,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     "Insert html from clipboard and convert into org-mode using pandoc."
     ;; credits to u/jsled
     (interactive)
-    (let* ((not-nil-and-not-a-buffer-means-current-buffer 1)
-           (dst-buffer not-nil-and-not-a-buffer-means-current-buffer)
-           (command "wl-paste | pandoc -f html -t org"))
-      (shell-command command dst-buffer)))
+    (let* ((html (shell-command-to-string "wl-paste"))
+           (html-sanitized (hk/sanitize-html html)))
+      (insert (org-web-tools--html-to-org-with-pandoc html-sanitized))))
 
   ;; https://www.reddit.com/r/emacs/comments/7m6nwo/comment/drt7mmr
   (defun hk/org-capture-template-goto-link ()
