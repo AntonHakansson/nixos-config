@@ -191,6 +191,12 @@
                                   elements[i].setAttribute(elementType[1], relToAbs(elements[i].getAttribute(elementType[1])));
                               }
                           });
+
+                          var remove_katex = div.getElementsByClassName("katex-html");
+                          while(remove_katex.length > 0) {
+                             remove_katex[0].parentNode.removeChild(remove_katex[0]);
+                          }
+
                           return div.innerHTML;
                     }(),
               });

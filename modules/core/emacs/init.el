@@ -801,6 +801,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
     "Insert html from clipboard and convert into org-mode using pandoc."
     ;; credits to u/jsled
     (interactive)
+    (require 'org-web-tools)
     (let* ((html (shell-command-to-string "wl-paste"))
            (html-sanitized (hk/sanitize-html html)))
       (insert (org-web-tools--html-to-org-with-pandoc html-sanitized))))
@@ -1605,7 +1606,7 @@ current buffer, killing it."
             (t . (1.1))))
   (setopt modus-operandi-tinted-palette-overrides
           '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
-  )
+  (load-theme 'ef-melissa-light t))
 
 (use-package olivetti
   ;; Center text for nicer writing and reading
