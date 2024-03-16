@@ -1625,6 +1625,7 @@ current buffer, killing it."
   :config
   ;; By default, compilation doesn't support ANSI colors. Enable them for compilation.
   (use-package ansi-color
+    :ensure nil
     :hook (compilation-filter . ansi-color-compilation-filter)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

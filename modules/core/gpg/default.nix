@@ -11,7 +11,7 @@
 
       programs.gnupg.agent = {
         enable = true;
-        pinentryFlavor = pinentryFlavor;
+        pinentryPackage = pkgs."pinentry-${pinentryFlavor}";
       };
       home-manager.users.hakanssn = { lib, ... }: {
         programs.gpg.enable = true;
@@ -19,7 +19,7 @@
           enable = true;
           defaultCacheTtl = 7200;
           maxCacheTtl = 99999;
-          pinentryFlavor = pinentryFlavor;
+          pinentryPackage = pkgs."pinentry-${pinentryFlavor}";
         };
       };
     };

@@ -27,8 +27,8 @@
     (
       let
         iosevka = pkgs.iosevka-bin;
-        iosevka-aile = pkgs.iosevka-bin.override { variant = "aile"; };
-        iosevka-etoile = pkgs.iosevka-bin.override { variant = "etoile"; };
+        iosevka-aile = pkgs.iosevka-bin.override { variant = "Aile"; };
+        iosevka-etoile = pkgs.iosevka-bin.override { variant = "Etoile"; };
       in
       {
         fonts = {

@@ -8,7 +8,7 @@ let
     ];
     programs.zsh = {
       enable = true;
-      enableAutosuggestions = true;
+      autosuggestion.enable = true;
       autocd = true;
       dotDir = ".config/zsh";
       history = {

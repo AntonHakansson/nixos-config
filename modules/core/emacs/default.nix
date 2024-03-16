@@ -206,7 +206,7 @@
     fonts.packages = with pkgs; [
       emacs-all-the-icons-fonts
       iosevka-bin
-      (iosevka-bin.override { variant = "aile"; })
+      (iosevka-bin.override { variant = "Aile"; })
       nerdfonts
       hakanssn.iosvmata
     ];

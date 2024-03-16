@@ -46,7 +46,7 @@
         ${pkgs.libnotify}/bin/notify-send "Starting download" "'$title'" -t 5000
         yt-dlp "$link" -o "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" --restrict-filenames -P ~/mpv \
                --embed-metadata --embed-subs \
-               || (${pkgs.libnotify}/bin/notify-send "Download failed."; exit 1)
+               || (${pkgs.libnotify}/bin/notify-send "Download failed." "'$title'"; exit 1)
         option=$(${pkgs.libnotify}/bin/notify-send "Download complete" "'$title'" -t 10000 \
                 -A mpv="Open in mpv" -A emac="Emacs Dired")
         if [[ "$option" == "mpv" ]]; then
@@ -65,6 +65,9 @@
       enable = true;
       extraPortals =
         with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-hyprland ];
+      config.preferred = {
+        default = "wlr";
+      };
     };
 
     environment.variables = { XDG_SESSION_TYPE = "wayland"; };
