@@ -49,39 +49,6 @@ in
             };
             notmuch.enable = true;
           };
-          webmaster = {
-            address = "webmaster@hakanssn.com";
-            realName = "Anton Håkansson";
-            userName = "webmaster@hakanssn.com";
-            passwordCommand = "${passwordScript} mail/webmaster";
-            imap = {
-              host = "mail.hakanssn.com";
-              port = 993;
-              tls.enable = true;
-            };
-            imapnotify = {
-              enable = true;
-              boxes = [ "Inbox" ];
-              onNotify = "${pkgs.isync}/bin/mbsync webmaster:INBOX";
-              onNotifyPost = "${pkgs.mu}/bin/mu index && ${notifyScript "webmaster"}";
-            };
-            mbsync = {
-              enable = true;
-              create = "both";
-              expunge = "both";
-              remove = "both";
-              flatten = ".";
-            };
-            msmtp.enable = true;
-            smtp = {
-              host = "mail.hakanssn.com";
-              port = 587;
-              tls = {
-                enable = true;
-                useStartTls = true;
-              };
-            };
-          };
           gmail = {
             address = "anton.hakansson98@gmail.com";
             userName = "anton.hakansson98@gmail.com";
