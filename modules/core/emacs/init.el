@@ -776,7 +776,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 
   :custom
   (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
-  (org-preview-latex-image-directory "/tmp/ltximg/") ; Don't pollute working dir
+  (org-preview-latex-image-directory "/tmp/ltximg/") ; Don't pollute working directory
 
   :config
   :init
@@ -1031,8 +1031,7 @@ Takes optional URL or gets it from the clipboard."
   (org-appear-autokeywords t))
 
 (use-package org-fragtog
-  :hook (org-mode . org-fragtog-mode)
-  :custom (org-startup-with-latex-preview t))
+  :hook (org-mode . org-fragtog-mode))
 
 (use-package org-modern
   :hook
@@ -1752,7 +1751,8 @@ current buffer, killing it."
   (with-eval-after-load "ox"
     (require 'edraw-org)
     (edraw-org-setup-exporter))
-  :init
+
+  :preface
   (defun hk/edraw-insert-link ()
     (interactive)
     (insert "[[edraw:]]")
