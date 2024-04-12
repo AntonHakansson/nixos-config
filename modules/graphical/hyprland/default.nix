@@ -240,6 +240,8 @@
             bind = SUPER, RIGHT, layoutmsg, orientationright
             bind = SUPER, UP,    layoutmsg, mfact 0.45
             bind = SUPER, UP,    layoutmsg, orientationcenter
+            bind = SUPER, DOWN,  layoutmsg, mfact 0.55
+            bind = SUPER, DOWN,  layoutmsg, orientationtop
 
             # Scratchpad
             bind = SUPER,       MINUS, togglespecialworkspace,
