@@ -1808,6 +1808,24 @@ Useful when using wacom tablet for freehand"
     (dolist (state '((eat-mode . insert)))
       (add-to-list 'meow-mode-state-list state))))
 
+(use-package activities
+  :bind
+  (("C-x C-a C-n" . activities-new)
+   ("C-x C-a C-d" . activities-define)
+   ("C-x C-a C-a" . activities-resume)
+   ("C-x C-a C-s" . activities-suspend)
+   ("C-x C-a C-k" . activities-kill)
+   ("C-x C-a RET" . activities-switch)
+   ("C-x C-a b" . activities-switch-buffer)
+   ("C-x C-a g" . activities-revert)
+   ("C-x C-a l" . activities-list))
+
+  :init
+  (activities-mode)
+  (activities-tabs-mode)
+  ;; Prevent `edebug' default bindings from interfering.
+  (setq edebug-inhibit-emacs-lisp-mode-bindings t))
+
 (provide 'init)
 ;;; init.el ends here
 
