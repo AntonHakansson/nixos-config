@@ -80,11 +80,6 @@
             };
           };
 
-          qt = {
-            enable = true;
-            platformTheme = "gtk";
-          };
-
           wayland.windowManager.sway.config = {
             fonts = {
               names = config.fonts.fontconfig.defaultFonts.sansSerif;

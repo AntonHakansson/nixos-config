@@ -27,7 +27,7 @@
       enable = true;
       syncthing.enable = true;
       media.anki.enable = true;
-      hyprland.enable = true;
+      plasma.enable = true;
     };
   };
 
@@ -42,6 +42,6 @@
   system.autoUpgrade.enable = false;
 
   # Enable OpenTabletDriver
-  hardware.opentabletdriver.enable = true;
+  # hardware.opentabletdriver.enable = true;
   hakanssn.core.zfs.homeCacheLinks = [ ".config/OpenTabletDriver/" ];
 }

@@ -11,7 +11,6 @@
     initrd = {
       availableKernelModules =
         [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
-      kernelModules = [ ];
     };
     kernelModules = [ "kvm-amd" ];
     kernelParams = [
@@ -24,6 +23,8 @@
       "usbhid.quirks=0x04D9:0xA292:0x00000400"
     ];
   };
+
+  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
   fileSystems."/" = {
     device = "rpool/local/root";
@@ -72,10 +73,17 @@
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
+      extraPackages = with pkgs; [
+          vaapiVdpau
+          libvdpau-va-gl
+          vulkan-validation-layers
+        ];
     };
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;
       modesetting.enable = true;
+      powerManagement.enable = true;
+      nvidiaSettings = true;
       open = false;
     };
   };
@@ -83,7 +91,6 @@
   # Nvidia proprietary drivers
   hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
   services.xserver.videoDrivers = [ "nvidia" ];
-  environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
 
   # Printer
   services.printing.enable = true;
