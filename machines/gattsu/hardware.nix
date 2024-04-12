@@ -1,4 +1,4 @@
-{ config, lib, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, ... }:
 
 {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
@@ -84,4 +84,11 @@
   hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
   services.xserver.videoDrivers = [ "nvidia" ];
   environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
+
+  # Printer
+  services.printing.enable = true;
+  services.printing.drivers = [
+    pkgs.brlaser # — Drivers for some Brother printers
+  ];
+  users.users.hakanssn.extraGroups = [ "lp" ];
 }
