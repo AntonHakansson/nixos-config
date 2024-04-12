@@ -275,9 +275,9 @@
             # OpenTabletDriver
             bind = SUPER,       W, submap, wacom
             submap = wacom
-                   bind = , W, exec, otd applypreset portrait_nav
+                   bind = , W, exec, otd applypreset absolute
                    bind = , W, submap, reset
-                   bind = , A, exec, otd applypreset portrait_artist
+                   bind = , A, exec, otd applypreset artist
                    bind = , A, submap, reset
                    bind = , escape, submap, reset
             submap = reset
