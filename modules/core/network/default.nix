@@ -7,7 +7,7 @@
       environmentFile = config.age.secrets."passwords/networks.age".path;
       networks = {
         "batman" = { psk = "@PSK_batman@"; };
-        "TeliaGateway9C-97-26-91-52-01" = { psk = "@PSK_parents@"; };
+        "#Telia-523728" = { psk = "@PSK_parents@"; };
       };
     };
 
