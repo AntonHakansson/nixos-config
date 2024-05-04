@@ -78,7 +78,4 @@
     wayland.windowManager.sway.extraOptions = [ "--unsupported-gpu" ];
   };
   environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
-
-  # Power Management
-  services.tlp.enable = true;
 }
