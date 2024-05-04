@@ -37,6 +37,10 @@
   # users.users.hakanssn.extraGroups = [ "libvirtd" ];
   # hakanssn.core.zfs.systemCacheLinks = [ "/var/lib/libvirt/" ];
 
+  # Distrobox
+  virtualisation.podman.enable = true;
+  environment.systemPackages = [ pkgs.distrobox ];
+
   # Disable auto-upgrade
   hakanssn.graphical.theme.autoSwitchTheme = false;
   system.autoUpgrade.enable = false;
