@@ -69,13 +69,9 @@
 
       indexDir = "${config.hakanssn.cachePrefix}/var/lib/dovecot/indices";
 
-      # # Enable POP3 for retrieving mail with gmail because it does not support imap
-      # # When configuring POP3 on gmail client use SSL on port 995
-      # enablePop3Ssl = true;
-
       # Use Let's Encrypt certificates. Note that this needs to set up a stripped
       # down nginx and opens port 80.
-      certificateScheme = 3;
+      certificateScheme = "acme-nginx";
 
       # whether to scan inbound emails for viruses (note that this requires at least
       # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
