@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v26
       - name: Cachix
-        uses: cachix/cachix-action@v14
+        uses: cachix/cachix-action@v15
         with:
           name: hakanssn
           extraPullNames: "nix-community"
