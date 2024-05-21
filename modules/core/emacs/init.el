@@ -949,6 +949,14 @@ parent."
         org-habit-following-days 7
         org-habit-preceding-days 21))
 
+(use-package org-noter
+  :custom
+  (org-noter-notes-search-path '("~/documents/org/"))
+  (org-noter-default-notes-file-names '("notes.org")))
+
+(use-package org-nix-shell
+  :hook (org-mode . org-nix-shell-mode))
+
 (use-package anki-editor
   :after org-capture
   :bind (:map org-mode-map
@@ -1787,13 +1795,7 @@ Useful when using wacom tablet for freehand"
         (edraw-set-grid-visible editor t)))
     ))
 
-(use-package org-noter
-  :custom
-  (org-noter-notes-search-path '("~/documents/org/"))
-  (org-noter-default-notes-file-names '("notes.org")))
 
-(use-package org-nix-shell
-  :hook (org-mode . org-nix-shell-mode))
 
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
