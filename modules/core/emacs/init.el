@@ -1349,16 +1349,23 @@ current buffer, killing it."
 
 (use-package shell-mode
   :ensure nil
-  :bind (("<f1>" . 'shell)
-         :map shell-mode-map
-         ("C-r" . consult-history))
+  :bind (:map shell-mode-map
+         ("C-r" . consult-history)))
+
+(use-package eat
+  ;; Terminal emulator
+  :bind (("<f1>" . 'eat))
+  :config
+  (use-package meow
+    :config
+    (dolist (state '((eat-mode . insert)))
+      (add-to-list 'meow-mode-state-list state)))
+
   :init
   (defun hk/run-tgpt ()
     "Open shell and run the program 'tgpt' in interactive mode."
     (interactive)
-    (shell "tgpt")
-    (insert "tgpt -i")
-    (comint-send-input)))
+    (switch-to-buffer (eat-make "tgpt" "tgpt" nil "-i"))))
 
 (use-package dirvish
   ;; File manager
@@ -1807,31 +1814,6 @@ Useful when using wacom tablet for freehand"
   :hook (erc-mode . erc-log-mode)
   :custom
   (erc-hide-list '("JOIN" "PART" "QUIT")))
-
-(use-package eat
-  :config
-  (use-package meow
-    :config
-    (dolist (state '((eat-mode . insert)))
-      (add-to-list 'meow-mode-state-list state))))
-
-(use-package activities
-  :bind
-  (("C-x C-a C-n" . activities-new)
-   ("C-x C-a C-d" . activities-define)
-   ("C-x C-a C-a" . activities-resume)
-   ("C-x C-a C-s" . activities-suspend)
-   ("C-x C-a C-k" . activities-kill)
-   ("C-x C-a RET" . activities-switch)
-   ("C-x C-a b" . activities-switch-buffer)
-   ("C-x C-a g" . activities-revert)
-   ("C-x C-a l" . activities-list))
-
-  :init
-  (activities-mode)
-  (activities-tabs-mode)
-  ;; Prevent `edebug' default bindings from interfering.
-  (setq edebug-inhibit-emacs-lisp-mode-bindings t))
 
 
 (use-package origami
