@@ -1193,8 +1193,7 @@ Takes optional URL or gets it from the clipboard."
 
 (use-package eglot
   :hook
-  ((nix-mode . eglot-ensure)
-   ((eglot-managed-mode) . hk/eglot-capf))
+  (((eglot-managed-mode) . hk/eglot-capf))
   :bind
   (:map eglot-mode-map
         ("C-c C" . eglot)
@@ -1204,7 +1203,6 @@ Takes optional URL or gets it from the clipboard."
         ("C-c F" . eglot-format))
   :custom
   (eglot-send-changes-idle-time 0.1)
-  (eglot-extend-to-xref t)              ; activate Eglot in referenced non-project files
   :config
   (fset #'jsonrpc--log-event #'ignore)  ; massive perf boost---don't log every event
 
@@ -1339,14 +1337,14 @@ Takes optional URL or gets it from the clipboard."
 (use-package sqlite-mode
   :ensure nil
   :config
-  (defun ct/sqlite-view-file-magically ()
+  (defun hk/sqlite-view-file-magically ()
     "Runs `sqlite-mode-open-file' on the file name visited by the
 current buffer, killing it."
     (require 'sqlite-mode)
     (let ((file-name buffer-file-name))
       (kill-current-buffer)
       (sqlite-mode-open-file file-name)))
-  (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . ct/sqlite-view-file-magically)))
+  (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . hk/sqlite-view-file-magically)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1354,11 +1352,6 @@ current buffer, killing it."
 ;;;   Applications and tools
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package shell-mode
-  :ensure nil
-  :bind (:map shell-mode-map
-         ("C-r" . consult-history)))
 
 (use-package eat
   ;; Terminal emulator
@@ -1369,7 +1362,7 @@ current buffer, killing it."
     (dolist (state '((eat-mode . insert)))
       (add-to-list 'meow-mode-state-list state)))
 
-  :init
+  :preface
   (defun hk/run-tgpt ()
     "Open shell and run the program 'tgpt' in interactive mode."
     (interactive)
@@ -1792,10 +1785,7 @@ Useful when using wacom tablet for freehand"
                  (edraw-set-grid-visible editor nil))
         (message "interval 20")
         (edraw-editor-set-grid-interval editor 20)
-        (edraw-set-grid-visible editor t)))
-    ))
-
-
+        (edraw-set-grid-visible editor t)))))
 
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
@@ -1808,15 +1798,13 @@ Useful when using wacom tablet for freehand"
    :keymap 'org-babel-map
    :transient t
    :blacklist-keys '("C-n" "C-p" "C-a" "C-e" "C-b" "C-r" "C-i" "C-f" "C-d" "C-j" "C-l" "C-o" "C-s" "C-t" "C-u" "C-v" "C-x" "C-z"))
-  (define-key org-mode-map (kbd "C-c C-v") #'org-babel-mode)
-  )
+  (define-key org-mode-map (kbd "C-c C-v") #'org-babel-mode))
 
 (use-package erc
   ;; IRC client
   :hook (erc-mode . erc-log-mode)
   :custom
   (erc-hide-list '("JOIN" "PART" "QUIT")))
-
 
 (use-package origami
   ;; Code Folding
