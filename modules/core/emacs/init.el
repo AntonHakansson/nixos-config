@@ -1713,6 +1713,13 @@ current buffer, killing it."
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defun hk/enable-impermanent-melpa-use-package ()
+  ;; I configure Emacs decoratively using Nix but sometimes you want to try things out temporally.
+  (interactive)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+  (setq use-package-always-ensure t))
+
 (use-package org-timeblock
   :bind
   ("C-c o t" . org-timeblock)
@@ -1827,19 +1834,11 @@ Useful when using wacom tablet for freehand"
   (setq edebug-inhibit-emacs-lisp-mode-bindings t))
 
 
-(defun hk/enable-impermanent-melpa-use-package ()
-  ;; I configure Emacs decoratively using Nix but sometimes you want to try things out temporally.
-  (interactive)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
-  (setq use-package-always-ensure t))
-
 (use-package origami
   ;; Code Folding
   :hook
   ((c-mode c-ts-mode . origami-mode))
-  (emacs-lisp . origami-mode)
-  )
+  (emacs-lisp . origami-mode))
 
 (provide 'init)
 ;;; init.el ends here
