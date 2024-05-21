@@ -28,6 +28,7 @@
       plasma-browser-integration
       print-manager
     ];
+    environment.systemPackages = [ pkgs.hakanssn.yt-dlp-from-clipboard ];
 
     # Get current settings with `nix run github:pjones/plasma-manager`
     home-manager.users.hakanssn = { pkgs, ... }: {
