@@ -19,9 +19,9 @@
         set auto-load local-gdbinit
       '';
       home.sessionVariables = {
-        # debbugger-oriented flags: break on error instead of uselessly exiting
+        # debugger-oriented flags: break on error instead of uselessly exiting
+        ASAN_OPTIONS = "abort_on_error=1:halt_on_error=1:detect_stack_use_after_return=1";
         UBSAN_OPTIONS = "abort_on_error=1:halt_on_error=1";
-        ASAN_OPTIONS  = "abort_on_error=1:halt_on_error=1";
       };
     };
   };
