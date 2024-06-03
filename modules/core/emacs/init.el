@@ -1076,6 +1076,11 @@ Takes optional URL or gets it from the clipboard."
   :custom
   (tempel-path "~/documents/org/tempel"))
 
+(use-package expand-region
+  :config
+  (with-eval-after-load 'meow
+    (meow-normal-define-key '("w" . er/expand-region))))
+
 (use-package embrace
   ;; Add/Change/Delete pairs based on expand-region.
   :bind (("M-)" . 'embrace-commander))  ; orig. move-past-close-and-reindent
