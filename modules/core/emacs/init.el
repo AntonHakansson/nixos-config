@@ -1755,68 +1755,15 @@ current buffer, killing it."
             (org-rich-yank--trim-nl contents)
             link)))
 
-(use-package el-easydraw
-  ;; A SVG Editor within Emacs. Perfect with wacom tablet for small sketches and thoughts.
-  :bind (:map org-mode-map
-              ("<f7>" . hk/edraw-insert-link)
-         :map edraw-editor-map
-              ("@" . hk/edraw-toggle-interval))
-  :config
-  (with-eval-after-load 'org
-    (require 'edraw-org)
-    (edraw-org-setup-default))
-  ;; When using the org-export-in-background option (when using the
-  ;; asynchronous export function), the following settings are
-  ;; required. This is because Emacs started in a separate process does
-  ;; not load org.el but only ox.el.
-  (with-eval-after-load "ox"
-    (require 'edraw-org)
-    (edraw-org-setup-exporter))
-
-  :preface
-  (defun hk/edraw-insert-link ()
-    (interactive)
-    (insert "[[edraw:]]")
-    (edraw-org-edit-link))
-
-  (defun hk/edraw-toggle-interval ()
-    "Switched between the default interaval and a interval of 1
-Useful when using wacom tablet for freehand"
-    (interactive)
-    (let* ((editor (edraw-current-editor))
-           (current-interval (edraw-get-setting editor 'grid-interval)))
-      (if (= current-interval edraw-editor-default-grid-interval)
-          (progn (message "interval 1")
-                 (edraw-editor-set-grid-interval editor 1)
-                 (edraw-set-grid-visible editor nil))
-        (message "interval 20")
-        (edraw-editor-set-grid-interval editor 20)
-        (edraw-set-grid-visible editor t)))))
-
 (use-package journalctl-mode
   ;; View systemd's journalctl within Emacs
   :bind ("C-c o j" . journalctl))
-
-(use-package hercules
-  :config
-  (hercules-def
-   :toggle-funs #'org-babel-mode
-   :keymap 'org-babel-map
-   :transient t
-   :blacklist-keys '("C-n" "C-p" "C-a" "C-e" "C-b" "C-r" "C-i" "C-f" "C-d" "C-j" "C-l" "C-o" "C-s" "C-t" "C-u" "C-v" "C-x" "C-z"))
-  (define-key org-mode-map (kbd "C-c C-v") #'org-babel-mode))
 
 (use-package erc
   ;; IRC client
   :hook (erc-mode . erc-log-mode)
   :custom
   (erc-hide-list '("JOIN" "PART" "QUIT")))
-
-(use-package origami
-  ;; Code Folding
-  :hook
-  ((c-mode c-ts-mode . origami-mode))
-  (emacs-lisp . origami-mode))
 
 (provide 'init)
 ;;; init.el ends here
