@@ -472,6 +472,7 @@
   (corfu-auto-delay 0.05 "Disable completion suggestion delay")
   (corfu-auto-prefix 3 "Trigger completion early")
   (corfu-cycle t "Cycle candidates")
+  (corfu-on-exact-match 'quit "Don't auto insert completion/templates on single match")
   :bind
   (:map corfu-map
         ("RET" . nil)     ; Return should insert a newline - not complete the sugggestion.
