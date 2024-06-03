@@ -950,6 +950,13 @@ parent."
         org-habit-following-days 7
         org-habit-preceding-days 21))
 
+(use-package org-timeblock
+  :bind
+  ("C-c o t" . org-timeblock)
+  :custom
+  (org-timeblock-inbox-file (concat org-directory "gtd/" "inbox.org"))
+  (org-timeblock-span 1 "show today"))
+
 (use-package org-noter
   :custom
   (org-noter-notes-search-path '("~/documents/org/"))
@@ -1031,6 +1038,20 @@ Takes optional URL or gets it from the clipboard."
       (denote-create-note title '("article" "ref") 'org)
       (insert converted)
       (save-buffer))))
+
+(use-package org-rich-yank
+  :demand t
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank))
+  :custom
+  (org-rich-yank-format-paste #'hk/org-rich-yank-format-paste)
+  :init
+  (defun hk/org-rich-yank-format-paste (language contents link)
+    "Based on `org-rich-yank--format-paste-default'."
+    (format "#+begin_src %s\n%s\n#+end_src\n#+comment: %s"
+            language
+            (org-rich-yank--trim-nl contents)
+            link)))
 
 (use-package org-appear
   :custom
@@ -1450,6 +1471,10 @@ current buffer, killing it."
       (message "Redirecting to bloatfree alt. " alt-url)
       (eww alt-url))))
 
+(use-package journalctl-mode
+  ;; View systemd's journalctl within Emacs
+  :bind ("C-c o j" . journalctl))
+
 (use-package pdf-tools
   :custom
   (pdf-view-display-size 'fit-page)
@@ -1528,6 +1553,12 @@ current buffer, killing it."
   ;; Enchaned Spell Checker
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
+
+(use-package erc
+  ;; IRC client
+  :hook (erc-mode . erc-log-mode)
+  :custom
+  (erc-hide-list '("JOIN" "PART" "QUIT")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -1734,36 +1765,7 @@ current buffer, killing it."
   (package-initialize)
   (setq use-package-always-ensure t))
 
-(use-package org-timeblock
-  :bind
-  ("C-c o t" . org-timeblock)
-  :custom
-  (org-timeblock-inbox-file (concat org-directory "gtd/" "inbox.org"))
-  (org-timeblock-span 1 "show today"))
 
-(use-package org-rich-yank
-  :demand t
-  :bind (:map org-mode-map
-              ("C-M-y" . org-rich-yank))
-  :custom
-  (org-rich-yank-format-paste #'hk/org-rich-yank-format-paste)
-  :init
-  (defun hk/org-rich-yank-format-paste (language contents link)
-    "Based on `org-rich-yank--format-paste-default'."
-    (format "#+begin_src %s\n%s\n#+end_src\n#+comment: %s"
-            language
-            (org-rich-yank--trim-nl contents)
-            link)))
-
-(use-package journalctl-mode
-  ;; View systemd's journalctl within Emacs
-  :bind ("C-c o j" . journalctl))
-
-(use-package erc
-  ;; IRC client
-  :hook (erc-mode . erc-log-mode)
-  :custom
-  (erc-hide-list '("JOIN" "PART" "QUIT")))
 
 (provide 'init)
 ;;; init.el ends here
