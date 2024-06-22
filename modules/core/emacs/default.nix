@@ -44,9 +44,7 @@
         e = "emacsclient -nw";
         ee = "emacsclient -c";
       };
-      home = let
-        aspell = (pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science sv ]));
-      in {
+      home = {
         packages = with pkgs; [
           (pkgs.writeShellScriptBin "emacseditor" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
           (pkgs.writeShellScriptBin "emacs" ''${config.hakanssn.core.emacs.package}/bin/emacs "$@"'')
@@ -93,7 +91,6 @@
         ];
         sessionVariables = {
           EDITOR = "emacsclient -nw";
-          ASPELL_CONF = "dict-dir ${aspell}/lib/aspell";
         };
       };
       xdg.configFile = {
