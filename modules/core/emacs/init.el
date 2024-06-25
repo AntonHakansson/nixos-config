@@ -1774,6 +1774,141 @@ current buffer, killing it."
   (package-initialize)
   (setq use-package-always-ensure t))
 
+;;;
+;;; Meow remap to position-based keybindings instead of mnemonic keybindings
+;;;
+(defun meow-smart-reverse ()
+  "Reverse selection or begin negative argument."
+  (interactive)
+  (if (use-region-p)
+      (meow-reverse)
+    (negative-argument nil)))
+
+(defun meow-word ()
+  "Expand word/symbol under cursor."
+  (interactive)
+  (if (and (use-region-p)
+           (equal (car (region-bounds))
+                  (bounds-of-thing-at-point 'word)))
+      (meow-mark-symbol 1)
+    (progn
+      (when (and (mark)
+                 (equal (car (region-bounds))
+                        (bounds-of-thing-at-point 'symbol)))
+        (meow-pop-selection))
+      (meow-mark-word 1))))
+
+(defun meow-setup ()
+  (meow-thing-register 'angle
+                       '(pair ("<") (">"))
+                       '(pair ("<") (">")))
+
+  (setq meow-char-thing-table
+        '((?t . round)
+          (?s . square)
+          (?r . curly)
+          (?a . angle)
+          (?p . string)
+          (?d . paragraph)
+          (?c . line)
+          (?x . buffer)))
+
+  (keymap-unset meow-normal-state-keymap "k")
+  (keymap-unset meow-normal-state-keymap "o")
+  (meow-normal-define-key
+    ;; expansion
+    '("0" . meow-expand-0)
+    '("1" . meow-expand-1)
+    '("2" . meow-expand-2)
+    '("3" . meow-expand-3)
+    '("4" . meow-expand-4)
+    '("5" . meow-expand-5)
+    '("6" . meow-expand-6)
+    '("7" . meow-expand-7)
+    '("8" . meow-expand-8)
+    '("9" . meow-expand-9)
+    '("'" . meow-smart-reverse)
+
+    ;; movement
+    '("u" . meow-prev)
+    '("e" . meow-next)
+    '("n" . meow-left)
+    '("i" . meow-right)
+
+    '("j" . meow-search)
+    ;; '("-" . meow-visit)
+    '("/" . meow-search)
+    '("T" . avy-goto-word-1)
+
+    ;; expansion
+    '("U" . meow-prev-expand)
+    '("E" . meow-next-expand)
+    '("N" . meow-left-expand)
+    '("I" . meow-right-expand)
+
+    '("l" . meow-back-word)
+    '("L" . meow-back-symbol)
+    '("y" . meow-next-word)
+    '("Y" . meow-next-symbol)
+
+    '("a" . meow-word)
+    '("A" . meow-mark-symbol) ; REVIEW: We can achieve the same with 'aa'
+    '("r" . meow-line)
+    '("R" . meow-goto-line)
+    '("w" . meow-block)
+    '("W" . meow-to-block)
+    '("q" . meow-join)
+    '("g" . meow-grab)
+    '("G" . meow-pop-grab)
+    '("h" . meow-swap-grab)
+    '("H" . meow-sync-grab)
+    '(";" . meow-cancel-selection)
+    '(":" . meow-pop-selection)
+
+    '("x" . meow-till)
+    '("z" . meow-find)
+
+    '("," . meow-beginning-of-thing)
+    '("." . meow-end-of-thing)
+    '("<" . meow-inner-of-thing)
+    '(">" . meow-bounds-of-thing)
+
+    ;; editing
+    '("s" . meow-kill)
+    '("t" . meow-change)
+    '("b" . meow-delete)
+    '("c" . meow-save)
+    '("d" . meow-yank)
+    '("D" . meow-yank-pop)
+
+    '("f" . meow-insert)
+    '("F" . meow-open-above)
+    '("p" . meow-append)
+    '("P" . meow-open-below)
+
+    '("m" . undo-only)
+    '("M" . undo-redo)
+
+    '("kk" . downcase-dwim)
+    '("kq" . align-regexp)
+    '("kw" . delete-trailing-whitespace)
+    '("kf" . fill-paragraph)
+    ;; '("kp" . sp-split-sexp)
+    '("kt" . meow-comment)
+
+    ;; general
+    '("oq" . jinx-mode)
+    '("ow" . jinx-correct)
+    '("ot" . eglot-rename)
+    '("og" . magit-diff-buffer-file)
+    '("os" . save-buffer)
+    '("oy" . overwrite-mode)
+    '("ou" . whitespace-mode)
+    '("ob" . eglot-format)
+
+    ;; ignore escape
+    '("<escape>" . ignore)))
+(meow-setup)
 
 
 (provide 'init)
