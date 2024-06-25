@@ -1395,6 +1395,14 @@ current buffer, killing it."
     (interactive)
     (switch-to-buffer (eat-make "tgpt" "tgpt" nil "-i"))))
 
+(defun hk/yt-dlp-audio ()
+  "Downloads thing-at-point to ~/documents/audio/ with denote filename"
+  (interactive)
+  (let ((url (thing-at-point-url-at-point))
+        (output-filename-option "-o \"%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s\""))
+    (unless url (error "No url at point"))
+    (async-shell-command (format "yt-dlp --extract-audio --restrict-filenames %s -P ~/documents/audio/ \"%s\"" output-filename-option url))))
+
 (use-package dirvish
   ;; File manager
   :bind
