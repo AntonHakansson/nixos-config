@@ -16,11 +16,6 @@
     kernelParams = [
       "quiet"
       "mitigations=off"
-
-      # Anne Pro 2 keyboard disconnects after inactivity
-      # boot with usb quirk HID_QUIRK_ALWAYS_POLL(0x00000400)
-      # ref: https://www.reddit.com/r/AnnePro/comments/gruzcb/anne_pro_2_linux_cant_type_after_inactivity/
-      "usbhid.quirks=0x04D9:0xA292:0x00000400"
     ];
   };
 
@@ -72,10 +67,10 @@
     graphics = {
       enable = true;
       extraPackages = with pkgs; [
-          vaapiVdpau
-          libvdpau-va-gl
-          vulkan-validation-layers
-        ];
+        vaapiVdpau
+        libvdpau-va-gl
+        vulkan-validation-layers
+      ];
     };
     nvidia = {
       package = config.boot.kernelPackages.nvidiaPackages.latest;
@@ -93,7 +88,7 @@
   # Printer
   services.printing.enable = true;
   services.printing.drivers = [
-    pkgs.brlaser # — Drivers for some Brother printers
+    pkgs.brlaser # Drivers for some Brother printers
   ];
   users.users.hakanssn.extraGroups = [ "lp" ];
 }

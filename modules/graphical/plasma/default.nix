@@ -14,7 +14,7 @@
     };
     services.desktopManager.plasma6.enable = true;
     environment.plasma6.excludePackages = with pkgs.kdePackages; [
-      baloo
+      baloo # File search/indexer
       elisa # KDE video player
       gwenview # Image viewer
       kate
@@ -35,9 +35,32 @@
       programs.plasma = {
         enable = true;
         panels = [
+          # TODO: bug: my bottom bar has disappeared completely
           { # Auto-hide bottom bar
             location = "bottom";
             hiding = "autohide";
+          }
+        ];
+        window-rules = [
+          {
+            description = "Hide titlebar by default";
+            match = {
+              window-class = {
+                value = ".*";
+                type = "regex";
+              };
+              window-types = [ "normal" ];
+            };
+            apply = {
+              noborder = {
+                value = true;
+                apply = "initially";
+              };
+              maximizevert = {
+                value = true;
+                apply = "initially";
+              };
+            };
           }
         ];
         shortcuts = {
@@ -76,13 +99,6 @@
           "kwinrc"."Desktops"."Id_7".value = "badf4ae6-d4da-477b-90da-0faf24144dfe";
           "kwinrc"."Desktops"."Id_8".value = "fd22cc68-6df8-42bf-8d20-b776d920103b";
           "kwinrc"."Desktops"."Id_9".value = "62ee81a4-5ec9-4137-ab14-df6b1431c4f2";
-
-          "kwinrulesrc"."General"."count".value = 1;
-          "kwinrulesrc"."1"."Description".value = "Hide titlebar by default";
-          "kwinrulesrc"."1"."noborder".value = true;
-          "kwinrulesrc"."1"."noborderrule".value = 3;
-          "kwinrulesrc"."1"."wmclass".value = ".*";
-          "kwinrulesrc"."1"."wmclassmatch".value = 3;
         };
       };
     };
