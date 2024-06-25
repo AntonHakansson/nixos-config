@@ -621,10 +621,11 @@
   (org-directory      "~/documents/org/")
   (org-return-follows-link t)
   (org-startup-indented t)
-  (org-cycle-separator-lines 0) ; Hide emptly lines between subtrees
-  (org-startup-with-inline-images t)
-  (org-cycle-hide-block-startup t)
   (org-startup-folded "show2levels") ; Apparently default showeverything overrides hide-block
+  (org-startup-with-inline-images t)
+  (org-cycle-separator-lines 0) ; Hide emptly lines between subtrees
+  (org-cycle-hide-block-startup t)
+  (org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
   (org-image-actual-width nil) ; Use width from #+attr_org and fallback to original width.
   (org-fold-catch-invisible-edits 'show-and-error)
   (org-use-speed-commands (lambda () ; When point is on any star at the beginning of the headline
@@ -1418,7 +1419,7 @@ current buffer, killing it."
      ("t" "~/.local/share/Trash/files/" "TrashCan")
      ("r" "~/repos/"                    "Repos")
      ("b" "~/documents/books/"          "Books")
-     ("a" "~/documents/books/audio"     "Audio Books")
+     ("a" "~/documents/audio"           "Audio Books")
      ("o" "~/documents/org/"            "Org Notes")))
   (dirvish-default-layout nil "disable preview pane by default")
   (dired-dwim-target t "copy/move operations based on other Dired window")
