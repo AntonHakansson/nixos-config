@@ -414,7 +414,7 @@
    '("s" . "M-s")
 
    ;; Files & buffer
-   '("d" . dirvish)
+   '("d" . dired)
    '("f" . find-file)
    '("r" . consult-recent-file)
    '("b" . consult-buffer)
@@ -464,8 +464,7 @@
       ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
       ("i" dumb-jump-go-prompt "Prompt")
       ("l" dumb-jump-quick-look "Quick look")
-      ("b" dumb-jump-back "Back")))
-  )
+      ("b" dumb-jump-back "Back"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -585,7 +584,7 @@
 (add-hook 'text-mode-hook 'hk/text-capf)
 
 (use-package denote
-  :hook (dirvish-mode . denote-dired-mode)
+  :hook (dired-mode . denote-dired-mode)
   :bind
   (("C-c C-n" . denote)
    ("C-c o n" . denote-open-or-create))
@@ -1436,43 +1435,28 @@ current buffer, killing it."
     (unless url (error "No url at point"))
     (async-shell-command (format "yt-dlp --extract-audio --restrict-filenames %s -P ~/documents/audio/ \"%s\"" output-filename-option url))))
 
-(use-package dirvish
+(defun hk/yt-dlp-video ()
+  "Downloads thing-at-point to ~/mpv/ with denote filename"
+  (interactive)
+  (let ((url (thing-at-point-url-at-point))
+        (output-filename-option "-o \"%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s\""))
+    (unless url (error "No url at point"))
+    (async-shell-command (format "mkdir -p ~/mpv/ && yt-dlp --restrict-filenames %s -P ~/mpv/ \"%s\"" output-filename-option url))))
+
+(use-package dired
+  :ensure nil
   ;; File manager
-  :bind
-  (:map dirvish-mode-map
-        ("a"   . 'dirvish-quick-access)
-        ("TAB" . 'dirvish-subtree-toggle)
-        ("T"   . 'dirvish-layout-toggle)) ; Orig. dired-do-touch
+  :hook (dired-after-readin . hk/truncate-lines)
   :custom
-  (dirvish-quick-access-entries
-   '(("h" "~/"                          "Home")
-     ("d" "~/downloads/"                "Downloads")
-     ("m" "~/mpv/"                      "Mpv")
-     ("t" "~/.local/share/Trash/files/" "TrashCan")
-     ("r" "~/repos/"                    "Repos")
-     ("b" "~/documents/books/"          "Books")
-     ("a" "~/documents/audio"           "Audio Books")
-     ("o" "~/documents/org/"            "Org Notes")))
-  (dirvish-default-layout nil "disable preview pane by default")
-  (dired-dwim-target t "copy/move operations based on other Dired window")
   (delete-by-moving-to-trash t)
-  (dired-mouse-drag-files t "enable drag-and-drop")
   (mouse-drag-and-drop-region-cross-program t)
-  (dired-listing-switches
-        "-l --almost-all --human-readable --group-directories-first --no-group")
-  :config
-  (setq dirvish-mode-line-format
-        '(:left (sort symlink) :right (omit yank index)))
-  (setq dirvish-attributes
-        '(nerd-icons file-time file-size collapse subtree-state vc-state git-msg))
-  (setq dirvish-preview-dispatchers (delete 'pdf dirvish-preview-dispatchers)) ; Remove pdf preview. It is too slow.
-  (dirvish-override-dired-mode)
-  (require 'dirvish-quick-access)
-  (require 'dirvish-extras))
+  (dired-dwim-target t "copy/move operations based on other Dired window")
+  (dired-mouse-drag-files t "enable drag-and-drop")
+  (dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"))
 
 (use-package gptel
   ;; AI assistant
-  :init
+  :preface
   (setq hk/gptel-backend (gptel-make-openai "llama-cpp"
                            :stream t
                            :protocol "http"
@@ -1575,6 +1559,7 @@ current buffer, killing it."
         (async-shell-command (concat "umpv \"" url "\"") nil nil)))))
 
 (use-package elfeed-tube-mpv
+  :after elfeed-tube
   :bind
   (:map elfeed-show-mode-map
         ("C-c C-f" . elfeed-tube-mpv-follow-mode)
@@ -1633,42 +1618,6 @@ current buffer, killing it."
   (doom-modeline-percent-position nil)
   (doom-modeline-battery nil)
   (doom-modeline-time nil))
-
-(use-package popper
-  ;; Pop-up window management
-  :commands (popper-mode)
-  :hook (emacs-startup . popper-mode)
-  :bind (("C-'"   . popper-toggle)
-         ("M-'"   . popper-cycle)       ; Orig. abbrev-prefix-mark
-         ("C-M-'" . popper-toggle-type))
-  :custom (popper-mode-line nil "hide modeline in popup windows")
-  :config
-  (setq popper-reference-buffers
-        '(
-          ;; help modes
-          help-mode
-          helpful-mode
-          eldoc-mode
-          "\\*eldoc\\*"
-          Man-mode
-          woman-mode
-          ;; repl modes
-          eshell-mode
-          shell-mode
-          ;; grep modes
-          occur-mode
-          grep-mode
-          xref--xref-buffer-mode
-          rg-mode
-          ;; message modes
-          compilation-mode
-          "\\*Messages\\*"
-          "[Oo]utput\\*"
-          "\\*Async Shell Command\\*"))
-  (setq popper-group-function 'popper-group-by-project)
-  (popper-mode +1)
-  (require 'popper-echo)
-  (popper-echo-mode +1))
 
 (use-package mixed-pitch)
 
