@@ -1920,7 +1920,7 @@ Otherwise split the current paragraph into one sentence per line."
     '("a" . meow-word)
     '("A" . meow-mark-symbol) ; REVIEW: We can achieve the same with 'aa'
     '("r" . meow-line)
-    '("R" . meow-goto-line)
+    '("R" . meow-replace)
     '("w" . meow-block)
     '("W" . meow-to-block)
     '("q" . meow-join)
