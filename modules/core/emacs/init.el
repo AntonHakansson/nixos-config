@@ -225,6 +225,35 @@
   (require 'consult-compile)
   (require 'consult-kmacro))
 
+
+(use-package consult-web
+  :after consult
+
+  :bind (("C-c w" . consult-web-multi))
+
+  :preface
+  (add-to-list 'load-path "~/repos/misc/consult-web/")
+  (add-to-list 'load-path "~/repos/misc/consult-web/sources/")
+
+  :init
+  (require 'consult-web-brave-autosuggest)
+  (require 'consult-web-brave)
+  (require 'consult-web-gptel)
+  (require 'consult-web-elfeed)
+
+  :custom
+  ;; General settings that apply to all sources
+  (consult-web-show-preview t) ;;; show previews
+  (consult-web-preview-key "C-o") ;;; set the preview key to C-o
+  (consult-web-highlight-matches t) ;;; highlight matches in minibuffer
+  (consult-web-default-autosuggest-command #'consult-web-dynamic-brave-autosuggest)
+
+  (consult-web-multi-sources '("Brave" "gptel"))
+  (consult-web-omni-sources (list "Brave" "elfeed" "gptel" 'consult-buffer-sources))
+
+  (consult-web-brave-api-key #'(lambda () (shell-command-to-string "pass show tools/brave-search-apikey")))
+  (consult-web-brave-autosuggest-api-key #'(lambda () (shell-command-to-string "pass show tools/brave-autosuggest-apikey"))))
+
 (use-package embark
   :bind
   (("C-." . embark-act)
