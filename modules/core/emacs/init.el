@@ -1467,6 +1467,18 @@ current buffer, killing it."
   (require 'dirvish-quick-access)
   (require 'dirvish-extras))
 
+(use-package gptel
+  ;; AI assistant
+  :init
+  (setq hk/gptel-backend (gptel-make-openai "llama-cpp"
+                           :stream t
+                           :protocol "http"
+                           :host "localhost:8080"))
+
+  :custom
+  (gptel-backend hk/gptel-backend)
+  (gptel-default-mode 'org-mode))
+
 (use-package eww
   ;; Web browser
   :ensure nil
