@@ -968,6 +968,9 @@ parent."
             (mapc #'org-element-extract-element (cdr sections)))))
       info)))
 
+(use-package org-ql
+  :after org)
+
 (use-package org-protocol
   :ensure nil)
 
