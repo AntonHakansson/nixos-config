@@ -70,6 +70,7 @@
   (setopt bookmark-save-flag 1)       ; Write bookmark file when bookmark list is modified
 
   ;; Keybinds
+  (global-set-key (kbd "C-x C-k") #'kill-current-buffer)
   (global-set-key (kbd "C-(") 'previous-buffer)
   (global-set-key (kbd "C-)") 'next-buffer)
   (global-set-key (kbd "<f5>") 'recompile)
