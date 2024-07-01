@@ -257,10 +257,29 @@
 
 (use-package embark
   :bind
-  (("C-." . embark-act)
-   ("C-;" . embark-dwim))
+  ("C-." . embark-act)
+  ("C-;" . embark-dwim)
+
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
+
+  ;; yt-dlp utilities
+  :bind
+  (:map embark-url-map
+        ("y" . #'hk/yt-dlp-video)
+        ("Y" . #'hk/yt-dlp-audio))
+  :preface
+  (defun hk/yt-dlp-audio (URL)
+    "Downloads thing-at-point to ~/documents/audio/ with denote filename"
+    (interactive "i")
+    (when-let ((url (or URL (thing-at-point-url-at-point))))
+      (start-process "yt-dlp" "yt-dlp-audio" "yt-dlp" "-P" "~/documents/audio/" "--extract-audio" "--restrict-filenames" "-o" "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" url)))
+
+  (defun hk/yt-dlp-video (URL)
+    "Downloads thing-at-point to ~/mpv/ with denote filename"
+    (interactive "i")
+    (when-let ((url (or URL (thing-at-point-url-at-point))))
+      (start-process "yt-dlp" "yt-dlp-video" "yt-dlp" "-P" "~/mpv/" "--restrict-filenames" "-o" "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" url)))
   )
 
 (use-package embark-consult
@@ -1428,22 +1447,6 @@ current buffer, killing it."
     (interactive)
     (switch-to-buffer (eat-make "tgpt" "tgpt" nil "-i"))))
 
-(defun hk/yt-dlp-audio ()
-  "Downloads thing-at-point to ~/documents/audio/ with denote filename"
-  (interactive)
-  (let ((url (thing-at-point-url-at-point))
-        (output-filename-option "-o \"%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s\""))
-    (unless url (error "No url at point"))
-    (async-shell-command (format "yt-dlp --extract-audio --restrict-filenames %s -P ~/documents/audio/ \"%s\"" output-filename-option url))))
-
-(defun hk/yt-dlp-video ()
-  "Downloads thing-at-point to ~/mpv/ with denote filename"
-  (interactive)
-  (let ((url (thing-at-point-url-at-point))
-        (output-filename-option "-o \"%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s\""))
-    (unless url (error "No url at point"))
-    (async-shell-command (format "mkdir -p ~/mpv/ && yt-dlp --restrict-filenames %s -P ~/mpv/ \"%s\"" output-filename-option url))))
-
 (use-package dired
   :ensure nil
   ;; File manager
@@ -1788,7 +1791,6 @@ Otherwise split the current paragraph into one sentence per line."
               (just-one-space) ;; leaves only one space, point is after it
               (delete-char -1) ;; delete the space
               (newline)        ;; and insert a newline
-              (LaTeX-indent-line) ;; I only use this in combination with late, so this makes sense
               ))))
     ;; otherwise do ordinary fill paragraph
     (fill-paragraph P)))
