@@ -1073,7 +1073,25 @@ parent."
 (use-package org-web-tools
   :bind (:map org-mode-map
               ("C-c y" . org-web-tools-insert-link-for-url))
+
   :config
+  (use-package embark
+    :bind
+    (:map embark-url-map
+          ("O" . #'hk/org-web-tools-read-url-as-org)))
+
+  :preface
+  (defun hk/org-web-tools-read-url-as-org (url)
+    "Read URL's readable content in an Org buffer."
+    (let ((entry (org-web-tools--url-as-readable-org url)))
+      (when entry
+        (switch-to-buffer url)
+        (org-mode)
+        (insert entry)
+        ;; Set buffer title
+        (goto-char (point-min))
+        (rename-buffer (cdr (org-web-tools--read-org-bracket-link))))))
+
   (defun hk/org-web-tools-url-as-denote (&optional url)
     "Create denote entry of URL's web page content.
 Content is processed with `eww-readable' and Pandoc.
