@@ -1306,7 +1306,8 @@ Takes optional URL or gets it from the clipboard."
   ;; Eglot sometimes needs to know where to find language servers
   (add-to-list
    'eglot-server-programs
-   '((c-mode c-ts-mode c++-mode c++-ts-mode) "clangd" "--clang-tidy" "--completion-style=detailed"))
+   '((c-mode c-ts-mode c++-mode c++-ts-mode)
+     "clangd" "--completion-style=detailed" "--clang-tidy" "--function-arg-placeholders=false" "--header-insertion=never" "--malloc-trim"))
   (add-to-list
    'eglot-server-programs '((nix-mode) "nil"))
 
