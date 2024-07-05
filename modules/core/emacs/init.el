@@ -261,26 +261,38 @@
   ("C-;" . embark-dwim)
 
   :init
-  (setq prefix-help-command #'embark-prefix-help-command)
+  (setopt prefix-help-command #'embark-prefix-help-command)
 
-  ;; yt-dlp utilities
+  ;; `yt-dlp` utilities
   :bind
   (:map embark-url-map
         ("y" . #'hk/yt-dlp-video)
         ("Y" . #'hk/yt-dlp-audio))
+
   :preface
+  (defcustom hk/yt-dlp-common-flags '("--embed-metadata" "--sub-langs" "en_US" "--restrict-filenames" "-o" "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s")
+    "Command line arguments passed directly to `yt-dlp` command")
+
   (defun hk/yt-dlp-audio (URL)
     "Downloads thing-at-point to ~/documents/audio/ with denote filename"
-    (interactive "i")
-    (when-let ((url (or URL (thing-at-point-url-at-point))))
-      (start-process "yt-dlp" "yt-dlp-audio" "yt-dlp" "-P" "~/documents/audio/" "--extract-audio" "--restrict-filenames" "-o" "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" url)))
+    (interactive (list
+                  (or  (thing-at-point-url-at-point)
+                       (read-string "Video URL: " (let ((url (current-kill 0)))
+                                                    (when (url-p url) url))))))
+    (apply 'start-process "yt-dlp"
+                   (generate-new-buffer-name "*yt-dlp-audio*")
+                   "yt-dlp" "-P" "~/documents/audio/" "--extract-audio" URL hk/yt-dlp-common-flags))
 
   (defun hk/yt-dlp-video (URL)
     "Downloads thing-at-point to ~/mpv/ with denote filename"
-    (interactive "i")
-    (when-let ((url (or URL (thing-at-point-url-at-point))))
-      (start-process "yt-dlp" "yt-dlp-video" "yt-dlp" "-P" "~/mpv/" "--restrict-filenames" "-o" "%(epoch>%Y%m%dT%H%M%S)s--%(title)s.%(ext)s" url)))
-  )
+    (interactive (list
+                  (or  (thing-at-point-url-at-point)
+                       (read-string "Video URL: " (let ((url (current-kill 0)))
+                                                    (when (url-p url) url))))))
+    (apply 'start-process
+           "yt-dlp"
+           (generate-new-buffer-name "*yt-dlp-video*")
+           "yt-dlp" "-P" "~/mpv/" URL hk/yt-dlp-common-flags)))
 
 (use-package embark-consult
   :hook
@@ -1562,16 +1574,8 @@ current buffer, killing it."
                  (entry (elfeed-search-selected :ignore-region))
                  (url (elfeed-entry-link entry)))
         `(url ,url ,(line-beginning-position) . ,(line-end-position))))
-
-    (defun embark-elfeed-url-candidates ()
-      "Target the URLs of the selected elfeed entries."
-      (when-let (((derived-mode-p 'elfeed-search-mode))
-                 (entries (elfeed-search-selected))
-                 (urls (mapcar #'elfeed-entry-link entries)))
-        (cons 'url urls)))
     :config
-    (add-to-list 'embark-target-finders #'embark-elfeed-target-url)
-    (add-to-list 'embark-candidate-collectors #'embark-elfeed-url-candidates))
+    (add-to-list 'embark-target-finders #'embark-elfeed-target-url))
   )
 
 (use-package elfeed-org
