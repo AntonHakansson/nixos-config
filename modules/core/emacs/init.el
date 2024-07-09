@@ -1487,7 +1487,9 @@ current buffer, killing it."
   (mouse-drag-and-drop-region-cross-program t)
   (dired-dwim-target t "copy/move operations based on other Dired window")
   (dired-mouse-drag-files t "enable drag-and-drop")
-  (dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group"))
+  (dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group")
+  (dired-create-destination-dirs 'ask)
+  (dired-create-destination-dirs-on-trailing-dirsep t))
 
 (use-package gptel
   ;; AI assistant
