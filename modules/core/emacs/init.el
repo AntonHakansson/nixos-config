@@ -68,6 +68,7 @@
   (setopt delete-by-moving-to-trash t)
   (setopt set-mark-command-repeat-pop t) ; After =C-u C-SPC=, keep ctrl down and press space to cycle mark ring
   (setopt bookmark-save-flag 1)       ; Write bookmark file when bookmark list is modified
+  (electric-pair-mode +1)
 
   ;; Keybinds
   (global-set-key (kbd "C-x C-k") #'kill-current-buffer)
@@ -1287,7 +1288,6 @@ Takes optional URL or gets it from the clipboard."
   :after ws-butler
   :config
   (setq editorconfig-trim-whitespaces-mode 'ws-butler-mode))
-
 
 (use-package emacs ;; treesitter
   :ensure nil
