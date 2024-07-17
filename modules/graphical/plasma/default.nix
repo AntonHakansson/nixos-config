@@ -70,7 +70,8 @@
           kwin = {
             "Expose" = "Meta+,";
             "Window Close" = "Meta+Q";
-            "Window Fullscreen" = "Meta+F";
+            "Window Fullscreen" = "Meta+Shift+F";
+            "Window Maximize" = "Meta+F";
             "Window No Border" = "Meta+B";
             "Window Center" = "Meta+Space";
             "Walk Through Windows" = "Meta+N";
