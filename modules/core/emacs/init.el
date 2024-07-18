@@ -914,6 +914,9 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
            (command (concat "leetcode-to-org-mode.py " leetcode-url)))
       (shell-command command dst-buffer))))
 
+(use-package ox-pandoc
+  :after org)
+
 (use-package org ; ox-extra ignore-headlines
   :config (add-hook 'org-export-filter-parse-tree-functions #'org-export-ignore-headlines)
   :init
@@ -1373,7 +1376,8 @@ Takes optional URL or gets it from the clipboard."
   :config
   (envrc-global-mode))
 
-(use-package nix-mode :mode (("\\.nix\\'" . nix-mode)))
+(use-package nix-mode
+  :mode (("\\.nix\\'" . nix-mode)))
 
 (use-package emacs ;; c-mode
   ;; c-mode, c-ts-mode config
