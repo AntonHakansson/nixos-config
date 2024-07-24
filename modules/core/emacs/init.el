@@ -506,15 +506,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package vertico
-  ;; Vertical UI
-  ;; Completion in minibuffer
-  :config
-  (vertico-mode))
+  ;; Vertical UI Completion in minibuffer
+  :hook
+  (after-init . vertico-mode))
 
 (use-package marginalia
   ;; Rich annotations in minibuffer
-  :config
-  (marginalia-mode))
+  :after vertico)
 
 (use-package orderless
   ;; Advanced completion style (better fuzzy matching)
@@ -541,7 +539,7 @@
                         (interactive)
                         (corfu-quit)
                         (meow-normal-mode))))
-  :init
+  :preface
   (defun hk/corfu-enable-always-in-minibuffer ()
     "Enable Corfu in the minibuffer if Vertico is not active."
     (unless (bound-and-true-p vertico--input)
@@ -798,7 +796,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-babel-load-languages
    (mapcar (lambda (e) (cons e t))
            '(awk calc C css emacs-lisp haskell js latex lisp makefile org perl plantuml python ruby shell sql sqlite)))
-  :init
+  :preface
   (defun hk/maybe-org-redisplay-inline-images (&optional beg end)
     (if (org--inline-image-overlays beg end)
         (org-redisplay-inline-images)))
@@ -841,8 +839,7 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
   (org-format-latex-options (plist-put org-format-latex-options :scale 1.3)) ; Increase scale of latex fragments
   (org-preview-latex-image-directory "/tmp/ltximg/") ; Don't pollute working directory
 
-  :config
-  :init
+  :preface
   (defun hk/org-syntax-convert-keyword-case-to-lower ()
     "Convert all #+KEYWORDS to #+keywords."
     (interactive)
@@ -1019,6 +1016,7 @@ parent."
         org-habit-preceding-days 21))
 
 (use-package org-timeblock
+  :after org
   :bind
   ("C-c o t" . org-timeblock)
   :custom
@@ -1026,11 +1024,13 @@ parent."
   (org-timeblock-span 1 "show today"))
 
 (use-package org-noter
+  :after org
   :custom
   (org-noter-notes-search-path '("~/documents/org/"))
   (org-noter-default-notes-file-names '("notes.org")))
 
 (use-package org-nix-shell
+  :after org
   :hook (org-mode . org-nix-shell-mode))
 
 (use-package anki-editor
@@ -1059,7 +1059,7 @@ parent."
                  "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n"))
   ;; Initialize
   (anki-editor-reset-cloze-number)
-  :init
+  :preface
   (defun anki-editor-cloze-region-auto-incr (&optional arg)
     "Cloze region without hint and increase card number."
     (interactive)
@@ -1082,6 +1082,7 @@ parent."
     (anki-editor-reset-cloze-number)))
 
 (use-package org-download
+  :after org
   :custom
   (org-download-method 'attach)
   (org-download-screenshot-method "flameshot gui --raw > %s"))
@@ -1140,6 +1141,7 @@ Takes optional URL or gets it from the clipboard."
             link)))
 
 (use-package org-appear
+  :after org
   :custom
   (org-appear-autosubmarkers t)
   (org-appear-autoentities t)
@@ -1147,15 +1149,18 @@ Takes optional URL or gets it from the clipboard."
   (org-appear-autokeywords t))
 
 (use-package org-fragtog
+  :after org
   :hook (org-mode . org-fragtog-mode))
 
 (use-package org-modern
+  :after org
   :hook
   (org-mode . global-org-modern-mode)
   :custom
   (org-modern-table nil))
 
 (use-package laas
+  :after org
   :hook (LaTeX-mode . laas-mode)
   :hook (org-mode . laas-mode)
   :config
@@ -1326,7 +1331,7 @@ Takes optional URL or gets it from the clipboard."
   (add-to-list
    'eglot-server-programs '((nix-mode) "nil"))
 
-  :init
+  :preface
   (defun hk/eglot-capf ()
     "Use eglot completions alongside cape and tempel."
     (setq-local completion-at-point-functions
@@ -1356,7 +1361,7 @@ Takes optional URL or gets it from the clipboard."
   (citre-readtags-program (file-truename (executable-find "readtags")))
   :init
   (require 'citre-config)
-  :init
+  :preface
   (defun hk/citre-capf ()
     (setq citre-ctags-program    (file-truename (executable-find "ctags")))
     (setq citre-readtags-program (file-truename (executable-find "readtags")))
@@ -1387,7 +1392,7 @@ Takes optional URL or gets it from the clipboard."
   (setopt c-basic-offset 2)
   (add-hook 'c-mode-hook 'hk/c-mode-hook)
   (add-hook 'c-ts-mode-hook 'hk/c-mode-hook)
-  :init
+  :preface
   (defun hk/c-mode-hook ()
     (c-set-offset 'substatement 0)
     (c-set-offset 'substatement-open 0)
@@ -1450,15 +1455,16 @@ Takes optional URL or gets it from the clipboard."
 
 (use-package sqlite-mode
   :ensure nil
-  :config
+  :init
+  (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . hk/sqlite-view-file-magically))
+  :preface
   (defun hk/sqlite-view-file-magically ()
     "Runs `sqlite-mode-open-file' on the file name visited by the
 current buffer, killing it."
     (require 'sqlite-mode)
     (let ((file-name buffer-file-name))
       (kill-current-buffer)
-      (sqlite-mode-open-file file-name)))
-  (add-to-list 'magic-mode-alist '("SQLite format 3\x00" . hk/sqlite-view-file-magically)))
+      (sqlite-mode-open-file file-name))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1523,7 +1529,7 @@ current buffer, killing it."
   (setq browse-url-browser-function #'eww-browse-url)
   (setq browse-url-generic-program "firefox")
 
-  :init
+  :preface
   (defun hk/eww-toggle-images ()
     "Toggle whether images are loaded and reload the current page."
     (interactive)
@@ -1603,7 +1609,7 @@ current buffer, killing it."
         ([remap save-buffer] . elfeed-tube-save))
   :config
   (elfeed-tube-setup)
-  :init
+  :preface
   (defun hk/mpv-play-url-at-point ()
     "Open the URL at point in mpv."
     (interactive)
@@ -1632,8 +1638,7 @@ current buffer, killing it."
   (notmuch-show-logo nil)
 
   :config
-  (use-package meow
-    :config
+  (with-eval-after-load 'meow
     (dolist (state '((notmuch-hello-mode . motion)
                      (notmuch-search-mode . motion)
                      (notmuch-tree-mode . motion)
