@@ -481,14 +481,14 @@
             (beacon . "B")))
   (meow-global-mode 1))
 
+(use-package hydra)
 
 (use-package dumb-jump
   :bind
   (("C-c j" . hk/dumb-jump-hydra/body))
   :commands dumb-jumb-go
   :config
-  (use-package hydra
-    :config
+  (eval-after-load 'hydra
     (defhydra hk/dumb-jump-hydra (:color blue :columns 3)
       "Dumb Jump"
       ("j" dumb-jump-go "Go")
@@ -1070,10 +1070,8 @@ parent."
               ("C-c y" . org-web-tools-insert-link-for-url))
 
   :config
-  (use-package embark
-    :bind
-    (:map embark-url-map
-          ("O" . #'hk/org-web-tools-read-url-as-org)))
+  (with-eval-after-load 'embark
+    (bind-key "O" #'hk/org-web-tools-read-url-as-org embark-url-map))
 
   :preface
   (defun hk/org-web-tools-read-url-as-org (url)
@@ -1240,8 +1238,7 @@ Takes optional URL or gets it from the clipboard."
   (git-gutter:modified-sign " ")
   :config
   (global-git-gutter-mode +1)
-  (use-package hydra
-    :config
+  (with-eval-after-load 'hydra
     (defhydra hk/git-gutter-hydra ()
       "git-gutter hydra."
       ("n" git-gutter:next-hunk "Next")
