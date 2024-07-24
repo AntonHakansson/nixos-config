@@ -630,28 +630,6 @@
 #+date:       %2$s
 #+filetags:   %3$s
 #+identifier: %4$s\n\n")
-  (denote-templates `((diary .   "
-* Morning Checklist
-
-- [ ] Sunlight + Water
-- [ ] Motion
-  - [ ] Bicycle + [[file:~/videos][Video]] or
-  - [ ] Workout + [[file:~/documents/books/audio/][Audio]] or
-  - [ ] Alternative (shuffle snow etc.)
-- [ ] Cold Shower
-- [ ] Breakfast
-- [ ] Clean Desk
-- [ ] Process [[elisp:(mu4e)][Mail]]
-- [ ] Process [[file:~/documents/org/gtd/inbox.org][Inbox]]
-- [ ] Process yesterday
-- [ ] [[elisp:org-timeblock][Timeblock]]
-  - [ ] Allocate one [[file:~/documents/org/gtd/repeaters.org::*Free Recall][Free Recall]] practice
-
-* Preperation for tomorrow
-
-- [ ] Overnight oats
-- [ ] [[file:~/videos][Video]] entertainment for bicycle workout
-- [ ] [[file:~/documents/books/audio][Audio]] entertainment for chores")))
   :config
   ;; Accept any symbol in a .dir-locals.el file; makes it easier to use silos.
   ;; See "silos" in the manual: https://protesilaos.com/emacs/denote
