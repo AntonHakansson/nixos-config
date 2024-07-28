@@ -51,7 +51,6 @@
           (pkgs.writeShellScriptBin "emacsclient" ''${config.hakanssn.core.emacs.package}/bin/emacsclient "$@"'')
 
           ## Core dependencies
-          gcc_latest
           binutils # native-comp needs 'as', provided by this
           git
           (ripgrep.override { withPCRE2 = true; })
