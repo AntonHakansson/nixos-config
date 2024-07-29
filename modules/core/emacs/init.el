@@ -1474,7 +1474,9 @@ current buffer, killing it."
   (dired-mouse-drag-files t "enable drag-and-drop")
   (dired-listing-switches "-l --almost-all --human-readable --group-directories-first --no-group")
   (dired-create-destination-dirs 'ask)
-  (dired-create-destination-dirs-on-trailing-dirsep t))
+  (dired-create-destination-dirs-on-trailing-dirsep t)
+  (dired-kill-when-opening-new-dired-buffer t)
+  (dired-auto-revert-buffer t))
 
 (use-package gptel
   ;; AI assistant
