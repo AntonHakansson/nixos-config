@@ -1608,6 +1608,7 @@ current buffer, killing it."
   (message-send-mail-function 'message-send-mail-with-sendmail)
   (message-cite-reply-position 'below)
   (message-kill-buffer-on-exit t)
+  (notmuch-fcc-dirs nil)
 
   :custom
   (notmuch-show-logo nil)
