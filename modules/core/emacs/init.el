@@ -1624,6 +1624,11 @@ current buffer, killing it."
                      (notmuch-show-mode . motion)))
       (add-to-list 'meow-mode-state-list state))))
 
+(use-package ol-notmuch
+  :after (org notmuch))
+(use-package consult-notmuch
+  :requires notmuch)
+
 (use-package jinx
   ;; Enchaned Spell Checker
   :bind (("M-$" . jinx-correct)
