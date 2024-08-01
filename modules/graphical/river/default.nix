@@ -39,9 +39,6 @@
               riverctl map normal Super Return spawn kitty
               riverctl map normal Super D      spawn "\$(tofi-drun)"
 
-              riverctl map normal Super     C spawn "otd applypreset nav"
-              riverctl map normal Super+Alt C spawn "otd applypreset absolute"
-
               riverctl map normal Super Q close
               riverctl map normal Super Space zoom
               riverctl map normal Super F toggle-fullscreen
@@ -75,9 +72,9 @@
               do
                 tags=$((1 << ($i - 1)))
                 riverctl map normal Super         $i set-focused-tags    $tags
-                riverctl map normal Super+Shift   $i set-view-tags       $tags
-                riverctl map normal Super+Control $i toggle-focused-tags $tags
-                riverctl map normal Super+Shift+Control $i toggle-view-tags $tags
+                riverctl map normal Super+Shift   $i toggle-focused-tags $tags
+                riverctl map normal Super+Control $i set-view-tags       $tags
+                riverctl map normal Super+Control+Shift $i toggle-view-tags $tags
               done
 
               riverctl map normal Super Up    send-layout-cmd rivertile "main-location top"
@@ -85,9 +82,13 @@
               riverctl map normal Super Down  send-layout-cmd rivertile "main-location bottom"
               riverctl map normal Super Left  send-layout-cmd rivertile "main-location left"
 
-              riverctl map normal None XF86AudioRaiseVolume  spawn '${pkgs.pamixer}/bin/pamixer -i 5'
-              riverctl map normal None XF86AudioLowerVolume  spawn '${pkgs.pamixer}/bin/pamixer -d 5'
-              riverctl map normal None XF86AudioMute         spawn '${pkgs.pamixer}/bin/pamixer --toggle-mute'
+              riverctl map normal None XF86AudioRaiseVolume  spawn '${pkgs.pamixer}/bin/pamixer -i 5 &&
+                                                                      ${pkgs.pamixer}/bin/pamixer --get-volume > $XDG_RUNTIME_DIR/wob.sock'
+              riverctl map normal None XF86AudioLowerVolume  spawn '${pkgs.pamixer}/bin/pamixer -d 5 &&
+                                                                      ${pkgs.pamixer}/bin/pamixer --get-volume > $XDG_RUNTIME_DIR/wob.sock'
+              riverctl map normal None XF86AudioMute         spawn '${pkgs.pamixer}/bin/pamixer --toggle-mute &&
+                                                                      ( [ "$(${pkgs.pamixer}/bin/pamixer --get-mute)" = "true" ] && echo 0 > $XDG_RUNTIME_DIR/wob.sock ) ||
+                                                                      ${pkgs.pamixer}/bin/pamixer --get-volume > $XDG_RUNTIME_DIR/wob.sock'
               riverctl map normal None XF86MonBrightnessDown spawn '${pkgs.brightnessctl}/bin/brightnessctl s -- -5%'
               riverctl map normal None XF86MonBrightnessUp   spawn '${pkgs.brightnessctl}/bin/brightnessctl s -- +5%'
 
@@ -96,7 +97,11 @@
               pkill rivertile; rivertile -view-padding 0 -outer-padding 0 &
 
               pkill river-tag-overl; ${pkgs.river-tag-overlay}/bin/river-tag-overlay --timeout 300 &
-          '';
+          ''
+        + (lib.optionalString config.hardware.opentabletdriver.enable ''
+            riverctl map normal Super     C spawn "otd applypreset nav"
+            riverctl map normal Super+Alt C spawn "otd applypreset absolute"
+         '');
       };
     };
   };
