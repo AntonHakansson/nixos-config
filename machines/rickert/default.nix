@@ -28,6 +28,5 @@
   };
 
   # Disable auto-upgrade
-  hakanssn.graphical.theme.autoSwitchTheme = false;
   system.autoUpgrade.enable = false;
 }
