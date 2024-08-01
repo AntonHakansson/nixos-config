@@ -1218,8 +1218,7 @@ Takes optional URL or gets it from the clipboard."
 
 (use-package magit-todos
   ;; Show TODOs (and FIXMEs, etc) in Magit status buffer
-  :after magit
-  :hook (magit-mode . magit-todos-mode))
+  :after magit)
 
 (use-package forge
   ;; Forge allows you to work with Git forges, such as Github and Gitlab, from the comfort of Magit and the rest of Emacs.
