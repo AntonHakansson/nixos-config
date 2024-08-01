@@ -1230,11 +1230,6 @@ Takes optional URL or gets it from the clipboard."
   (("C-%"     . #'git-gutter:previous-hunk)
    ("C-^"     . #'git-gutter:next-hunk)
    ("C-c g"   . #'hk/git-gutter-hydra/body))
-  :custom
-  ;; Only show color to indicate hunks
-  (git-gutter:added-sign " ")
-  (git-gutter:deleted-sign " ")
-  (git-gutter:modified-sign " ")
   :config
   (global-git-gutter-mode +1)
   (with-eval-after-load 'hydra
