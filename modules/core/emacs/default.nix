@@ -64,8 +64,9 @@
           ## Module dependencies
           # :checkers spell
           aspell
+          aspellDicts.en
+          aspellDicts.en-computers
           proselint
-          nodePackages.textlint
           # :checkers grammar
           languagetool
           # :tools editorconfig
