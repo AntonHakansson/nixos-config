@@ -63,12 +63,11 @@
 
           ## Module dependencies
           # :checkers spell
-          aspell
-          aspellDicts.en
-          aspellDicts.en-computers
-          proselint
-          # :checkers grammar
-          languagetool
+          (hunspellWithDicts [ "en_US" ])
+          vale
+          valeStyles.google
+          valeStyles.write-good
+          valeStyles.proselint
           # :tools editorconfig
           editorconfig-core-c # per-project style config
           # :tools lookup & :lang org +roam
