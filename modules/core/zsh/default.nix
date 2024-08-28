@@ -54,15 +54,13 @@ let
         # nix
         nepl = "nix repl '<nixpkgs>'";
         ns = "nix search nixpkgs";
-        mn = ''
-          manix "" | grep '^# ' | sed 's/^# \(.*\) (.*/\1/;s/ (.*//;s/^# //' | sk --preview="manix '{}'" | xargs manix
-        '';
+        nsh = "nix-shell -p";
 
         # top
         top = "btm";
 
         # systemd
-        stl = " systemctl";
+        stl = "systemctl";
         jtl = "journalctl";
         utl = "systemctl --user";
       };
