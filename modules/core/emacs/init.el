@@ -1602,10 +1602,13 @@ current buffer, killing it."
   (sendmail-program "msmtp")
   (message-directory "~/mail/")
   (message-send-mail-function 'message-send-mail-with-sendmail)
+  (notmuch-fcc-dirs '(("anton@hakanssn.com" . "personal/Sent")
+                      ("anton.hakanssson98@gmail.com" . "gmail/[Gmail]/Sent Mail")))
+
+  :custom
   (message-cite-reply-position 'below)
   (message-kill-buffer-on-exit t)
   (notmuch-search-oldest-first nil "Show new mail first.")
-  (notmuch-fcc-dirs nil)
 
   :custom
   (notmuch-show-logo nil)
