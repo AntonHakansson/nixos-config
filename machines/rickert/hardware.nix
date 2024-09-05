@@ -78,4 +78,10 @@
     wayland.windowManager.sway.extraOptions = [ "--unsupported-gpu" ];
   };
   environment.variables = { WLR_NO_HARDWARE_CURSORS = "1"; };
+
+  hardware.nvidia.prime = {
+    sync.enable = true;
+    nvidiaBusId = "PCI:1:0:0";
+    intelBusId = "PCI:0:2:0";
+  };
 }
