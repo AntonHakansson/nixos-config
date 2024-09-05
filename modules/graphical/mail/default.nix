@@ -81,7 +81,12 @@ in
         mbsync.enable = true;
         msmtp.enable = true;
         mu.enable = true;
-        notmuch.enable = true;
+        notmuch.enable = {
+          enable = true;
+          hooks = {
+            preNew = "mbsync --all";
+          };
+        };
       };
       services = {
         imapnotify.enable = true;
