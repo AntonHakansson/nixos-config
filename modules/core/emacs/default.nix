@@ -63,7 +63,7 @@
 
           ## Module dependencies
           # :checkers spell
-          (hunspellWithDicts [ "en_US" ])
+          hunspellDicts.en_US
           vale
           valeStyles.google
           valeStyles.write-good
