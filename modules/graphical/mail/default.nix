@@ -81,7 +81,7 @@ in
         mbsync.enable = true;
         msmtp.enable = true;
         mu.enable = true;
-        notmuch.enable = {
+        notmuch = {
           enable = true;
           hooks = {
             preNew = "mbsync --all";
