@@ -1561,6 +1561,7 @@ current buffer, killing it."
       (when-let (((derived-mode-p 'elfeed-search-mode))
                  (entry (elfeed-search-selected :ignore-region))
                  (url (elfeed-entry-link entry)))
+        (elfeed-search-untag-all-unread)
         `(url ,url ,(line-beginning-position) . ,(line-end-position))))
     :config
     (add-to-list 'embark-target-finders #'embark-elfeed-target-url))
