@@ -1186,7 +1186,9 @@ Takes optional URL or gets it from the clipboard."
 
 (use-package string-edit-at-point
   ;; Edit strings normally and get it escaped automatically
-  )
+  :config
+  (with-eval-after-load 'meow
+    (meow-normal-define-key '("ki" . string-edit-at-point))))
 
 (use-package poporg
   ;; Edit code comments in org-mode.
