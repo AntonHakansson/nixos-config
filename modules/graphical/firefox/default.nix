@@ -1,18 +1,6 @@
 { config, lib, pkgs, ... }:
 
 let
-  ff2mpv-go = pkgs.buildGoModule {
-    pname = "ff2mpv-go";
-    version = "1.0.0";
-    src = fetchGit {
-      url = "https://git.clsr.net/util/ff2mpv-go/";
-      rev = "639496c5829220467dec8f2177ee8d31afa5502b";
-    };
-    vendorHash = null;
-    postPatch = ''
-      substituteInPlace ./ff2mpv.go --replace "\"mpv\"" "\"umpv\""
-    '';
-  };
   ffPackage = pkgs.firefox-beta-bin.override {
     extraPolicies = {
       DisableFirefoxStudies = true;
@@ -59,7 +47,6 @@ in
             extensions = with pkgs.nur.repos.rycee.firefox-addons; [
               browserpass
               darkreader
-              ff2mpv
               vimium
               swedish-dictionary
               tree-style-tab
@@ -104,17 +91,6 @@ in
             };
           };
         };
-      };
-      home.file.".mozilla/native-messaging-hosts/ff2mpv.json" = {
-        source = pkgs.writeText "ff2mpv.json" ''
-          {
-              "name": "ff2mpv",
-              "description": "ff2mpv's external manifest",
-              "path": "${ff2mpv-go}/bin/ff2mpv-go",
-              "type": "stdio",
-              "allowed_extensions": ["ff2mpv@yossarian.net"]
-          }
-        '';
       };
     };
   };
