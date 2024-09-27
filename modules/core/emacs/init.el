@@ -1518,14 +1518,14 @@ current buffer, killing it."
 
   (defun hk/map-url-to-bloatfree-alt (url)
     (cond
-     ((string-match "reddit\\.com" url)
-      (s-replace "www.reddit.com" "redlib.freedit.eu" url))
+     ((string-match "www\\.reddit\\.com" url)
+      (s-replace "www.reddit.com" "old.reddit.com" url))
      ((string-match "youtube\\.com" url)
       (s-replace "www.youtube.com" "invidious.io.lol" url))
      ((string-match "x\\.com" url)
-      (s-replace "x.com" "nitter.net" url))
+      (s-replace "x.com" "xcancel.com" url))
      ((string-match "twitter\\.com" url)
-      (s-replace "twitter.com" "nitter.net" url))))
+      (s-replace "twitter.com" "xcancel.com" url))))
 
   (defun hk/eww-redirect-to-bloatfree-alt ()
     (when-let* ((url (eww-current-url))
