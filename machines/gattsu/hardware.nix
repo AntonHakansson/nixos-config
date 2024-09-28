@@ -19,8 +19,6 @@
     ];
   };
 
-  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-
   fileSystems."/" = {
     device = "rpool/local/root";
     fsType = "zfs";
