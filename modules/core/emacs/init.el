@@ -229,6 +229,7 @@
 
 
 (use-package consult-web
+  :ensure nil ;; local install
   :after consult
 
   :bind (("C-c w" . consult-web-multi))
