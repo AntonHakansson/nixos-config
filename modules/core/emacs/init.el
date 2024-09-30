@@ -1690,6 +1690,9 @@ current buffer, killing it."
      (agenda-structure . (variable-pitch light 1.3))
      (t . (1.1))))
   :config
+  ;; Font - Iosevka
+  (push '(font . "Iosevka-18") default-frame-alist)
+
   ;; Theme - modus operandi
   (setopt modus-themes-mixed-fonts t)
   (setopt modus-themes-headings
