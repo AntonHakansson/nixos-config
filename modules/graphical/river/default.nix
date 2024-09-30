@@ -103,6 +103,19 @@
             riverctl map normal Super+Alt C spawn "otd applypreset absolute"
          '');
       };
+      # ref: https://codeberg.org/river/wiki#user-content-how-do-i-disable-gtk-decorations-e-g-title-bar
+      xdg.configFile."gtk-3.0/gtk.css".text = ''
+        /* No (default) title bar on wayland */
+        headerbar.default-decoration {
+          margin-bottom: 50px;
+          margin-top: -100px;
+        }
+        /* rm -rf window shadows */
+        window.csd,
+        window.csd decoration {
+          box-shadow: none;
+        }
+      '';
     };
   };
 }
