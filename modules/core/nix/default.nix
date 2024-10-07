@@ -32,6 +32,8 @@ let
   };
 in
 {
+  imports = [ ./realise-symlink.nix ];
+
   options.hakanssn.core.nix = {
     enableDirenv = lib.mkOption { default = true; };
     unfreePackages = lib.mkOption {
