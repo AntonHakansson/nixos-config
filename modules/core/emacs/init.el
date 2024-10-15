@@ -1004,7 +1004,7 @@ parent."
   :bind
   ("C-c o t" . org-timeblock)
   :custom
-  (org-timeblock-inbox-file (concat org-directory "gtd/" "inbox.org"))
+  (org-timeblock-inbox-file (expand-file-name "inbox.org" (concat org-directory "gtd/")))
   (org-timeblock-span 1 "show today"))
 
 (use-package org-noter
