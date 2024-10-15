@@ -1680,7 +1680,7 @@ current buffer, killing it."
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 (use-package ef-themes
-  ;; :hook (after-init . (lambda () (load-theme 'ef-melissa-light)))
+  :hook (after-init . (lambda () (interactive) (load-theme 'ef-light t)))
   :custom
   (ef-themes-mixed-fonts t)
   (ef-themes-headings
@@ -1689,21 +1689,10 @@ current buffer, killing it."
      (agenda-date . (1.1))
      (agenda-structure . (variable-pitch light 1.3))
      (t . (1.1))))
-  :config
-  ;; Font - Iosevka
-  (push '(font . "Iosevka-18") default-frame-alist)
 
-  ;; Theme - modus operandi
-  (setopt modus-themes-mixed-fonts t)
-  (setopt modus-themes-headings
-          '((1 . (variable-pitch 1.3))
-            (2 . (1.1))
-            (agenda-date . (1.1))
-            (agenda-structure . (variable-pitch light 1.3))
-            (t . (1.1))))
-  (setopt modus-operandi-tinted-palette-overrides
-          '((bg-main "#f4e6cd"))) ; Sepia backround color. Original too harsh for my poor eyes.
-  (load-theme 'ef-melissa-light t))
+  ;; Font - Iosevka
+  :config
+  (push '(font . "Iosevka-16") default-frame-alist))
 
 (use-package olivetti
   ;; Center text for nicer writing and reading
