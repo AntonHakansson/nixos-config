@@ -22,11 +22,11 @@
         pkgs.wl-clipboard
       ];
       programs = {
-        tofi.enable = true;
+        tofi.enable = true; # dmenu
       };
       services = {
-        mako.enable = true;
-        wob.enable = true;
+        mako.enable = true; # notifications
+        wob.enable = true;  # overlay bar for volume
       };
       wayland.windowManager.river = {
         enable = true;
