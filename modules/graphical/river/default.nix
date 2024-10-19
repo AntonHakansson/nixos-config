@@ -27,6 +27,7 @@
       services = {
         mako.enable = true; # notifications
         wob.enable = true;  # overlay bar for volume
+        cliphist.enable = true;  # clipboard history
       };
       wayland.windowManager.river = {
         enable = true;
@@ -98,6 +99,10 @@
 
               pkill river-tag-overl; ${pkgs.river-tag-overlay}/bin/river-tag-overlay --timeout 300 &
           ''
+        + (lib.optionalString config.home-manager.users.hakanssn.services.cliphist.enable ''
+            riverctl map normal Super O spawn "cliphist list | tofi | cliphist decode | wl-copy"
+            pkill wl-paste; wl-paste --watch cliphist store &
+        '')
         + (lib.optionalString config.hardware.opentabletdriver.enable ''
             riverctl map normal Super     C spawn "otd applypreset nav"
             riverctl map normal Super+Alt C spawn "otd applypreset absolute"
