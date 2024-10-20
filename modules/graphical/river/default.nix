@@ -94,6 +94,9 @@
               riverctl map normal None XF86MonBrightnessUp   spawn '${pkgs.brightnessctl}/bin/brightnessctl s -- +5%'
 
               riverctl border-width 8
+              riverctl hide-cursor when-typing enabled
+              riverctl rule-add -app-id '*' ssd
+
               riverctl default-layout rivertile
               pkill rivertile; rivertile -view-padding 0 -outer-padding 0 &
 
