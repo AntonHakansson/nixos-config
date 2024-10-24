@@ -5,11 +5,11 @@
     networking.wireless = {
       enable = !config.networking.networkmanager.enable;
       userControlled.enable = true;
-      environmentFile = config.age.secrets."passwords/networks.age".path;
+      secretsFile = config.age.secrets."passwords/networks.age".path;
       networks = {
-        "batman" = { psk = "@PSK_batman@"; };
-        "#Telia-523728" = { psk = "@PSK_parents@"; };
-        "#Telia-523728-2.4Ghz" = { psk = "@PSK_parents@"; };
+        "batman" = { pskRaw = "ext:PSK_batman"; };
+        "#Telia-523728" = { pskRaw = "ext:PSK_parents"; };
+        "#Telia-523728-2.4Ghz" = { pskRaw = "ext:PSK_parents"; };
       };
     };
     age.secrets."passwords/networks.age" = {
