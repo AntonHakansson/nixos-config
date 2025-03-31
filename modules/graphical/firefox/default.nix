@@ -44,7 +44,7 @@ in
           package = ffPackage;
           profiles.hakanssn = {
             isDefault = true;
-            extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+            extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
               browserpass
               darkreader
               vimium

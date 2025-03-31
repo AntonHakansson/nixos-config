@@ -9,7 +9,7 @@
     hakanssn.core.zfs.homeCacheLinks = [ ".local/share/sioyek" ".config/inkscape" ".config/xournalpp" ];
 
     home-manager.users.hakanssn = { ... }: {
-      home.packages = with pkgs; [ okular inkscape xournalpp ];
+      home.packages = with pkgs; [ inkscape xournalpp kdePackages.okular ];
       programs.sioyek = {
         enable = true;
       };

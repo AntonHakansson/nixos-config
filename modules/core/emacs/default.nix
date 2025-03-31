@@ -17,7 +17,7 @@
       readOnly = true;
       default = pkgs.emacsWithPackagesFromUsePackage {
         config = config.hakanssn.core.emacs.fullConfig;
-        package = pkgs.emacs-pgtk.overrideAttrs (old: {
+        package = pkgs.emacs-git-pgtk.overrideAttrs (old: {
           passthru = old.passthru // {
             treeSitter = true;
           };
@@ -203,7 +203,6 @@
       emacs-all-the-icons-fonts
       iosevka-bin
       (iosevka-bin.override { variant = "Aile"; })
-      nerdfonts
       hakanssn.iosvmata
     ];
   };

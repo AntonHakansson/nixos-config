@@ -5,7 +5,10 @@
     # Core
     nixpkgs.url        = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
-    nur.url = "github:nix-community/NUR";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs = {
@@ -74,7 +77,7 @@
               overlays = [
                 (import ./overlays { inherit inputs; }).additions
                 (import ./overlays { inherit inputs; }).modifications
-                nur.overlay
+                nur.overlays.default
                 emacs-overlay.overlay
               ];
             };
@@ -83,7 +86,7 @@
           impermanence.nixosModule
           nixos-mailserver.nixosModule
 
-          home-manager.nixosModule
+          home-manager.nixosModules.home-manager
           { home-manager.sharedModules = [ hyprland.homeManagerModules.default  plasma-manager.homeManagerModules.plasma-manager ]; }
 
           ./modules
@@ -100,7 +103,7 @@
             default = pkgs.mkShell {
               # Enable experimental features without having to specify the argument
               NIX_CONFIG = "experimental-features = nix-command flakes";
-              nativeBuildInputs = [ pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default ];
+              nativeBuildInputs = [ pkgs.nix pkgs.home-manager pkgs.git agenix.packages.x86_64-linux.default ]; 
             };
           });
       formatter = forAllSystems (system:
