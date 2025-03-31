@@ -80,28 +80,6 @@
   ;; ibuffer
   (keymap-set global-map "<remap> <list-buffers>" 'ibuffer) ;; C-x C-b
   (setopt ibuffer-expert t)             ; Stop yes no prompt on delete
-  (setopt ibuffer-saved-filter-groups
-	        '(("default"
-		         ("dired" (mode . dired-mode))
-		         ("org"   (and
-                       (mode . org-mode)
-                       ;; exclude GTD and scratch buffer
-                       (not (or (filename . "^.+/gtd/.+")
-                                (name . "^\\*scratch\\*$")))))
-		         ("magit" (name . "^magit"))
-		         ("planner" (or
-				                 (name . "^\\*Calendar\\*$")
-				                 (name . "^\\*Org Agenda\\*")
-                         (filename . "^.+gtd.+")))
-             ("config" (filename . "/nixos-config/"))
-		         ("emacs" (or
-			                 (name . "^\\*scratch\\*$")
-			                 (name . "^\\*Messages\\*$"))))))
-
-  (add-hook 'ibuffer-mode-hook
-	          (lambda ()
-	            (ibuffer-switch-to-saved-filter-groups "default")))
-
 
   ;; C-w terminal behavior
   (defun backward-kill-word-or-region (&optional arg)
@@ -227,36 +205,6 @@
   (require 'consult-compile)
   (require 'consult-kmacro))
 
-
-(use-package consult-web
-  :ensure nil ;; local install
-  :after consult
-
-  :bind (("C-c w" . consult-web-multi))
-
-  :preface
-  (add-to-list 'load-path "~/repos/misc/consult-web/")
-  (add-to-list 'load-path "~/repos/misc/consult-web/sources/")
-
-  :init
-  (require 'consult-web-brave-autosuggest)
-  (require 'consult-web-brave)
-  (require 'consult-web-gptel)
-  (require 'consult-web-elfeed)
-
-  :custom
-  ;; General settings that apply to all sources
-  (consult-web-show-preview t) ;;; show previews
-  (consult-web-preview-key "C-o") ;;; set the preview key to C-o
-  (consult-web-highlight-matches t) ;;; highlight matches in minibuffer
-  (consult-web-default-autosuggest-command #'consult-web-dynamic-brave-autosuggest)
-
-  (consult-web-multi-sources '("Brave" "gptel"))
-  (consult-web-omni-sources (list "Brave" "elfeed" "gptel" 'consult-buffer-sources))
-
-  (consult-web-brave-api-key #'(lambda () (shell-command-to-string "pass show tools/brave-search-apikey")))
-  (consult-web-brave-autosuggest-api-key #'(lambda () (shell-command-to-string "pass show tools/brave-autosuggest-apikey"))))
-
 (use-package embark
   :bind
   ("C-." . embark-act)
@@ -348,138 +296,261 @@
   (meow-use-clipboard 't)
   (meow-goto-line-function #'consult-goto-line)
 
+  :preface
+  (defcustom hk/meow-layout 'colemak-dh
+    "What keyboard layout to load for meow."
+    :options '(qwerty colemak-dh))
+
+  (defun hk/meow-smart-reverse ()
+    "Reverse selection or begin negative argument."
+    (interactive)
+    (if (use-region-p)
+        (meow-reverse)
+      (negative-argument nil)))
+
+  (defun hk/meow-word ()
+    "Expand word/symbol under cursor."
+    (interactive)
+    (if (and (use-region-p)
+             (equal (car (region-bounds))
+                    (bounds-of-thing-at-point 'word)))
+        (meow-mark-symbol 1)
+      (progn
+        (when (and (mark)
+                   (equal (car (region-bounds))
+                          (bounds-of-thing-at-point 'symbol)))
+          (meow-pop-selection))
+        (meow-mark-word 1))))
+
+  (defun hk/meow-setup-qwerty ()
+    (setq meow-char-thing-table
+          '((?f . round)
+            (?d . square)
+            (?s . curly)
+            (?a . angle)
+            (?r . string)
+            (?v . paragraph)
+            (?c . line)
+            (?x . buffer)))
+
+    (meow-normal-define-key
+     ;; movement
+     '("i" . meow-prev)
+     '("k" . meow-next)
+     '("j" . meow-left)
+     '("l" . meow-right)
+
+     '("z" . meow-search)
+     '("-" . meow-visit)
+
+     ;; expansion
+     '("I" . meow-prev-expand)
+     '("K" . meow-next-expand)
+     '("J" . meow-left-expand)
+     '("L" . meow-right-expand)
+
+     '("u" . meow-back-word)
+     '("U" . meow-back-symbol)
+     '("o" . meow-next-word)
+     '("O" . meow-next-symbol)
+
+     '("a" . meow-mark-word)
+     '("A" . meow-mark-symbol)
+     '("s" . meow-line)
+     '("S" . meow-replace)
+     '("w" . meow-block)
+     '("q" . meow-join)
+     '("g" . meow-grab)
+     '("G" . meow-pop-grab)
+     '("m" . meow-swap-grab)
+     '("M" . meow-sync-grab)
+     '("p" . meow-cancel-selection)
+     '("P" . meow-pop-selection)
+
+     '("x" . meow-till)
+     '("y" . meow-find)
+
+     '("," . meow-beginning-of-thing)
+     '("." . meow-end-of-thing)
+     '(";" . meow-inner-of-thing)
+     '(":" . meow-bounds-of-thing)
+
+     ;; editing
+     '("d" . meow-kill)
+     '("f" . meow-change)
+     '("t" . meow-delete)
+     '("c" . meow-save)
+     '("v" . meow-yank)
+     '("V" . meow-yank-pop)
+
+     '("e" . meow-insert)
+     '("E" . meow-open-above)
+     '("r" . meow-append)
+     '("R" . meow-open-below)
+
+     '("h" . undo-only)
+     '("H" . undo-redo)
+
+     '("b" . open-line)
+     '("B" . split-line)
+
+     '("ü" . indent-rigidly-left-to-tab-stop)
+     '("+" . indent-rigidly-right-to-tab-stop))
+
+    (keymap-unset meow-normal-state-keymap "n")
+    (keymap-unset meow-normal-state-keymap ";")
+    (meow-normal-define-key
+     '("nk" . downcase-dwim)
+     '("nq" . align-regexp)
+     '("nw" . delete-trailing-whitespace)
+     '("nf" . fill-paragraph)
+     '("nt" . meow-comment)
+
+     ;; general
+     '(";q" . jinx-mode)
+     '(";w" . jinx-correct)
+     '(";t" . eglot-rename)
+     '(";g" . magit-diff-buffer-file)
+     '(";s" . save-buffer)
+     '(";y" . overwrite-mode)
+     '(";u" . whitespace-mode)
+     '(";b" . eglot-format))
+    )
+
+  (defun hk/meow-setup-colemak-dh ()
+    (setq meow-char-thing-table
+          '((?t . round)
+            (?s . square)
+            (?r . curly)
+            (?a . angle)
+            (?p . string)
+            (?d . paragraph)
+            (?c . line)
+            (?x . buffer)))
+
+    (keymap-unset meow-normal-state-keymap "k")
+    (keymap-unset meow-normal-state-keymap "o")
+    (meow-normal-define-key
+     ;; movement
+     '("u" . meow-prev)
+     '("e" . meow-next)
+     '("n" . meow-left)
+     '("i" . meow-right)
+
+     '("j" . meow-search)
+     ;; '("-" . meow-visit)
+     '("T" . avy-goto-word-1)
+
+     ;; expansion
+     '("U" . meow-prev-expand)
+     '("E" . meow-next-expand)
+     '("N" . meow-left-expand)
+     '("I" . meow-right-expand)
+
+     '("l" . meow-back-word)
+     '("L" . meow-back-symbol)
+     '("y" . meow-next-word)
+     '("Y" . meow-next-symbol)
+
+     '("a" . hk/meow-word)
+     '("A" . meow-mark-symbol) ; REVIEW: We can achieve the same with 'aa'
+     '("r" . meow-line)
+     '("R" . meow-replace)
+     '("w" . meow-block)
+     '("W" . meow-to-block)
+     '("q" . meow-join)
+     '("g" . meow-grab)
+     '("G" . meow-pop-grab)
+     '("h" . meow-swap-grab)
+     '("H" . meow-sync-grab)
+     '(";" . meow-cancel-selection)
+     '(":" . meow-pop-selection)
+
+     '("x" . meow-till)
+     '("z" . meow-find)
+
+     '("," . meow-beginning-of-thing)
+     '("." . meow-end-of-thing)
+     '("<" . meow-inner-of-thing)
+     '(">" . meow-bounds-of-thing)
+
+     ;; editing
+     '("s" . meow-kill)
+     '("t" . meow-change)
+     '("b" . meow-delete)
+     '("c" . meow-save)
+     '("d" . meow-yank)
+     '("D" . meow-yank-pop)
+
+     '("f" . meow-insert)
+     '("F" . meow-open-above)
+     '("p" . meow-append)
+     '("P" . meow-open-below)
+
+     '("m" . undo-only)
+     '("M" . undo-redo)
+
+     '("kk" . downcase-dwim)
+     '("kq" . align-regexp)
+     '("kw" . delete-trailing-whitespace)
+     '("kf" . fill-paragraph)
+     ;; '("kp" . sp-split-sexp)
+     '("kt" . meow-comment)
+
+     ;; general
+     '("oq" . jinx-mode)
+     '("ow" . jinx-correct)
+     '("ot" . eglot-rename)
+     '("og" . magit-diff-buffer-file)
+     '("os" . save-buffer)
+     '("oy" . overwrite-mode)
+     '("ou" . whitespace-mode)
+     '("ob" . eglot-format)))
+
+  (defun hk/meow-setup ()
+    (interactive)
+    (meow-thing-register 'angle
+                         '(pair ("<") (">"))
+                         '(pair ("<") (">")))
+
+    (meow-normal-define-key
+     ;; expansion
+     '("0" . meow-expand-0)
+     '("1" . meow-expand-1)
+     '("2" . meow-expand-2)
+     '("3" . meow-expand-3)
+     '("4" . meow-expand-4)
+     '("5" . meow-expand-5)
+     '("6" . meow-expand-6)
+     '("7" . meow-expand-7)
+     '("8" . meow-expand-8)
+     '("9" . meow-expand-9)
+     ;; begin/end of thing
+     '("'" . hk/meow-smart-reverse)
+     '("," . meow-beginning-of-thing)
+     '("." . meow-end-of-thing)
+     '("<" . meow-inner-of-thing)
+     '(">" . meow-bounds-of-thing)
+
+     '("/" . meow-search)
+
+     ;; ignore escape
+     '("<escape>" . ignore))
+
+    (pcase hk/meow-layout
+      ('qwerty (hk/meow-setup-qwerty))
+      ('colemak-dh (hk/meow-setup-colemak-dh))))
+
+  (defun hk/meow-toggle-layout ()
+    (interactive)
+    (setopt hk/meow-layout
+            (pcase hk/meow-layout
+              ('qwerty     'colemak-dh)
+              ('colemak-dh 'qwerty)))
+    (hk/meow-setup))
+
   :config
-  (meow-motion-overwrite-define-key
-   ;; Use e to move up, n to move down.
-   ;; Since special modes usually use n to move down, we only overwrite e here (Colemak-Dh).
-   '("e" . meow-prev)
-   '("<escape>" . ignore))
-
-  ;; Expansion
-  (meow-normal-define-key
-   '("0" . meow-expand-0)
-   '("1" . meow-expand-1)
-   '("2" . meow-expand-2)
-   '("3" . meow-expand-3)
-   '("4" . meow-expand-4)
-   '("5" . meow-expand-5)
-   '("6" . meow-expand-6)
-   '("7" . meow-expand-7)
-   '("8" . meow-expand-8)
-   '("9" . meow-expand-9))
-
-  ;; Movement
-  (meow-normal-define-key
-   '("n" . meow-next)
-   '("N" . meow-next-expand)
-   '("e" . meow-prev)
-   '("E" . meow-prev-expand)
-   '("m" . meow-left)
-   '("M" . meow-left-expand)
-   '("i" . meow-right)
-   '("I" . meow-right-expand)
-   '("w" . meow-next-word)
-   '("W" . meow-next-symbol)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("[" . meow-beginning-of-thing)
-   '("]" . meow-end-of-thing)
-   '("/" . meow-visit)
-   '("v" . meow-search)
-   '("f" . meow-find)
-   '("F" . meow-find-expand)
-   '("t" . meow-till)
-   '("T" . meow-till-expand)
-   '("L" . meow-goto-line)
-   )
-
-  ;; Operations
-  (meow-normal-define-key
-   '("-" . negative-argument)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
-   '("c" . meow-change)
-   '("d" . meow-delete)
-   '("g" . meow-cancel-selection)
-   '("G" . meow-grab)
-   '("j" . meow-join)
-   '("k" . meow-kill)
-   '("l" . meow-line)
-   '("h" . meow-mark-word)
-   '("H" . meow-mark-symbol)
-   '("o" . meow-block)
-   '("O" . meow-to-block)
-   '("p" . meow-yank)
-   '("q" . meow-quit)
-   '("r" . meow-replace)
-   '("R" . meow-swap-grab)
-   '("s" . meow-insert)
-   '("S" . meow-open-above)
-   '("u" . meow-undo)
-   '("U" . meow-undo-in-selection)
-   '("x" . meow-delete)
-   '("X" . meow-backward-delete)
-   '("y" . meow-save)
-   '("z" . meow-pop-selection)
-   '("<escape>" . ignore))
-
-  ;; Commands
-  (meow-normal-define-key
-   '("!" . shell-command)
-   '("%" . meow-query-replace)
-   '("$" . jinx-correct)
-   '("M-$" . jinx-next)
-   '("'" . repeat))
-
-  ;; Leader Commands
-  (meow-leader-define-key
-   ;; m -> M-
-   ;; g -> C-M-
-   ;; x / h / c -> C-x / C-h / C-c
-
-   ;; Emacs general
-   '("SPC" . execute-extended-command)
-   '("t t" . visual-line-mode)
-   '("t l" . global-display-line-numbers-mode)
-   '("t k" . kill-this-buffer)
-   '("s" . "M-s")
-
-   ;; Files & buffer
-   '("d" . dired)
-   '("f" . find-file)
-   '("r" . consult-recent-file)
-   '("b" . consult-buffer)
-   '("B" . consult-bookmark)
-   '("p" . "C-x p")
-
-   ;; meow
-   '("?" . meow-cheatsheet)
-   '("e" . "H-e")                      ; To execute original e in MOTION state, use SPC e.
-   '("'" . (lambda () (interactive) (if (meow-normal-mode-p) (meow-motion-mode +1) (meow-normal-mode +1))))
-   '("1" . meow-digit-argument)
-   '("2" . meow-digit-argument)
-   '("3" . meow-digit-argument)
-   '("4" . meow-digit-argument)
-   '("5" . meow-digit-argument)
-   '("6" . meow-digit-argument)
-   '("7" . meow-digit-argument)
-   '("8" . meow-digit-argument)
-   '("9" . meow-digit-argument)
-   '("0" . meow-digit-argument))
-
-  ;; Register HTML tag as a meow object/thing
-  (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
-  (add-to-list 'meow-char-thing-table '(?a . angle))
-
-  (setq meow-replace-state-name-list
-          '((normal . "N")
-            (motion . "M")
-            (keypad . "K")
-            (insert . "I")
-            (beacon . "B")))
+  (hk/meow-setup)
   (meow-global-mode 1))
 
 (use-package hydra)
@@ -764,26 +835,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
           (todo . " %i ")
           (tags . " %i ")
           (search . " %i %-12:c")))
-  :config
-  ;; https://github.com/Templarian/MaterialDesign/
-  ;; webui: https://pictogrammers.com/library/mdi/category/files-folders/
-  (let ((hk/icons-dir "~/documents/org/theme/icons/"))
-    (setq org-agenda-category-icon-alist
-          `(("inbox"     ,(concat hk/icons-dir "inbox-arrow-down.svg") nil nil :ascent center :scale 0.8)
-            ("project"   ,(concat hk/icons-dir "folder-pound.svg") nil nil :ascent center :scale 0.8)
-            ("someday"   ,(concat hk/icons-dir "material_lightbulb-on-90.svg") nil nil :ascent center :scale 0.8)
-            ("repeaters" ,(concat hk/icons-dir "material_restart.svg") nil nil :ascent center :scale 0.8)
-            ("home"      ,(concat hk/icons-dir "material_home.svg") nil nil :ascent center :scale 0.8)
-            ("comp"      ,(concat hk/icons-dir "material_laptop.svg") nil nil :ascent center :scale 0.8)
-            ("read"      ,(concat hk/icons-dir "material_book.svg") nil nil :ascent center :scale 0.8)
-            ("uni"       ,(concat hk/icons-dir "material_school.svg") nil nil :ascent center :scale 0.8)
-            ("birthday"  ,(concat hk/icons-dir "material_cake.svg") nil nil :ascent center :scale 0.8)
-            (".*_diary"  ,(concat hk/icons-dir "material_weather-sunset.svg") nil nil :ascent center :scale 0.8)
-            ("one-off"   ,(concat hk/icons-dir "checkbox-blank-outline.svg") nil nil :ascent center :scale 0.8)
-            ("code"      ,(concat hk/icons-dir "xml.svg") nil nil :ascent center :scale 0.8)
-            ("nixos"     ,(concat hk/icons-dir "nix.svg") nil nil :ascent center :scale 0.8)
-            ("emacs"     ,(concat hk/icons-dir "emacs-icon.svg") nil nil :ascent center :scale 0.4)
-            )))
 
   :hook (org-babel-after-execute . hk/maybe-org-redisplay-inline-images)
   :custom
@@ -925,14 +976,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
         org-habit-following-days 7
         org-habit-preceding-days 21))
 
-(use-package org-timeblock
-  :after org
-  :bind
-  ("C-c o t" . org-timeblock)
-  :custom
-  (org-timeblock-inbox-file (expand-file-name "inbox.org" (concat org-directory "gtd/")))
-  (org-timeblock-span 1 "show today"))
-
 (use-package org-noter
   :after org
   :custom
@@ -942,54 +985,6 @@ PRIORITY may be one of the characters ?A, ?B, or ?C."
 (use-package org-nix-shell
   :after org
   :hook (org-mode . org-nix-shell-mode))
-
-(use-package anki-editor
-  :after org-capture
-  :bind (:map org-mode-map
-              ("<f12>" . anki-editor-cloze-region-dont-incr)
-              ("<f11>" . anki-editor-cloze-region-auto-incr)
-              ("<f10>" . anki-editor-reset-cloze-number)
-              ("<f9>"  . anki-editor-push-tree))
-  :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
-  :config
-  (setq anki-editor-create-decks t
-        anki-editor-org-tags-as-anki-tags t)
-
-  ;; Org-capture templates
-  (setq hk/org-anki-file "~/documents/org/anki.org")
-  (add-to-list 'org-capture-templates
-               '("a" "Anki basic"
-                 entry
-                 (file+headline hk/org-anki-file "Scratch")
-                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Basic\n:ANKI_DECK: Mega\n:END:\n** Front\n%?\n** Back\n%x\n"))
-  (add-to-list 'org-capture-templates
-               '("A" "Anki cloze"
-                 entry
-                 (file+headline hk/org-anki-file "Scratch")
-                 "* %<%H:%M>   %^g\n:PROPERTIES:\n:ANKI_NOTE_TYPE: Cloze\n:ANKI_DECK: Mega\n:END:\n** Text\n%x\n** Extra\n"))
-  ;; Initialize
-  (anki-editor-reset-cloze-number)
-  :preface
-  (defun anki-editor-cloze-region-auto-incr (&optional arg)
-    "Cloze region without hint and increase card number."
-    (interactive)
-    (anki-editor-cloze-region my-anki-editor-cloze-number "")
-    (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
-    (forward-sexp))
-  (defun anki-editor-cloze-region-dont-incr (&optional arg)
-    "Cloze region without hint using the previous card number."
-    (interactive)
-    (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
-    (forward-sexp))
-  (defun anki-editor-reset-cloze-number (&optional arg)
-    "Reset cloze number to ARG or 1"
-    (interactive)
-    (setq my-anki-editor-cloze-number (or arg 1)))
-  (defun anki-editor-push-tree ()
-    "Push all notes under a tree."
-    (interactive)
-    (anki-editor-push-notes '(4))
-    (anki-editor-reset-cloze-number)))
 
 (use-package org-download
   :after org
@@ -1149,10 +1144,6 @@ Takes optional URL or gets it from the clipboard."
   (magit-repository-directories '(("~/repos" . 2)))
   :bind
   (("C-c o m" . 'magit)))
-
-(use-package magit-todos
-  ;; Show TODOs (and FIXMEs, etc) in Magit status buffer
-  :after magit)
 
 (use-package forge
   ;; Forge allows you to work with Git forges, such as Github and Gitlab, from the comfort of Magit and the rest of Emacs.
@@ -1383,13 +1374,7 @@ current buffer, killing it."
   (use-package meow
     :config
     (dolist (state '((eat-mode . insert)))
-      (add-to-list 'meow-mode-state-list state)))
-
-  :preface
-  (defun hk/run-tgpt ()
-    "Open shell and run the program 'tgpt' in interactive mode."
-    (interactive)
-    (switch-to-buffer (eat-make "tgpt" "tgpt" nil "-i"))))
+      (add-to-list 'meow-mode-state-list state))))
 
 (use-package dired
   :ensure nil
@@ -1409,13 +1394,18 @@ current buffer, killing it."
 (use-package gptel
   ;; AI assistant
   :preface
-  (setq hk/gptel-backend (gptel-make-openai "llama-cpp"
-                           :stream t
-                           :protocol "http"
-                           :host "localhost:8080"))
-
+  (defun hk/gptel-setup ()
+    (interactive)
+    (setq
+     github-access-token (shell-command-to-string "pass show dev/github-ai-access-token")
+     gptel-model   'gpt-4o
+     gptel-backend (gptel-make-openai "Github Models"
+                     :host "models.inference.ai.azure.com"
+                     :endpoint "/chat/completions"
+                     :stream t
+                     :key github-access-token
+                     :models '("gpt-4o" "gpt-4o-mini"))))
   :custom
-  (gptel-backend hk/gptel-backend)
   (gptel-default-mode 'org-mode))
 
 (use-package eww
@@ -1566,23 +1556,11 @@ current buffer, killing it."
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
 
-(use-package erc
-  ;; IRC client
-  :hook (erc-mode . erc-log-mode)
-  :custom
-  (erc-hide-list '("JOIN" "PART" "QUIT")))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;;  Appearance
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package pixel-scroll
-  :ensure nil
-  :hook (emacs-startup . pixel-scroll-precision-mode)
-  :custom
-  (pixel-scroll-precision-interpolate-page t))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -1618,15 +1596,7 @@ current buffer, killing it."
 
   ;; Font - Iosevka
   :config
-  (push '(font . "Iosevka-16") default-frame-alist))
-
-(use-package olivetti
-  ;; Center text for nicer writing and reading
-  :defer 3
-  :bind (("C-c t z" . olivetti-mode))
-  :custom
-  (olivetti-body-width 120)
-  (fill-column 90))
+  (modify-all-frames-parameters '((font . "Iosevka-12"))))
 
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
@@ -1642,86 +1612,6 @@ current buffer, killing it."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
-;;;  Transient helpers
-;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package transient
-  :ensure nil
-  :bind
-  (:map isearch-mode-map
-        ("C-t" . hk/isearch-menu))
-  :init
-  (transient-define-prefix hk/isearch-menu ()
-    "isearch Menu"
-    [["Edit Search String"
-      ("e"
-       "Edit the search string (recursive)"
-       isearch-edit-string
-       :transient nil)
-      ("w"
-       "Pull next word or character word from buffer"
-       isearch-yank-word-or-char
-       :transient nil)
-      ("s"
-       "Pull next symbol or character from buffer"
-       isearch-yank-symbol-or-char
-       :transient nil)
-      ("l"
-       "Pull rest of line from buffer"
-       isearch-yank-line
-       :transient nil)
-      ("y"
-       "Pull string from kill ring"
-       isearch-yank-kill
-       :transient nil)
-      ("t"
-       "Pull thing from buffer"
-       isearch-forward-thing-at-point
-       :transient nil)]
-
-     ["Replace"
-      ("q"
-       "Start ‘query-replace’"
-       isearch-query-replace
-       :if-nil buffer-read-only
-       :transient nil)
-      ("x"
-       "Start ‘query-replace-regexp’"
-       isearch-query-replace-regexp
-       :if-nil buffer-read-only
-       :transient nil)]]
-
-    [["Toggle"
-      ("X"
-       "Toggle regexp searching"
-       isearch-toggle-regexp
-       :transient nil)
-      ("S"
-       "Toggle symbol searching"
-       isearch-toggle-symbol
-       :transient nil)
-      ("W"
-       "Toggle word searching"
-       isearch-toggle-word
-       :transient nil)
-      ("F"
-       "Toggle case fold"
-       isearch-toggle-case-fold
-       :transient nil)
-      ("L"
-       "Toggle lax whitespace"
-       isearch-toggle-lax-whitespace
-       :transient nil)]
-
-     ["Misc"
-      ("o"
-       "occur"
-       isearch-occur
-       :transient nil)]]))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
 ;;;  Scratch Area
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1732,143 +1622,6 @@ current buffer, killing it."
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (package-initialize)
   (setq use-package-always-ensure t))
-
-;;;
-;;; Meow remap to position-based keybindings instead of mnemonic keybindings
-;;;
-(defun meow-smart-reverse ()
-  "Reverse selection or begin negative argument."
-  (interactive)
-  (if (use-region-p)
-      (meow-reverse)
-    (negative-argument nil)))
-
-(defun meow-word ()
-  "Expand word/symbol under cursor."
-  (interactive)
-  (if (and (use-region-p)
-           (equal (car (region-bounds))
-                  (bounds-of-thing-at-point 'word)))
-      (meow-mark-symbol 1)
-    (progn
-      (when (and (mark)
-                 (equal (car (region-bounds))
-                        (bounds-of-thing-at-point 'symbol)))
-        (meow-pop-selection))
-      (meow-mark-word 1))))
-
-(defun meow-setup ()
-  (meow-thing-register 'angle
-                       '(pair ("<") (">"))
-                       '(pair ("<") (">")))
-
-  (setq meow-char-thing-table
-        '((?t . round)
-          (?s . square)
-          (?r . curly)
-          (?a . angle)
-          (?p . string)
-          (?d . paragraph)
-          (?c . line)
-          (?x . buffer)))
-
-  (keymap-unset meow-normal-state-keymap "k")
-  (keymap-unset meow-normal-state-keymap "o")
-  (meow-normal-define-key
-    ;; expansion
-    '("0" . meow-expand-0)
-    '("1" . meow-expand-1)
-    '("2" . meow-expand-2)
-    '("3" . meow-expand-3)
-    '("4" . meow-expand-4)
-    '("5" . meow-expand-5)
-    '("6" . meow-expand-6)
-    '("7" . meow-expand-7)
-    '("8" . meow-expand-8)
-    '("9" . meow-expand-9)
-    '("'" . meow-smart-reverse)
-
-    ;; movement
-    '("u" . meow-prev)
-    '("e" . meow-next)
-    '("n" . meow-left)
-    '("i" . meow-right)
-
-    '("j" . meow-search)
-    ;; '("-" . meow-visit)
-    '("/" . meow-search)
-    '("T" . avy-goto-word-1)
-
-    ;; expansion
-    '("U" . meow-prev-expand)
-    '("E" . meow-next-expand)
-    '("N" . meow-left-expand)
-    '("I" . meow-right-expand)
-
-    '("l" . meow-back-word)
-    '("L" . meow-back-symbol)
-    '("y" . meow-next-word)
-    '("Y" . meow-next-symbol)
-
-    '("a" . meow-word)
-    '("A" . meow-mark-symbol) ; REVIEW: We can achieve the same with 'aa'
-    '("r" . meow-line)
-    '("R" . meow-replace)
-    '("w" . meow-block)
-    '("W" . meow-to-block)
-    '("q" . meow-join)
-    '("g" . meow-grab)
-    '("G" . meow-pop-grab)
-    '("h" . meow-swap-grab)
-    '("H" . meow-sync-grab)
-    '(";" . meow-cancel-selection)
-    '(":" . meow-pop-selection)
-
-    '("x" . meow-till)
-    '("z" . meow-find)
-
-    '("," . meow-beginning-of-thing)
-    '("." . meow-end-of-thing)
-    '("<" . meow-inner-of-thing)
-    '(">" . meow-bounds-of-thing)
-
-    ;; editing
-    '("s" . meow-kill)
-    '("t" . meow-change)
-    '("b" . meow-delete)
-    '("c" . meow-save)
-    '("d" . meow-yank)
-    '("D" . meow-yank-pop)
-
-    '("f" . meow-insert)
-    '("F" . meow-open-above)
-    '("p" . meow-append)
-    '("P" . meow-open-below)
-
-    '("m" . undo-only)
-    '("M" . undo-redo)
-
-    '("kk" . downcase-dwim)
-    '("kq" . align-regexp)
-    '("kw" . delete-trailing-whitespace)
-    '("kf" . fill-paragraph)
-    ;; '("kp" . sp-split-sexp)
-    '("kt" . meow-comment)
-
-    ;; general
-    '("oq" . jinx-mode)
-    '("ow" . jinx-correct)
-    '("ot" . eglot-rename)
-    '("og" . magit-diff-buffer-file)
-    '("os" . save-buffer)
-    '("oy" . overwrite-mode)
-    '("ou" . whitespace-mode)
-    '("ob" . eglot-format)
-
-    ;; ignore escape
-    '("<escape>" . ignore)))
-(meow-setup)
-
 
 (provide 'init)
 ;;; init.el ends here
