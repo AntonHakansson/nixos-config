@@ -400,7 +400,7 @@
     (keymap-unset meow-normal-state-keymap "n")
     (keymap-unset meow-normal-state-keymap ";")
     (meow-normal-define-key
-     '("nk" . downcase-dwim)
+     '"nk" . downcase-dwim
      '("nq" . align-regexp)
      '("nw" . delete-trailing-whitespace)
      '("nf" . fill-paragraph)
@@ -767,7 +767,6 @@ Otherwise split the current paragraph into one sentence per line."
   (org-attach-use-inheritance t) ; Always respect parent IDs
 
   :bind ("C-c a" . org-agenda)
-  :hook (org-agenda-mode . olivetti-mode)
   :hook (org-agenda-finalize . hk/truncate-lines)
   :custom
   (org-agenda-files (mapcar (lambda (f) (concat org-directory "gtd/" f)) '("inbox.org" "projects.org" "repeaters.org" "someday.org")))
@@ -776,7 +775,6 @@ Otherwise split the current paragraph into one sentence per line."
   (org-agenda-time-grid '((daily today require-timed) (600 1200 1800 2200) "" ""))
   (org-agenda-current-time-string "<-")
   (org-agenda-block-separator (kbd " "))
-  (org-agenda-tags-column 90)           ; Play nice with olivetti-mode
   (org-deadline-warning-days 30)
   (org-stuck-projects '("LEVEL=1&+project" ("NEXT") nil ""))
   :init
@@ -1411,7 +1409,6 @@ current buffer, killing it."
 (use-package eww
   ;; Web browser
   :ensure nil
-  :hook (eww-mode . olivetti-mode)
   :hook (eww-after-render . hk/eww-redirect-to-bloatfree-alt)
   :hook (eww-after-render . eww-readable)
   :bind
@@ -1571,6 +1568,9 @@ current buffer, killing it."
   (doom-modeline-battery nil)
   (doom-modeline-time nil))
 
+(use-package spacious-padding
+  :hook (after-init-hook . spacious-padding-mode))
+
 (use-package mixed-pitch)
 
 (use-package nerd-icons)
@@ -1596,7 +1596,7 @@ current buffer, killing it."
 
   ;; Font - Iosevka
   :config
-  (modify-all-frames-parameters '((font . "Iosevka-12"))))
+  (modify-all-frames-parameters '((font . "Iosevka-24"))))
 
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
