@@ -17,6 +17,63 @@
         set history filename ~/.cache/.gdb_history
 
         set auto-load local-gdbinit
+
+        # When a breakpoint it is hit, automatically pop reserved function frames (starting with __)
+        if !$_isvoid($_any_caller_matches)
+            define hook-stop
+                while $_thread && $_any_caller_matches("^__")
+                    up-silently
+                end
+            end
+        end
+
+        # Print array assuming array_count variable exists
+        define parr
+            if $argc == 1
+                set $arr_name = "$arg0"
+                set $count_name = "$arg0_count"
+                # Check if variables exist
+                if &$arg0 != 0
+                    eval "print *%s@%s", $arr_name, $count_name
+                else
+                    printf "Error: Variable %s not found\n", $arr_name
+                end
+            else
+                print "Usage: parr <array_name>"
+            end
+        end
+
+        # Print stack with local variables
+        define btfull
+            set $frame = 0
+            set $nframes = 8
+            if $argc >= 1
+                set $nframes = $arg0
+            end
+            while $frame < $nframes
+                printf "\n=== Frame %d ===\n", $frame
+                frame $frame
+                info locals
+                set $frame = $frame + 1
+            end
+            frame 0
+        end
+
+        # Print linked list (assuming node->next structure)
+        define plist
+            if $argc == 1
+                set $node = $arg0
+                set $count = 0
+                while $node != 0 && $count < 20
+                    printf "Node %d: ", $count
+                    print *$node
+                    set $node = $node->next
+                    set $count = $count + 1
+                end
+            else
+                print "Usage: plist <head_node>"
+            end
+        end
       '';
       home.sessionVariables = {
         # debugger-oriented flags: break on error instead of uselessly exiting
