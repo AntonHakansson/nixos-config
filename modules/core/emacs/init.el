@@ -402,7 +402,7 @@
     (keymap-unset meow-normal-state-keymap "n")
     (keymap-unset meow-normal-state-keymap ";")
     (meow-normal-define-key
-     '"nk" . downcase-dwim
+     '("nk" . downcase-dwim)
      '("nq" . align-regexp)
      '("nw" . delete-trailing-whitespace)
      '("nf" . fill-paragraph)
