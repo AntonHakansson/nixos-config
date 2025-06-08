@@ -19,7 +19,7 @@
           enable = true;
           defaultCacheTtl = 7200;
           maxCacheTtl = 99999;
-          pinentryPackage = pkgs."pinentry-${pinentryFlavor}";
+          pinentry.package = pkgs."pinentry-${pinentryFlavor}";
         };
       };
     };

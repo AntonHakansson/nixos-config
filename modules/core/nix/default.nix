@@ -9,7 +9,7 @@ let
   };
   baseNixIndex = {
     home.packages = with pkgs; [ nix-index ];
-    programs.zsh.initExtra = ''
+    programs.zsh.initContent = ''
       source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
     '';
     systemd.user = {
