@@ -1404,7 +1404,11 @@ current buffer, killing it."
                      :key github-access-token
                      :models '("gpt-4o" "gpt-4o-mini"))))
   :custom
-  (gptel-default-mode 'org-mode))
+  (gptel-default-mode 'org-mode)
+  :config
+  (require 'gptel-gh)
+  (setq gptel-model 'claude-sonnet-4
+        gptel-backend (gptel-make-gh-copilot "Copilot")))
 
 (use-package eww
   ;; Web browser
