@@ -47,6 +47,8 @@
   ;; Scrolling & cursor
   (blink-cursor-mode -1)                             ; Steady cursor
   (push '(vertical-scroll-bars) default-frame-alist) ; Remove vertical scroll bar
+  (setopt scroll-conservatively 10
+          scroll-margin 15)
 
   ;; Buffers, Lines, and indentation
   (setopt display-line-numbers-type 'relative) ; Relative line numbers
