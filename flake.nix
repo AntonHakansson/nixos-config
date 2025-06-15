@@ -34,11 +34,6 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    plasma-manager = {
-      url = "github:pjones/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
-    };
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
@@ -56,7 +51,6 @@
     , nur
     , emacs-overlay
     , hyprland
-    , plasma-manager
     , nixos-mailserver
     , ...
     }@inputs:
@@ -87,7 +81,7 @@
           nixos-mailserver.nixosModule
 
           home-manager.nixosModules.home-manager
-          { home-manager.sharedModules = [ hyprland.homeManagerModules.default  plasma-manager.homeManagerModules.plasma-manager ]; }
+          { home-manager.sharedModules = [ hyprland.homeManagerModules.default ]; }
 
           ./modules
         ];

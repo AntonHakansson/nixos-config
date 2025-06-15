@@ -10,7 +10,7 @@
 - Encrypted *zfs* partition
 - Deploy secrets using *agenix*
 - Flexible *Home Manager* config files
-- *wayland* environments (plasma, river, hyprland)
+- *wayland* environments (river)
 - Github CI/CD and binary cache
 
 * Filesystem quirks
