@@ -28,6 +28,7 @@
       syncthing.enable = true;
       media.anki.enable = true;
       river.enable = true;
+      games.enable = true;
     };
   };
 
@@ -39,12 +40,12 @@
 
   # Distrobox
   virtualisation.podman.enable = true;
-  environment.systemPackages = [ pkgs.distrobox ];
+  environment.systemPackages = [ pkgs.distrobox pkgs.signal-desktop ];
 
   # Disable auto-upgrade
   system.autoUpgrade.enable = false;
 
   # Enable OpenTabletDriver
-  # hardware.opentabletdriver.enable = true;
+  hardware.opentabletdriver.enable = true;
   hakanssn.core.zfs.homeCacheLinks = [ ".config/OpenTabletDriver/" ];
 }

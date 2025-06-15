@@ -84,7 +84,7 @@
   services.xserver.videoDrivers = [ "nvidia" ];
 
   # Printer
-  services.printing.enable = false; # RCE vuln. CVE-2024-47076, CVE-2024-47175, CVE-2024-47176 and CVE-2024-47177
+  services.printing.enable = true;
   services.printing.drivers = [
     pkgs.brlaser # Drivers for some Brother printers
   ];
