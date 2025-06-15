@@ -32,6 +32,7 @@ in
   config = lib.mkIf config.hakanssn.graphical.firefox.enable {
     hakanssn.core.zfs.homeCacheLinks = [ ".cache/mozilla" ];
     hakanssn.core.zfs.homeDataLinks = [ ".mozilla" ];
+    hakanssn.core.nix.unfreePackages = [ "firefox-beta-bin" "firefox-beta-bin-unwrapped" ];
 
     home-manager.users.hakanssn = { ... }: {
       programs = {
