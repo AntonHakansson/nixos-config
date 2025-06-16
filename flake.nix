@@ -30,10 +30,6 @@
         nixpkgs-stable.follows = "nixpkgs-stable";
       };
     };
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixos-mailserver = {
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs = {
@@ -50,7 +46,6 @@
     , impermanence
     , nur
     , emacs-overlay
-    , hyprland
     , nixos-mailserver
     , ...
     }@inputs:
@@ -81,7 +76,6 @@
           nixos-mailserver.nixosModule
 
           home-manager.nixosModules.home-manager
-          { home-manager.sharedModules = [ hyprland.homeManagerModules.default ]; }
 
           ./modules
         ];
