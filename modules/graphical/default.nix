@@ -7,6 +7,7 @@
     ./games
     ./mail
     ./media
+    ./niri
     ./pass
     ./river
     ./sway
