@@ -15,6 +15,7 @@
       home.packages = [
         pkgs.wf-recorder
         pkgs.wl-clipboard
+        pkgs.xwayland-satellite
       ];
       programs = {
         tofi.enable = true; # dmenu
@@ -80,6 +81,7 @@
             // - "on-overflow", focusing a column will center it if it doesn't fit
             //   together with the previously focused column.
             center-focused-column "never"
+            always-center-single-column
 
             preset-column-widths {
                 proportion 0.33333
@@ -97,7 +99,10 @@
                 inactive-color "#505050"
             }
         }
-
+        cursor {
+            hide-when-typing
+            hide-after-inactive-ms 1000
+        }
         animations {
             slowdown 0.1
         }
