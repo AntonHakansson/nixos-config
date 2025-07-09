@@ -46,6 +46,7 @@
 
     mailserver = {
       enable = true;
+      stateVersion = 3;
       fqdn = "mail.hakanssn.com";
       domains = [ "hakanssn.com" ];
 
