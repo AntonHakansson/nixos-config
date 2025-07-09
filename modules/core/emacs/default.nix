@@ -200,10 +200,10 @@
       };
     };
     fonts.packages = with pkgs; [
-      emacs-all-the-icons-fonts
       iosevka-bin
       (iosevka-bin.override { variant = "Aile"; })
       hakanssn.iosvmata
+      nerd-fonts.symbols-only
     ];
   };
 }
