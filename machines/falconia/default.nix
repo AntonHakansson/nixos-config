@@ -25,6 +25,7 @@
       mail.enable = true;
       # nextcloud.enable = true;
       syncthing.enable = true;
+      hakanssn-webserver.enable = true;
     };
   };
 

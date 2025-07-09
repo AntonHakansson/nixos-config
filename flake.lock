@@ -169,6 +169,26 @@
         "type": "github"
       }
     },
+    "hakanssn-webserver": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1752051039,
+        "narHash": "sha256-qR/b43A8UBFvBboAte9wHnBPNeUMPpBIF36+FssdPbY=",
+        "owner": "AntonHakansson",
+        "repo": "hakanssn.com",
+        "rev": "342c3837cfe414f05b4d2ea6b8fbef8f949c89e2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AntonHakansson",
+        "repo": "hakanssn.com",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -323,6 +343,7 @@
       "inputs": {
         "agenix": "agenix",
         "emacs-overlay": "emacs-overlay",
+        "hakanssn-webserver": "hakanssn-webserver",
         "home-manager": "home-manager_2",
         "impermanence": "impermanence",
         "nixos-mailserver": "nixos-mailserver",
