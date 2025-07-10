@@ -176,11 +176,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1752051039,
-        "narHash": "sha256-qR/b43A8UBFvBboAte9wHnBPNeUMPpBIF36+FssdPbY=",
+        "lastModified": 1752151347,
+        "narHash": "sha256-HXbnihA8lBdb273/MMCmF8xekcGzO9swO5WUJXYH7jk=",
         "owner": "AntonHakansson",
         "repo": "hakanssn.com",
-        "rev": "342c3837cfe414f05b4d2ea6b8fbef8f949c89e2",
+        "rev": "2ad9ad0b4ff6c43dd923d8cca6498eb881e02d85",
         "type": "github"
       },
       "original": {

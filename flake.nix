@@ -79,6 +79,7 @@
           agenix.nixosModules.age
           impermanence.nixosModule
           nixos-mailserver.nixosModule
+          hakanssn-webserver.nixosModules.default
 
           home-manager.nixosModules.home-manager
 
@@ -106,8 +107,7 @@
       nixosConfigurations = {
         falconia = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
-          modules = sharedModules ++
-                    [ hakanssn-webserver.nixosModules.default ./machines/falconia/default.nix ];
+          modules = sharedModules ++ [ ./machines/falconia/default.nix ];
         };
         gattsu = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
