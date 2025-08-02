@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  ffPackage = pkgs.firefox-beta-bin.override {
+  ffPackage = pkgs.firefox-beta.override {
     extraPolicies = {
       DisableFirefoxStudies = true;
       DisablePocket = true;
@@ -32,7 +32,7 @@ in
   config = lib.mkIf config.hakanssn.graphical.firefox.enable {
     hakanssn.core.zfs.homeCacheLinks = [ ".cache/mozilla" ];
     hakanssn.core.zfs.homeDataLinks = [ ".mozilla" ];
-    hakanssn.core.nix.unfreePackages = [ "firefox-beta-bin" "firefox-beta-bin-unwrapped" ];
+    hakanssn.core.nix.unfreePackages = [ "firefox-beta" "firefox-beta-unwrapped" ];
 
     home-manager.users.hakanssn = { ... }: {
       programs = {
