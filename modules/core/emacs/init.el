@@ -1410,7 +1410,18 @@ current buffer, killing it."
   :config
   (require 'gptel-gh)
   (setq gptel-model 'claude-sonnet-4
-        gptel-backend (gptel-make-gh-copilot "Copilot")))
+        gptel-backend (gptel-make-gh-copilot "Copilot"))
+
+  :config
+  (when (featurep 'meow)
+    (meow-normal-define-key
+     '("kk" . gptel)
+     '("km" . gptel-menu)
+     '("kr" . gptel-rewrite)
+     '("ka" . gptel-context-add)
+     '("kf" . gptel-add-file)
+     ))
+  )
 
 (use-package eww
   ;; Web browser
