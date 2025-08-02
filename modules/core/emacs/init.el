@@ -1613,7 +1613,7 @@ current buffer, killing it."
 
   ;; Font - Iosevka
   :config
-  (modify-all-frames-parameters '((font . "Iosevka-18"))))
+  (modify-all-frames-parameters '((font . "Iosevka-12"))))
 
 (use-package rainbow-mode
   :hook (prog-mode . rainbow-mode)
