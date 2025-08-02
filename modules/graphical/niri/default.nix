@@ -8,6 +8,14 @@
     services = {
       dbus.packages = with pkgs; [ dconf ];
     };
+    xdg.portal = {
+      enable = true;
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
+      config.preferred = {
+        default = "gtk";
+        "org.freedesktop.impl.portal.Screencast" = "wlr";
+      };
+    };
     programs = {
       niri.enable = true;
     };
