@@ -7,6 +7,9 @@
   hakanssn = {
     stateVersion = "21.11";
     core = {
+      nix = {
+        enableNixIndex = false; # reduce memory pressure
+      };
       zfs = {
         encrypted = false;
         rootDataset = "rpool/local/root";
