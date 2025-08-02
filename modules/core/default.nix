@@ -100,7 +100,7 @@
           isNormalUser = true;
           home = "/home/hakanssn";
           description = "Anton Hakansson";
-          extraGroups = [ "systemd-journal" ];
+          extraGroups = [ "wheel" "systemd-journal" ];
           hashedPasswordFile = config.age.secrets."passwords/users/hakanssn".path;
         };
         root.hashedPasswordFile = config.age.secrets."passwords/users/root".path;
