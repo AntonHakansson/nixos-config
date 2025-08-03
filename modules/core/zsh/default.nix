@@ -10,7 +10,7 @@ let
       enable = true;
       autosuggestion.enable = true;
       autocd = true;
-      dotDir = ".config/zsh";
+      dotDir = "${home}/.config/zsh";
       history = {
         expireDuplicatesFirst = true;
         path = "${config.hakanssn.cachePrefix}${home}/.local/share/zsh/history";

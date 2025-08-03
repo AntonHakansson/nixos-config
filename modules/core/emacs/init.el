@@ -1507,33 +1507,6 @@ current buffer, killing it."
   (setq rmh-elfeed-org-files (list (concat org-directory "elfeed.org")))
   (elfeed-org)) ;; Hook up elfeed-org to read the configuration when elfeed starts
 
-(use-package elfeed-tube
-  :after elfeed
-  :bind
-  (:map elfeed-show-mode-map
-        ("F" . elfeed-tube-fetch)
-        ([remap save-buffer] . elfeed-tube-save)
-        ("C-o" . elfeed-tube-mpv)
-        :map elfeed-search-mode-map
-        ("F" . elfeed-tube-fetch)
-        ([remap save-buffer] . elfeed-tube-save))
-  :config
-  (elfeed-tube-setup)
-  :preface
-  (defun hk/mpv-play-url-at-point ()
-    "Open the URL at point in mpv."
-    (interactive)
-    (let ((url (thing-at-point-url-at-point)))
-      (when url
-        (async-shell-command (concat "umpv \"" url "\"") nil nil)))))
-
-(use-package elfeed-tube-mpv
-  :after elfeed-tube
-  :bind
-  (:map elfeed-show-mode-map
-        ("C-c C-f" . elfeed-tube-mpv-follow-mode)
-        ("C-c C-w" . elfeed-tube-mpv-where)))
-
 (use-package notmuch
   :defer t
   :bind (("C-x m" . notmuch))
