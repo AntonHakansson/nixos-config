@@ -1290,7 +1290,8 @@ Takes optional URL or gets it from the clipboard."
   (defun hk/c-mode-hook ()
     (c-set-offset 'substatement 0)
     (c-set-offset 'substatement-open 0)
-    (setq-local outline-regexp " *//\\(-+\\)"))
+    (setq-local outline-regexp " *//\\(-+\\)")
+    (setq-local eglot-ignored-server-capabilities '(:documentOnTypeFormattingProvider)))
 
   (defun hk/c-ts-get-return-type ()
     (when-let* ((defun-node (treesit-defun-at-point))
