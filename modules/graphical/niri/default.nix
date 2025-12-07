@@ -39,6 +39,7 @@
                 xkb {
                     // For more information, see xkeyboard-config(7).
                     layout "us"
+                    variant "altgr-intl"
                     options "ctrl:nocaps"
                 }
                 numlock
