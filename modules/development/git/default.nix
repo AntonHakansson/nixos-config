@@ -14,7 +14,7 @@
   config =
     lib.mkIf config.hakanssn.development.git.enable {
       home-manager.users.hakanssn = { ... }: {
-        home.packages = with pkgs; [ gitAndTools.gitflow git-crypt ];
+        home.packages = with pkgs; [ gitflow git-crypt ];
         programs.git = {
           enable = true;
           ignores = [ ".direnv" ".envrc" ];

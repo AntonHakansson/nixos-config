@@ -63,7 +63,7 @@ in
         dates = "daily";
         options = "--delete-older-than 7d";
       };
-      package = pkgs.nixStable;
+      package = pkgs.nixVersions.stable;
       settings = {
         auto-optimise-store = true;
         substituters = [
