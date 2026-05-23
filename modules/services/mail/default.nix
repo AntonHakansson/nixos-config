@@ -44,35 +44,27 @@
       }
     ];
 
+    services.nginx.virtualHosts.${config.mailserver.fqdn}.enableACME = true;
+
     mailserver = {
       enable = true;
       stateVersion = 3;
       fqdn = "mail.hakanssn.com";
       domains = [ "hakanssn.com" ];
 
+      # Reference the existing ACME configuration created by nginx
+      x509.useACMEHost = config.mailserver.fqdn;
+
       # A list of all login accounts. To create the password hashes, use
       # nix run nixpkgs.apacheHttpd -c htpasswd -nbB "" "super secret password" | cut -d: -f2
-      loginAccounts = {
+      accounts = {
         "anton@hakanssn.com" = {
           hashedPasswordFile =
             config.age.secrets."passwords/services/mail/anton@hakanssn.com".path;
         };
-        "webmaster@hakanssn.com" = {
-          hashedPasswordFile =
-            config.age.secrets."passwords/services/mail/webmaster@hakanssn.com".path;
-        };
-        "postbot@hakanssn.com" = {
-          hashedPasswordFile = config.age.secrets."passwords/services/mail/postbot@hakanssn.com".path;
-          # Allow to send from arbitrary email addresses from @hakanssn.com domains.
-          aliases = [ "@hakanssn.com" ];
-        };
       };
 
       indexDir = "${config.hakanssn.cachePrefix}/var/lib/dovecot/indices";
-
-      # Use Let's Encrypt certificates. Note that this needs to set up a stripped
-      # down nginx and opens port 80.
-      certificateScheme = "acme-nginx";
 
       # whether to scan inbound emails for viruses (note that this requires at least
       # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
@@ -82,10 +74,6 @@
     age.secrets = {
       "passwords/services/mail/anton@hakanssn.com".file =
         ../../../secrets/passwords/services/mail/anton_at_hakanssn.com.age;
-      "passwords/services/mail/webmaster@hakanssn.com".file =
-        ../../../secrets/passwords/services/mail/webmaster_at_hakanssn.com.age;
-      "passwords/services/mail/postbot@hakanssn.com".file =
-        ../../../secrets/passwords/services/mail/postbot_at_hakanssn.com.age;
     };
   };
 }

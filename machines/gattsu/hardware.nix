@@ -80,7 +80,7 @@
   };
 
   # Nvidia proprietary drivers
-  hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" ];
+  hakanssn.core.nix.unfreePackages = [ "nvidia-x11" "nvidia-settings" "nvidia-kernel-modules" ];
   services.xserver.videoDrivers = [ "nvidia" ];
 
   # Printer

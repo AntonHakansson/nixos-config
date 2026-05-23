@@ -23,7 +23,6 @@ let
         plugins = [
           "systemd"
           "common-aliases"
-          "tmux"
           "autojump"
           "git"
           "history-substring-search"

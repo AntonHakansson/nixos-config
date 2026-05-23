@@ -10,8 +10,6 @@
     ./smartd
     ./ssh
     ./sshd
-    ./tmux
-    ./vim
     ./zfs
     ./zsh
   ];

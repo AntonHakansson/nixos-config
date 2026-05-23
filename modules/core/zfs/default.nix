@@ -45,11 +45,24 @@
       supportedFilesystems = [ "zfs" ];
       zfs = {
         devNodes = "/dev/";
+        forceImportRoot = false;
         requestEncryptionCredentials = config.hakanssn.core.zfs.encrypted;
       };
-      initrd.postDeviceCommands = lib.mkAfter ''
-        zfs rollback -r ${config.hakanssn.core.zfs.rootDataset}@blank
-      '';
+      initrd.systemd = {
+        enable = true;
+        services.rollback = {
+          description = "Rollback root filesystem to a pristine state on boot";
+          wantedBy = [ "initrd.target" ];
+          after = [ "zfs-import-rpool.service" ];
+          before = [ "sysroot.mount" ];
+          path = with pkgs; [ zfs ];
+          unitConfig.DefaultDependencies = "no";
+          serviceConfig.Type = "oneshot";
+          script = ''
+            ${config.boot.zfs.package}/bin/zfs rollback -r ${config.hakanssn.core.zfs.rootDataset}@blank && echo "  >> >> rollback complete << <<"
+          '';
+        };
+      };
     };
 
     services = {
