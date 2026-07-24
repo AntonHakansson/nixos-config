@@ -41,11 +41,8 @@ in
             msmtp.enable = true;
             smtp = {
               host = "mail.hakanssn.com";
-              port = 587;
-              tls = {
-                enable = true;
-                useStartTls = true;
-              };
+              port = 465;
+              tls.enable = true;
             };
             notmuch.enable = true;
           };

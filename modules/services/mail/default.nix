@@ -71,6 +71,10 @@
       virusScanning = false;
     };
 
+    # IPv6 privacy address extention make mail originate from one of
+    # the temporary addresses breaking rDNS expectations.
+    networking.tempAddresses = "disabled";
+
     age.secrets = {
       "passwords/services/mail/anton@hakanssn.com".file =
         ../../../secrets/passwords/services/mail/anton_at_hakanssn.com.age;
