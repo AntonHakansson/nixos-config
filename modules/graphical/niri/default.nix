@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ inputs, config, lib, pkgs, ... }:
 {
   options.hakanssn.graphical.niri = {
     enable = lib.mkEnableOption "Niri window manager environment";
@@ -16,20 +16,26 @@
         "org.freedesktop.impl.portal.Screencast" = "wlr";
       };
     };
-    programs = {
-      niri.enable = true;
-    };
+    programs.niri.enable = true;
     home-manager.users.hakanssn = { pkgs, ... }: {
+      imports = [ inputs.noctalia.homeModules.default ];
       home.packages = [
         pkgs.wf-recorder
         pkgs.wl-clipboard
         pkgs.xwayland-satellite
+        pkgs.noctalia-shell
       ];
-      programs = {
-        tofi.enable = true; # dmenu
-      };
-      services = {
-        mako.enable = true; # notifications
+      programs.noctalia = {
+        enable = true;
+        systemd.enable = true;
+        settings = {
+          theme.mode = "auto";
+          bar.default = {
+            reserve_space = false;
+            smart_auto_hide = true;
+          };
+          shell.animation.speed = 2.0;
+        };
       };
       xdg.configFile."niri/config.kdl".text = ''
         // Check the wiki for a full description of the configuration:
@@ -137,7 +143,8 @@
 
             // Binds for running terminal, app launcher, screen locker.
             Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
-            Mod+D hotkey-overlay-title="Run an Application: tofi" { spawn "bash" "-c" "$(tofi-drun)"; }
+            Mod+D hotkey-overlay-title="Run an Application: noctalia" { spawn-sh "noctalia msg panel-toggle launcher"; }
+            Mod+L hotkey-overlay-title="Lockscreen: quickshell"       { spawn-sh "noctalia msg session lock"; }
             Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
             // Example volume keys mappings for PipeWire & WirePlumber.
@@ -192,17 +199,11 @@
 
             Mod+Page_Down      { focus-workspace-down; }
             Mod+Page_Up        { focus-workspace-up; }
-            Mod+L              { focus-workspace-down; }
-            Mod+Y              { focus-workspace-up; }
             Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
             Mod+Ctrl+Page_Up   { move-column-to-workspace-up; }
-            Mod+Ctrl+L         { move-column-to-workspace-down; }
-            Mod+Ctrl+Y         { move-column-to-workspace-up; }
 
             Mod+Shift+Page_Down { move-workspace-down; }
             Mod+Shift+Page_Up   { move-workspace-up; }
-            Mod+Shift+L         { move-workspace-down; }
-            Mod+Shift+Y         { move-workspace-up; }
 
             Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
             Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
@@ -254,9 +255,6 @@
             Mod+Ctrl+F { expand-column-to-available-width; }
 
             Mod+C { center-column; }
-
-            // Center all fully visible columns on screen.
-            Mod+Ctrl+C { center-visible-columns; }
 
             // * set width in pixels: "1000"
             // * adjust width in pixels: "-5" or "+5"

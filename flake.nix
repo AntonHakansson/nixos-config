@@ -4,7 +4,7 @@
   inputs = {
     # Core
     nixpkgs.url        = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -23,6 +23,10 @@
       "github:nix-community/impermanence"; # bind-mount directories
 
     # Extras
+    noctalia = {
+      url = "github:noctalia-dev/noctalia";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs = {
@@ -50,6 +54,7 @@
     , impermanence
     , nur
     , emacs-overlay
+    , noctalia
     , nixos-mailserver
     , hakanssn-webserver
     , ...
