@@ -78,7 +78,7 @@
           })
           agenix.nixosModules.age
           impermanence.nixosModule
-          nixos-mailserver.nixosModule
+          nixos-mailserver.nixosModules.default
           hakanssn-webserver.nixosModules.default
 
           home-manager.nixosModules.home-manager

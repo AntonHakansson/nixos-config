@@ -12,9 +12,11 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks."*" = {
-        addKeysToAgent = "no";
-        forwardAgent = false;
+      settings = {
+        "Host *" = {
+          addKeysToAgent = "no";
+          forwardAgent = false;
+        };
       };
     };
     home.packages =
