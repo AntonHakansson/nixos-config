@@ -18,6 +18,7 @@
           }];
       };
       emacs.enable = true;
+      ai-agents.enable = true;
     };
     development = {
       enable = true;
