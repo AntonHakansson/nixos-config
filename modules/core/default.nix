@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./ai-agents.nix
+    ./ai
     ./emacs
     ./gpg
     ./mail
