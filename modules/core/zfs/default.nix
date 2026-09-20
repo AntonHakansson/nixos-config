@@ -32,7 +32,8 @@
 
     environment.persistence."${config.hakanssn.cachePrefix}" = {
       hideMounts = true;
-      directories = config.hakanssn.core.zfs.systemCacheLinks;
+      # /var/lib/nixos: keeps UID/GID allocations stable across reboots
+      directories = [ "/var/lib/nixos" ] ++ config.hakanssn.core.zfs.systemCacheLinks;
       users.hakanssn.directories = config.hakanssn.core.zfs.homeCacheLinks;
     };
     environment.persistence."${config.hakanssn.dataPrefix}" = {
