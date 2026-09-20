@@ -33,15 +33,18 @@ in
           hideThinkingBlock = true;
           packages = [
             "npm:pi-ollama-cloud"
-            "npm:@dietrichgebert/ponytail"
             "npm:@juicesharp/rpiv-voice"
+            "npm:pi-hermes-memory"
           ];
         };
       };
 
       # Declarative skills and extensions from ./pi/
+      home.file.".pi/agent/AGENTS.md".source = ./pi/AGENTS.md;
       home.file.".pi/agent/skills/caveman/SKILL.md".source =
         ./pi/skills/caveman/SKILL.md;
+      home.file.".pi/agent/skills/lavish/SKILL.md".source =
+        ./pi/skills/lavish/SKILL.md;
       home.file.".pi/agent/extensions/caveman/index.ts".source =
         ./pi/extensions/caveman/index.ts;
     };

@@ -27,7 +27,9 @@ link() {
   echo "Linked $dst -> $src"
 }
 
+link "pi/AGENTS.md" "AGENTS.md"
 link "pi/skills/caveman" "skills/caveman"
+link "pi/skills/lavish" "skills/lavish"
 link "pi/extensions/caveman" "extensions/caveman"
 
 echo "Done. Start a new pi session to pick up changes."
