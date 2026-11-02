@@ -33,8 +33,11 @@ in
           hideThinkingBlock = true;
           packages = [
             "npm:pi-ollama-cloud"
+            "npm:pi-web-access"
             "npm:@juicesharp/rpiv-voice"
+            "npm:@juicesharp/rpiv-ask-user-question"
             "npm:pi-hermes-memory"
+            "npm:pi-subagents"
           ];
         };
       };
