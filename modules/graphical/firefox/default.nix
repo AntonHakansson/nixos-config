@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  ffPackage = pkgs.firefox-beta.override {
+  ffPackage = pkgs.firefox.override {
     extraPolicies = {
       DisableFirefoxStudies = true;
       DisablePocket = true;

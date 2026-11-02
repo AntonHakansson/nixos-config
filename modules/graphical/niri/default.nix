@@ -23,7 +23,6 @@
         pkgs.wf-recorder
         pkgs.wl-clipboard
         pkgs.xwayland-satellite
-        pkgs.noctalia-shell
       ];
       programs.noctalia = {
         enable = true;
